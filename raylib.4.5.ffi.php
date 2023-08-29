@@ -1610,16 +1610,31 @@ RAYLIB_H.PHP_EOL;
 
 } #endif // RAYLIB_H
 
-if ( PHP_OS_FAMILY == 'Linux' )
+$_RAYLIB_TEST_PATHES = [
+	'./raylib/',
+	'./libs/',
+	'./lib/',
+	'./',
+	'',
+];
+
+$_RAYLIB_SHARED_LIBRARY = match( PHP_OS_FAMILY )
 {
-	$RAYLIB_FFI = FFI::cdef( $RAYLIB_H , './raylib/libraylib.so' );
-}
-else
-if ( PHP_OS_FAMILY == 'Windows' )
+	'Linux'   => 'libraylib.so' ,
+	'Windows' => 'raylib.dll'
+};
+
+
+foreach( $_RAYLIB_TEST_PATHES as $_RAYLIB_TEST_PATH )
 {
-	$RAYLIB_FFI = FFI::cdef( $RAYLIB_H , './raylib/raylib.dll' );
+	$_RAYLIB_PATH = $_RAYLIB_TEST_PATH.$_RAYLIB_SHARED_LIBRARY ;
+	if ( file_exists( $_RAYLIB_PATH ) )
+	{
+		break;
+	}
 }
 
+$RAYLIB_FFI = FFI::cdef( $RAYLIB_H , $_RAYLIB_PATH );
 
 // -------------------------------------------------------
 
