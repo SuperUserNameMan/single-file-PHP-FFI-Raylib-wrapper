@@ -3,6 +3,6 @@ A single file [PHP8](https://github.com/php/php-src) FFI [Raylib 4.5](https://gi
 
 Very W.I.P.
 
-Only need `libraylib.so` or `raylib.dll` into a `.\raylib\` directory.
+Only need `libraylib.so` or `raylib.dll` into a `.\raylib\`, or `.\lib` or `.\` sub directory.
 
-All RLAPI function and enums consts are prefixed with `RL_`.
+All RLAPI function and enums and consts are prefixed with `RL_`.
