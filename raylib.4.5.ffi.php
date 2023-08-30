@@ -160,34 +160,36 @@ define( 'RL_MATRIX_TYPE' , true );
 
 // Some Basic Colors
 // NOTE: Custom raylib color palette for amazing visuals on WHITE background
-#define LIGHTGRAY  CLITERAL(Color){ 200, 200, 200, 255 }   // Light Gray
-#define GRAY       CLITERAL(Color){ 130, 130, 130, 255 }   // Gray
-#define DARKGRAY   CLITERAL(Color){ 80, 80, 80, 255 }      // Dark Gray
-#define YELLOW     CLITERAL(Color){ 253, 249, 0, 255 }     // Yellow
-#define GOLD       CLITERAL(Color){ 255, 203, 0, 255 }     // Gold
-#define ORANGE     CLITERAL(Color){ 255, 161, 0, 255 }     // Orange
-#define PINK       CLITERAL(Color){ 255, 109, 194, 255 }   // Pink
-#define RED        CLITERAL(Color){ 230, 41, 55, 255 }     // Red
-#define MAROON     CLITERAL(Color){ 190, 33, 55, 255 }     // Maroon
-#define GREEN      CLITERAL(Color){ 0, 228, 48, 255 }      // Green
-#define LIME       CLITERAL(Color){ 0, 158, 47, 255 }      // Lime
-#define DARKGREEN  CLITERAL(Color){ 0, 117, 44, 255 }      // Dark Green
-#define SKYBLUE    CLITERAL(Color){ 102, 191, 255, 255 }   // Sky Blue
-#define BLUE       CLITERAL(Color){ 0, 121, 241, 255 }     // Blue
-#define DARKBLUE   CLITERAL(Color){ 0, 82, 172, 255 }      // Dark Blue
-#define PURPLE     CLITERAL(Color){ 200, 122, 255, 255 }   // Purple
-#define VIOLET     CLITERAL(Color){ 135, 60, 190, 255 }    // Violet
-#define DARKPURPLE CLITERAL(Color){ 112, 31, 126, 255 }    // Dark Purple
-#define BEIGE      CLITERAL(Color){ 211, 176, 131, 255 }   // Beige
-#define BROWN      CLITERAL(Color){ 127, 106, 79, 255 }    // Brown
-#define DARKBROWN  CLITERAL(Color){ 76, 63, 47, 255 }      // Dark Brown
+function _RAYLIB_define_colors_when_ready()
+{
+define( 'RL_LIGHTGRAY'  , RL_Color( 200, 200, 200, 255 ) );  // Light Gray
+define( 'RL_GRAY'       , RL_Color( 130, 130, 130, 255 ) );  // Gray
+define( 'RL_DARKGRAY'   , RL_Color(  80,  80,  80, 255 ) );  // Dark Gray
+define( 'RL_YELLOW'     , RL_Color( 253, 249,   0, 255 ) );  // Yellow
+define( 'RL_GOLD'       , RL_Color( 255, 203,   0, 255 ) );  // Gold
+define( 'RL_ORANGE'     , RL_Color( 255, 161,   0, 255 ) );  // Orange
+define( 'RL_PINK'       , RL_Color( 255, 109, 194, 255 ) );  // Pink
+define( 'RL_RED'        , RL_Color( 230,  41,  55, 255 ) );  // Red
+define( 'RL_MAROON'     , RL_Color( 190,  33,  55, 255 ) );  // Maroon
+define( 'RL_GREEN'      , RL_Color(   0, 228,  48, 255 ) );  // Green
+define( 'RL_LIME'       , RL_Color(   0, 158,  47, 255 ) );  // Lime
+define( 'RL_DARKGREEN'  , RL_Color(   0, 117,  44, 255 ) );  // Dark Green
+define( 'RL_SKYBLUE'    , RL_Color( 102, 191, 255, 255 ) );  // Sky Blue
+define( 'RL_BLUE'       , RL_Color(   0, 121, 241, 255 ) );  // Blue
+define( 'RL_DARKBLUE'   , RL_Color(   0,  82, 172, 255 ) );  // Dark Blue
+define( 'RL_PURPLE'     , RL_Color( 200, 122, 255, 255 ) );  // Purple
+define( 'RL_VIOLET'     , RL_Color( 135,  60, 190, 255 ) );  // Violet
+define( 'RL_DARKPURPLE' , RL_Color( 112,  31, 126, 255 ) );  // Dark Purple
+define( 'RL_BEIGE'      , RL_Color( 211, 176, 131, 255 ) );  // Beige
+define( 'RL_BROWN'      , RL_Color( 127, 106,  79, 255 ) );  // Brown
+define( 'RL_DARKBROWN'  , RL_Color(  76,  63,  47, 255 ) );  // Dark Brown
 
-#define WHITE      CLITERAL(Color){ 255, 255, 255, 255 }   // White
-#define BLACK      CLITERAL(Color){ 0, 0, 0, 255 }         // Black
-#define BLANK      CLITERAL(Color){ 0, 0, 0, 0 }           // Blank (Transparent)
-#define MAGENTA    CLITERAL(Color){ 255, 0, 255, 255 }     // Magenta
-#define RAYWHITE   CLITERAL(Color){ 245, 245, 245, 255 }   // My own White (raylib logo)
-
+define( 'RL_WHITE'      , RL_Color( 255, 255, 255, 255 ) );  // White
+define( 'RL_BLACK'      , RL_Color(   0,   0,   0, 255 ) );  // Black
+define( 'RL_BLANK'      , RL_Color(   0,   0,   0,   0 ) );  // Blank (Transparent)
+define( 'RL_MAGENTA'    , RL_Color( 255,   0, 255, 255 ) );  // Magenta
+define( 'RL_RAYWHITE'   , RL_Color( 245, 245, 245, 255 ) );  // My own White (raylib logo)
+}
 //----------------------------------------------------------------------------------
 // Structures Definition
 //----------------------------------------------------------------------------------
@@ -1636,7 +1638,9 @@ foreach( $_RAYLIB_TEST_PATHES as $_RAYLIB_TEST_PATH )
 
 $RAYLIB_FFI = FFI::cdef( $RAYLIB_H , $_RAYLIB_PATH );
 
+
 // -------------------------------------------------------
+
 
 // This tool function autmatically rebuild the base of the PHP wrapper for the RLAPI.
 // The generated base wrapper will have to be completed manually.
@@ -1647,6 +1651,24 @@ $RAYLIB_FFI = FFI::cdef( $RAYLIB_H , $_RAYLIB_PATH );
 function _RAYLIB_REBUILD_WRAPPER_FROM_SCRATCH() : string
 {
 	global $RAYLIB_H ;
+
+	$RLAPI_PHP = '';
+
+	// Typedef list :
+
+	preg_match_all( '|typedef\h+struct\h+(\H+)\h+{|' , $RAYLIB_H , $RAYLIB_FFI_TYPDEF_LIST );
+//	print_r( $RAYLIB_FFI_TYPDEF_LIST );
+
+	foreach( $RAYLIB_FFI_TYPDEF_LIST[1] as $TYPE_NAME )
+	{
+		$RLAPI_PHP .= "define( 'RAYLIB_FFI_$TYPE_NAME' , \$RAYLIB_FFI->type( '$TYPE_NAME' ) );".PHP_EOL ;
+		$RLAPI_PHP .= "function RL_$TYPE_NAME( ...\$_ ) : object { \$OBJ = FFI::new( RAYLIB_FFI_$TYPE_NAME ); foreach( RAYLIB_FFI_${TYPE_NAME}->getStructFieldNames() as \$INDEX => \$FIELD ) { \$OBJ->\$FIELD = \$_[\$INDEX];	} return \$OBJ ; }".PHP_EOL;
+		$RLAPI_PHP .= PHP_EOL ;
+	}
+
+	$RAYLIB_PHP .= '_RAYLIB_define_colors_when_ready();'.PHP_EOL.PHP_EOL;
+
+	// Function list :
 
 	preg_match_all( '@/\*RLAPI\*/\h+(.*;.*)@' , $RAYLIB_H , $MATCHES , PREG_SET_ORDER );
 
@@ -1678,8 +1700,6 @@ function _RAYLIB_REBUILD_WRAPPER_FROM_SCRATCH() : string
 	];
 
 	//$RETURN_TYPES = [];
-
-	$RLAPI_PHP = '';
 
 	foreach( $MATCHES as $FOO )
 	{
@@ -1819,6 +1839,104 @@ function _RAYLIB_REBUILD_WRAPPER_FROM_SCRATCH() : string
 
 
 // ------------------- RLAPI WRAPPER ----------------------
+
+define( 'RAYLIB_FFI_Vector2' , $RAYLIB_FFI->type( 'Vector2' ) );
+function RL_Vector2( ...$_ ) : object { $OBJ = FFI::new( RAYLIB_FFI_Vector2 ); foreach( RAYLIB_FFI_Vector2->getStructFieldNames() as $INDEX => $FIELD ) { $OBJ->$FIELD = $_[$INDEX];	} return $OBJ ; }
+
+define( 'RAYLIB_FFI_Vector3' , $RAYLIB_FFI->type( 'Vector3' ) );
+function RL_Vector3( ...$_ ) : object { $OBJ = FFI::new( RAYLIB_FFI_Vector3 ); foreach( RAYLIB_FFI_Vector3->getStructFieldNames() as $INDEX => $FIELD ) { $OBJ->$FIELD = $_[$INDEX];	} return $OBJ ; }
+
+define( 'RAYLIB_FFI_Vector4' , $RAYLIB_FFI->type( 'Vector4' ) );
+function RL_Vector4( ...$_ ) : object { $OBJ = FFI::new( RAYLIB_FFI_Vector4 ); foreach( RAYLIB_FFI_Vector4->getStructFieldNames() as $INDEX => $FIELD ) { $OBJ->$FIELD = $_[$INDEX];	} return $OBJ ; }
+
+define( 'RAYLIB_FFI_Matrix' , $RAYLIB_FFI->type( 'Matrix' ) );
+function RL_Matrix( ...$_ ) : object { $OBJ = FFI::new( RAYLIB_FFI_Matrix ); foreach( RAYLIB_FFI_Matrix->getStructFieldNames() as $INDEX => $FIELD ) { $OBJ->$FIELD = $_[$INDEX];	} return $OBJ ; }
+
+define( 'RAYLIB_FFI_Color' , $RAYLIB_FFI->type( 'Color' ) );
+function RL_Color( ...$_ ) : object { $OBJ = FFI::new( RAYLIB_FFI_Color ); foreach( RAYLIB_FFI_Color->getStructFieldNames() as $INDEX => $FIELD ) { $OBJ->$FIELD = $_[$INDEX];	} return $OBJ ; }
+
+define( 'RAYLIB_FFI_Rectangle' , $RAYLIB_FFI->type( 'Rectangle' ) );
+function RL_Rectangle( ...$_ ) : object { $OBJ = FFI::new( RAYLIB_FFI_Rectangle ); foreach( RAYLIB_FFI_Rectangle->getStructFieldNames() as $INDEX => $FIELD ) { $OBJ->$FIELD = $_[$INDEX];	} return $OBJ ; }
+
+define( 'RAYLIB_FFI_Image' , $RAYLIB_FFI->type( 'Image' ) );
+function RL_Image( ...$_ ) : object { $OBJ = FFI::new( RAYLIB_FFI_Image ); foreach( RAYLIB_FFI_Image->getStructFieldNames() as $INDEX => $FIELD ) { $OBJ->$FIELD = $_[$INDEX];	} return $OBJ ; }
+
+define( 'RAYLIB_FFI_Texture' , $RAYLIB_FFI->type( 'Texture' ) );
+function RL_Texture( ...$_ ) : object { $OBJ = FFI::new( RAYLIB_FFI_Texture ); foreach( RAYLIB_FFI_Texture->getStructFieldNames() as $INDEX => $FIELD ) { $OBJ->$FIELD = $_[$INDEX];	} return $OBJ ; }
+
+define( 'RAYLIB_FFI_RenderTexture' , $RAYLIB_FFI->type( 'RenderTexture' ) );
+function RL_RenderTexture( ...$_ ) : object { $OBJ = FFI::new( RAYLIB_FFI_RenderTexture ); foreach( RAYLIB_FFI_RenderTexture->getStructFieldNames() as $INDEX => $FIELD ) { $OBJ->$FIELD = $_[$INDEX];	} return $OBJ ; }
+
+define( 'RAYLIB_FFI_NPatchInfo' , $RAYLIB_FFI->type( 'NPatchInfo' ) );
+function RL_NPatchInfo( ...$_ ) : object { $OBJ = FFI::new( RAYLIB_FFI_NPatchInfo ); foreach( RAYLIB_FFI_NPatchInfo->getStructFieldNames() as $INDEX => $FIELD ) { $OBJ->$FIELD = $_[$INDEX];	} return $OBJ ; }
+
+define( 'RAYLIB_FFI_GlyphInfo' , $RAYLIB_FFI->type( 'GlyphInfo' ) );
+function RL_GlyphInfo( ...$_ ) : object { $OBJ = FFI::new( RAYLIB_FFI_GlyphInfo ); foreach( RAYLIB_FFI_GlyphInfo->getStructFieldNames() as $INDEX => $FIELD ) { $OBJ->$FIELD = $_[$INDEX];	} return $OBJ ; }
+
+define( 'RAYLIB_FFI_Font' , $RAYLIB_FFI->type( 'Font' ) );
+function RL_Font( ...$_ ) : object { $OBJ = FFI::new( RAYLIB_FFI_Font ); foreach( RAYLIB_FFI_Font->getStructFieldNames() as $INDEX => $FIELD ) { $OBJ->$FIELD = $_[$INDEX];	} return $OBJ ; }
+
+define( 'RAYLIB_FFI_Camera3D' , $RAYLIB_FFI->type( 'Camera3D' ) );
+function RL_Camera3D( ...$_ ) : object { $OBJ = FFI::new( RAYLIB_FFI_Camera3D ); foreach( RAYLIB_FFI_Camera3D->getStructFieldNames() as $INDEX => $FIELD ) { $OBJ->$FIELD = $_[$INDEX];	} return $OBJ ; }
+
+define( 'RAYLIB_FFI_Camera2D' , $RAYLIB_FFI->type( 'Camera2D' ) );
+function RL_Camera2D( ...$_ ) : object { $OBJ = FFI::new( RAYLIB_FFI_Camera2D ); foreach( RAYLIB_FFI_Camera2D->getStructFieldNames() as $INDEX => $FIELD ) { $OBJ->$FIELD = $_[$INDEX];	} return $OBJ ; }
+
+define( 'RAYLIB_FFI_Mesh' , $RAYLIB_FFI->type( 'Mesh' ) );
+function RL_Mesh( ...$_ ) : object { $OBJ = FFI::new( RAYLIB_FFI_Mesh ); foreach( RAYLIB_FFI_Mesh->getStructFieldNames() as $INDEX => $FIELD ) { $OBJ->$FIELD = $_[$INDEX];	} return $OBJ ; }
+
+define( 'RAYLIB_FFI_Shader' , $RAYLIB_FFI->type( 'Shader' ) );
+function RL_Shader( ...$_ ) : object { $OBJ = FFI::new( RAYLIB_FFI_Shader ); foreach( RAYLIB_FFI_Shader->getStructFieldNames() as $INDEX => $FIELD ) { $OBJ->$FIELD = $_[$INDEX];	} return $OBJ ; }
+
+define( 'RAYLIB_FFI_MaterialMap' , $RAYLIB_FFI->type( 'MaterialMap' ) );
+function RL_MaterialMap( ...$_ ) : object { $OBJ = FFI::new( RAYLIB_FFI_MaterialMap ); foreach( RAYLIB_FFI_MaterialMap->getStructFieldNames() as $INDEX => $FIELD ) { $OBJ->$FIELD = $_[$INDEX];	} return $OBJ ; }
+
+define( 'RAYLIB_FFI_Material' , $RAYLIB_FFI->type( 'Material' ) );
+function RL_Material( ...$_ ) : object { $OBJ = FFI::new( RAYLIB_FFI_Material ); foreach( RAYLIB_FFI_Material->getStructFieldNames() as $INDEX => $FIELD ) { $OBJ->$FIELD = $_[$INDEX];	} return $OBJ ; }
+
+define( 'RAYLIB_FFI_Transform' , $RAYLIB_FFI->type( 'Transform' ) );
+function RL_Transform( ...$_ ) : object { $OBJ = FFI::new( RAYLIB_FFI_Transform ); foreach( RAYLIB_FFI_Transform->getStructFieldNames() as $INDEX => $FIELD ) { $OBJ->$FIELD = $_[$INDEX];	} return $OBJ ; }
+
+define( 'RAYLIB_FFI_BoneInfo' , $RAYLIB_FFI->type( 'BoneInfo' ) );
+function RL_BoneInfo( ...$_ ) : object { $OBJ = FFI::new( RAYLIB_FFI_BoneInfo ); foreach( RAYLIB_FFI_BoneInfo->getStructFieldNames() as $INDEX => $FIELD ) { $OBJ->$FIELD = $_[$INDEX];	} return $OBJ ; }
+
+define( 'RAYLIB_FFI_Model' , $RAYLIB_FFI->type( 'Model' ) );
+function RL_Model( ...$_ ) : object { $OBJ = FFI::new( RAYLIB_FFI_Model ); foreach( RAYLIB_FFI_Model->getStructFieldNames() as $INDEX => $FIELD ) { $OBJ->$FIELD = $_[$INDEX];	} return $OBJ ; }
+
+define( 'RAYLIB_FFI_ModelAnimation' , $RAYLIB_FFI->type( 'ModelAnimation' ) );
+function RL_ModelAnimation( ...$_ ) : object { $OBJ = FFI::new( RAYLIB_FFI_ModelAnimation ); foreach( RAYLIB_FFI_ModelAnimation->getStructFieldNames() as $INDEX => $FIELD ) { $OBJ->$FIELD = $_[$INDEX];	} return $OBJ ; }
+
+define( 'RAYLIB_FFI_Ray' , $RAYLIB_FFI->type( 'Ray' ) );
+function RL_Ray( ...$_ ) : object { $OBJ = FFI::new( RAYLIB_FFI_Ray ); foreach( RAYLIB_FFI_Ray->getStructFieldNames() as $INDEX => $FIELD ) { $OBJ->$FIELD = $_[$INDEX];	} return $OBJ ; }
+
+define( 'RAYLIB_FFI_RayCollision' , $RAYLIB_FFI->type( 'RayCollision' ) );
+function RL_RayCollision( ...$_ ) : object { $OBJ = FFI::new( RAYLIB_FFI_RayCollision ); foreach( RAYLIB_FFI_RayCollision->getStructFieldNames() as $INDEX => $FIELD ) { $OBJ->$FIELD = $_[$INDEX];	} return $OBJ ; }
+
+define( 'RAYLIB_FFI_BoundingBox' , $RAYLIB_FFI->type( 'BoundingBox' ) );
+function RL_BoundingBox( ...$_ ) : object { $OBJ = FFI::new( RAYLIB_FFI_BoundingBox ); foreach( RAYLIB_FFI_BoundingBox->getStructFieldNames() as $INDEX => $FIELD ) { $OBJ->$FIELD = $_[$INDEX];	} return $OBJ ; }
+
+define( 'RAYLIB_FFI_Wave' , $RAYLIB_FFI->type( 'Wave' ) );
+function RL_Wave( ...$_ ) : object { $OBJ = FFI::new( RAYLIB_FFI_Wave ); foreach( RAYLIB_FFI_Wave->getStructFieldNames() as $INDEX => $FIELD ) { $OBJ->$FIELD = $_[$INDEX];	} return $OBJ ; }
+
+define( 'RAYLIB_FFI_AudioStream' , $RAYLIB_FFI->type( 'AudioStream' ) );
+function RL_AudioStream( ...$_ ) : object { $OBJ = FFI::new( RAYLIB_FFI_AudioStream ); foreach( RAYLIB_FFI_AudioStream->getStructFieldNames() as $INDEX => $FIELD ) { $OBJ->$FIELD = $_[$INDEX];	} return $OBJ ; }
+
+define( 'RAYLIB_FFI_Sound' , $RAYLIB_FFI->type( 'Sound' ) );
+function RL_Sound( ...$_ ) : object { $OBJ = FFI::new( RAYLIB_FFI_Sound ); foreach( RAYLIB_FFI_Sound->getStructFieldNames() as $INDEX => $FIELD ) { $OBJ->$FIELD = $_[$INDEX];	} return $OBJ ; }
+
+define( 'RAYLIB_FFI_Music' , $RAYLIB_FFI->type( 'Music' ) );
+function RL_Music( ...$_ ) : object { $OBJ = FFI::new( RAYLIB_FFI_Music ); foreach( RAYLIB_FFI_Music->getStructFieldNames() as $INDEX => $FIELD ) { $OBJ->$FIELD = $_[$INDEX];	} return $OBJ ; }
+
+define( 'RAYLIB_FFI_VrDeviceInfo' , $RAYLIB_FFI->type( 'VrDeviceInfo' ) );
+function RL_VrDeviceInfo( ...$_ ) : object { $OBJ = FFI::new( RAYLIB_FFI_VrDeviceInfo ); foreach( RAYLIB_FFI_VrDeviceInfo->getStructFieldNames() as $INDEX => $FIELD ) { $OBJ->$FIELD = $_[$INDEX];	} return $OBJ ; }
+
+define( 'RAYLIB_FFI_VrStereoConfig' , $RAYLIB_FFI->type( 'VrStereoConfig' ) );
+function RL_VrStereoConfig( ...$_ ) : object { $OBJ = FFI::new( RAYLIB_FFI_VrStereoConfig ); foreach( RAYLIB_FFI_VrStereoConfig->getStructFieldNames() as $INDEX => $FIELD ) { $OBJ->$FIELD = $_[$INDEX];	} return $OBJ ; }
+
+define( 'RAYLIB_FFI_FilePathList' , $RAYLIB_FFI->type( 'FilePathList' ) );
+function RL_FilePathList( ...$_ ) : object { $OBJ = FFI::new( RAYLIB_FFI_FilePathList ); foreach( RAYLIB_FFI_FilePathList->getStructFieldNames() as $INDEX => $FIELD ) { $OBJ->$FIELD = $_[$INDEX];	} return $OBJ ; }
+
+_RAYLIB_define_colors_when_ready();
 
 /// Initialize window and OpenGL context
 // void InitWindow(int width , int height , const char* title);
@@ -3887,6 +4005,7 @@ function RL_SetAudioStreamBufferSizeDefault( int $size ) : void { global $RAYLIB
 /// Detach audio stream processor from the entire audio pipeline
 // void DetachAudioMixedProcessor(AudioCallback processor);
 //XXX function RL_DetachAudioMixedProcessor( AudioCallback processor ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->DetachAudioMixedProcessor(  ); }
+
 
 
 //EOF
