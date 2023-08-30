@@ -24,3 +24,18 @@ $my_vector = RL_Vector3D( 1.0 , 2.0, 3.0 );
 $my_vector = FFI::new( RAYLIB_FFI_Vector3D );
 
 ```
+
+Arrays of Raylib's structs can be created this way :
+
+```PHP
+
+$my_palette = RL_Color_array( [ 256 ] );
+$my_color_map = RL_Color_array( [ 320 , 240 ] );
+$my_cube_array = RL_Vector3D_array( [ 3 , 5 , 8 ] );
+
+// or
+
+$my_palette = FFI::new( FFI::arrayType( RAYLIB_FFI_Color ) , [ 1 ] );
+$my_color_map = FFI::new( FFI::arrayType( RAYLIB_FFI_Color ) , [ 320 , 240 ] );
+$my_cube_array = FFI::new( FFI::arrayType( RAYLIB_FFI_Vector3D ) , [ 3 , 5 , 8 ] );
+```
