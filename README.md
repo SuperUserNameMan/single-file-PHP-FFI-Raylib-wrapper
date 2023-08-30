@@ -7,7 +7,7 @@ Only need `libraylib.so` or `raylib.dll` into a `.\raylib\`, or `.\lib` or `.\` 
 
 ## Notes :
 
-All RLAPI function, enums, consts and typedefs are prefixed with `RL_`.
+All RLAPI and RMAPI function, enums, consts and typedefs are prefixed with `RL_`.
 
 ```PHP
 RL_ClearBackground( RL_WHITE );
