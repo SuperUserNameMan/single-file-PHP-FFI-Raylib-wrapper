@@ -29,9 +29,9 @@ Arrays of Raylib's structs can be created this way :
 
 ```PHP
 
-$my_palette = RL_Color_array( [ 256 ] );
-$my_color_map = RL_Color_array( [ 320 , 240 ] );
-$my_cube_array = RL_Vector3D_array( [ 3 , 5 , 8 ] );
+$my_palette = RL_Color_array( 256 );
+$my_color_map = RL_Color_array( 320 , 240  );
+$my_cube_array = RL_Vector3D_array( 3 , 5 , 8 );
 
 // or
 
