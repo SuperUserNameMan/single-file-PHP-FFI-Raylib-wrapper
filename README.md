@@ -3,14 +3,24 @@ A single file [PHP8](https://github.com/php/php-src) FFI [Raylib 4.5](https://gi
 
 Very W.I.P.
 
+Meant to work out of the box with official precompiled library releases.
+
+The wrapper integrates RLAPI + RMAPI + RLGL API.
+
 Only need `libraylib.so` or `raylib.dll` into a `.\raylib\`, or `.\lib` or `.\` sub directory.
 
 ## Notes :
 
-All RLAPI and RMAPI function, enums, consts and typedefs are prefixed with `RL_`.
+All RLAPI and RMAPI functions, enums, consts and typedefs are prefixed with `RL_`.
 
 ```PHP
 RL_ClearBackground( RL_WHITE );
+``
+
+RLGL functions are also prefixed with `RL_`, but RLGL consts are prefixed with `RLGL_`.
+
+```PHP
+RL_rlMatrixMode( RLGL_PROJECTION );
 ```
 
 Raylib's structs can be created this way :
