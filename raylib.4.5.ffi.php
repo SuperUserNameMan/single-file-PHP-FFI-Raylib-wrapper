@@ -1610,8 +1610,6 @@ RAYLIB_H.PHP_EOL;
 //}
 #endif
 
-} #endif // RAYLIB_H
-
 $_RAYLIB_TEST_PATHES = [
 	'./raylib/',
 	'./libs/',
@@ -4044,6 +4042,8 @@ function RL_SetAudioStreamBufferSizeDefault( int $size ) : void { global $RAYLIB
 // void DetachAudioMixedProcessor(AudioCallback processor);
 //XXX function RL_DetachAudioMixedProcessor( AudioCallback processor ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->DetachAudioMixedProcessor(  ); }
 
+
+} #endif // RAYLIB_H
 
 
 //EOF
