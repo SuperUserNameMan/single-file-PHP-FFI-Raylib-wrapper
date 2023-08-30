@@ -17,12 +17,11 @@ Raylib's structs can be created this way :
 
 ```PHP
 
-$my_vector = RL_Vector3D( 1.0 , 2.0, 3.0 );
-
+$my_vector = RL_Vector3D(); // uninit
+//or
+$my_vector = RL_Vector3D( 1.0 , 2.0 , 3.0 ); // init
 // or
-
-$my_vector = FFI::new( RAYLIB_FFI_Vector3D );
-
+$my_vector = FFI::new( RAYLIB_FFI_Vector3D ); // uninit
 ```
 
 Arrays of Raylib's structs can be created this way :
