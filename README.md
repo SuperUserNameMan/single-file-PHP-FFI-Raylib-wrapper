@@ -15,7 +15,7 @@ All RLAPI and RMAPI functions, enums, consts and typedefs are prefixed with `RL_
 
 ```PHP
 RL_ClearBackground( RL_WHITE );
-``
+```
 
 RLGL functions are also prefixed with `RL_`, but RLGL consts are prefixed with `RLGL_`.
 
