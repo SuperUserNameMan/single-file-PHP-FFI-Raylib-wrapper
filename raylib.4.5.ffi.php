@@ -2440,7 +2440,11 @@ function _RAYLIB_REBUILD_WRAPPER_FROM_SCRATCH() : string
 
 	foreach( $MATCHES as $FOO )
 	{
-		list( $DEF , $DESC ) = explode( '//' , $FOO[1] );
+		$FOO = explode( '//' , $FOO[1] );
+
+		if ( count( $FOO ) == 1 ) $FOO[] = '// ' ;
+
+		list( $DEF , $DESC ) = $FOO ;
 
 		$DEF = trim( $DEF );
 		$DESC = trim( $DESC );
@@ -2463,14 +2467,15 @@ function _RAYLIB_REBUILD_WRAPPER_FROM_SCRATCH() : string
 
 		$ARGS = str_replace( ' void* ', ' object $' , $ARGS );
 
-		$ARGS = str_replace( ' unsigned char* ' , ' string $' , $ARGS );
-		$ARGS = str_replace( ' char* ' , ' string $' , $ARGS );
-		$ARGS = str_replace( ' char** ' , ' object $' , $ARGS );
-		$ARGS = str_replace( ' char ' , ' string $' , $ARGS );
-
 		$ARGS = str_replace( ' int ' , ' int $' , $ARGS );
 		$ARGS = str_replace( ' int* ', ' int &$' , $ARGS );
 		$ARGS = str_replace( ' unsigned int ', ' int ' , $ARGS );
+
+		$ARGS = str_replace( ' unsigned char* ' , ' string $' , $ARGS );
+		$ARGS = str_replace( ' unsigned char ' , ' int $' , $ARGS );
+		$ARGS = str_replace( ' char* ' , ' string $' , $ARGS );
+		$ARGS = str_replace( ' char** ' , ' object $' , $ARGS );
+		$ARGS = str_replace( ' char ' , ' string $' , $ARGS );
 
 		$ARGS = str_replace( ' float ' , ' float $' , $ARGS );
 		$ARGS = str_replace( ' float* ' , ' object $' , $ARGS );
@@ -2527,6 +2532,12 @@ function _RAYLIB_REBUILD_WRAPPER_FROM_SCRATCH() : string
 		$ARGS = str_replace( ' VrStereoConfig ' , ' object $', $ARGS );
 		$ARGS = str_replace( ' Wave ' , ' object $', $ARGS );
 		$ARGS = str_replace( ' Wave* ' , ' object $', $ARGS );
+		$ARGS = str_replace( ' rlDrawCall ' , ' object $' , $ARGS );
+		$ARGS = str_replace( ' rlRenderBatch ' , ' object $' , $ARGS );
+		$ARGS = str_replace( ' rlVertexBuffer ' , ' object $' , $ARGS );
+		$ARGS = str_replace( ' rlDrawCall* ' , ' object $' , $ARGS );
+		$ARGS = str_replace( ' rlRenderBatch* ' , ' object $' , $ARGS );
+		$ARGS = str_replace( ' rlVertexBuffer* ' , ' object $' , $ARGS );
 
 		$ARGS = trim( $ARGS );
 
@@ -2713,6 +2724,18 @@ function RL_VrStereoConfig_array( ...$DIMENSIONS ) : object { $ARR = FFI::new( F
 define( 'RAYLIB_FFI_FilePathList' , $RAYLIB_FFI->type( 'FilePathList' ) );
 function RL_FilePathList( ...$_ ) : object { $OBJ = FFI::new( RAYLIB_FFI_FilePathList ); $FIELDS = RAYLIB_FFI_FilePathList->getStructFieldNames() ; if ( count( $FIELDS ) == count( $_ ) ) foreach( $FIELDS as $INDEX => $FIELD ) { $OBJ->$FIELD = $_[$INDEX]; } return $OBJ ; }
 function RL_FilePathList_array( ...$DIMENSIONS ) : object { $ARR = FFI::new( FFI::arrayType( RAYLIB_FFI_FilePathList , $DIMENSIONS ) ); return $ARR ; }
+
+define( 'RAYLIB_FFI_rlVertexBuffer' , $RAYLIB_FFI->type( 'rlVertexBuffer' ) );
+function RL_rlVertexBuffer( ...$_ ) : object { $OBJ = FFI::new( RAYLIB_FFI_rlVertexBuffer ); $FIELDS = RAYLIB_FFI_rlVertexBuffer->getStructFieldNames() ; if ( count( $FIELDS ) == count( $_ ) ) foreach( $FIELDS as $INDEX => $FIELD ) { $OBJ->$FIELD = $_[$INDEX]; } return $OBJ ; }
+function RL_rlVertexBuffer_array( ...$DIMENSIONS ) : object { $ARR = FFI::new( FFI::arrayType( RAYLIB_FFI_rlVertexBuffer , $DIMENSIONS ) ); return $ARR ; }
+
+define( 'RAYLIB_FFI_rlDrawCall' , $RAYLIB_FFI->type( 'rlDrawCall' ) );
+function RL_rlDrawCall( ...$_ ) : object { $OBJ = FFI::new( RAYLIB_FFI_rlDrawCall ); $FIELDS = RAYLIB_FFI_rlDrawCall->getStructFieldNames() ; if ( count( $FIELDS ) == count( $_ ) ) foreach( $FIELDS as $INDEX => $FIELD ) { $OBJ->$FIELD = $_[$INDEX]; } return $OBJ ; }
+function RL_rlDrawCall_array( ...$DIMENSIONS ) : object { $ARR = FFI::new( FFI::arrayType( RAYLIB_FFI_rlDrawCall , $DIMENSIONS ) ); return $ARR ; }
+
+define( 'RAYLIB_FFI_rlRenderBatch' , $RAYLIB_FFI->type( 'rlRenderBatch' ) );
+function RL_rlRenderBatch( ...$_ ) : object { $OBJ = FFI::new( RAYLIB_FFI_rlRenderBatch ); $FIELDS = RAYLIB_FFI_rlRenderBatch->getStructFieldNames() ; if ( count( $FIELDS ) == count( $_ ) ) foreach( $FIELDS as $INDEX => $FIELD ) { $OBJ->$FIELD = $_[$INDEX]; } return $OBJ ; }
+function RL_rlRenderBatch_array( ...$DIMENSIONS ) : object { $ARR = FFI::new( FFI::arrayType( RAYLIB_FFI_rlRenderBatch , $DIMENSIONS ) ); return $ARR ; }
 
 _RAYLIB_define_colors_when_ready();
 
@@ -5232,7 +5255,587 @@ function RL_QuaternionTransform( object $q , object $mat ) : object { global $RA
 // int QuaternionEquals(Quaternion p , Quaternion q);
 function RL_QuaternionEquals( object $p , object $q ) : int { global $RAYLIB_FFI; return $RAYLIB_FFI->QuaternionEquals( $p , $q ); }
 
-function RL_rlGetVersion() : int { global $RAYLIB_FFI; return $RAYLIB_FFI->rlGetVersion(); }
+/// Choose the current matrix to be transformed
+// void rlMatrixMode(int mode);
+function RL_rlMatrixMode( int $mode ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->rlMatrixMode( $mode ); }
+
+/// Push the current matrix to stack
+// void rlPushMatrix(void);
+function RL_rlPushMatrix(  ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->rlPushMatrix(  ); }
+
+/// Pop latest inserted matrix from stack
+// void rlPopMatrix(void);
+function RL_rlPopMatrix(  ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->rlPopMatrix(  ); }
+
+/// Reset current matrix to identity matrix
+// void rlLoadIdentity(void);
+function RL_rlLoadIdentity(  ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->rlLoadIdentity(  ); }
+
+/// Multiply the current matrix by a translation matrix
+// void rlTranslatef(float x , float y , float z);
+function RL_rlTranslatef( float $x , float $y , float $z ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->rlTranslatef( $x , $y , $z ); }
+
+/// Multiply the current matrix by a rotation matrix
+// void rlRotatef(float angle , float x , float y , float z);
+function RL_rlRotatef( float $angle , float $x , float $y , float $z ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->rlRotatef( $angle , $x , $y , $z ); }
+
+/// Multiply the current matrix by a scaling matrix
+// void rlScalef(float x , float y , float z);
+function RL_rlScalef( float $x , float $y , float $z ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->rlScalef( $x , $y , $z ); }
+
+/// Multiply the current matrix by another matrix
+// void rlMultMatrixf(const float* matf);
+function RL_rlMultMatrixf( object $matf ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->rlMultMatrixf( $matf ); }
+
+/// //
+// void rlFrustum(double left , double right , double bottom , double top , double znear , double zfar);
+function RL_rlFrustum( float $left , float $right , float $bottom , float $top , float $znear , float $zfar ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->rlFrustum( $left , $right , $bottom , $top , $znear , $zfar ); }
+
+/// //
+// void rlOrtho(double left , double right , double bottom , double top , double znear , double zfar);
+function RL_rlOrtho( float $left , float $right , float $bottom , float $top , float $znear , float $zfar ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->rlOrtho( $left , $right , $bottom , $top , $znear , $zfar ); }
+
+/// Set the viewport area
+// void rlViewport(int x , int y , int width , int height);
+function RL_rlViewport( int $x , int $y , int $width , int $height ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->rlViewport( $x , $y , $width , $height ); }
+
+/// Initialize drawing mode (how to organize vertex)
+// void rlBegin(int mode);
+function RL_rlBegin( int $mode ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->rlBegin( $mode ); }
+
+/// Finish vertex providing
+// void rlEnd(void);
+function RL_rlEnd(  ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->rlEnd(  ); }
+
+/// Define one vertex (position) - 2 int
+// void rlVertex2i(int x , int y);
+function RL_rlVertex2i( int $x , int $y ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->rlVertex2i( $x , $y ); }
+
+/// Define one vertex (position) - 2 float
+// void rlVertex2f(float x , float y);
+function RL_rlVertex2f( float $x , float $y ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->rlVertex2f( $x , $y ); }
+
+/// Define one vertex (position) - 3 float
+// void rlVertex3f(float x , float y , float z);
+function RL_rlVertex3f( float $x , float $y , float $z ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->rlVertex3f( $x , $y , $z ); }
+
+/// Define one vertex (texture coordinate) - 2 float
+// void rlTexCoord2f(float x , float y);
+function RL_rlTexCoord2f( float $x , float $y ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->rlTexCoord2f( $x , $y ); }
+
+/// Define one vertex (normal) - 3 float
+// void rlNormal3f(float x , float y , float z);
+function RL_rlNormal3f( float $x , float $y , float $z ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->rlNormal3f( $x , $y , $z ); }
+
+/// Define one vertex (color) - 4 byte
+// void rlColor4ub(unsigned char r , unsigned char g , unsigned char b , unsigned char a);
+function RL_rlColor4ub( int $r , int $g , int $b , int $a ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->rlColor4ub( $r , $g , $b , $a ); }
+
+/// Define one vertex (color) - 3 float
+// void rlColor3f(float x , float y , float z);
+function RL_rlColor3f( float $x , float $y , float $z ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->rlColor3f( $x , $y , $z ); }
+
+/// Define one vertex (color) - 4 float
+// void rlColor4f(float x , float y , float z , float w);
+function RL_rlColor4f( float $x , float $y , float $z , float $w ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->rlColor4f( $x , $y , $z , $w ); }
+
+/// Enable vertex array (VAO, if supported)
+// bool rlEnableVertexArray(unsigned int vaoId);
+function RL_rlEnableVertexArray( int $vaoId ) : bool { global $RAYLIB_FFI; return $RAYLIB_FFI->rlEnableVertexArray( $vaoId ); }
+
+/// Disable vertex array (VAO, if supported)
+// void rlDisableVertexArray(void);
+function RL_rlDisableVertexArray(  ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->rlDisableVertexArray(  ); }
+
+/// Enable vertex buffer (VBO)
+// void rlEnableVertexBuffer(unsigned int id);
+function RL_rlEnableVertexBuffer( int $id ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->rlEnableVertexBuffer( $id ); }
+
+/// Disable vertex buffer (VBO)
+// void rlDisableVertexBuffer(void);
+function RL_rlDisableVertexBuffer(  ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->rlDisableVertexBuffer(  ); }
+
+/// Enable vertex buffer element (VBO element)
+// void rlEnableVertexBufferElement(unsigned int id);
+function RL_rlEnableVertexBufferElement( int $id ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->rlEnableVertexBufferElement( $id ); }
+
+/// Disable vertex buffer element (VBO element)
+// void rlDisableVertexBufferElement(void);
+function RL_rlDisableVertexBufferElement(  ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->rlDisableVertexBufferElement(  ); }
+
+/// Enable vertex attribute index
+// void rlEnableVertexAttribute(unsigned int index);
+function RL_rlEnableVertexAttribute( int $index ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->rlEnableVertexAttribute( $index ); }
+
+/// Disable vertex attribute index
+// void rlDisableVertexAttribute(unsigned int index);
+function RL_rlDisableVertexAttribute( int $index ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->rlDisableVertexAttribute( $index ); }
+
+/// Select and active a texture slot
+// void rlActiveTextureSlot(int slot);
+function RL_rlActiveTextureSlot( int $slot ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->rlActiveTextureSlot( $slot ); }
+
+/// Enable texture
+// void rlEnableTexture(unsigned int id);
+function RL_rlEnableTexture( int $id ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->rlEnableTexture( $id ); }
+
+/// Disable texture
+// void rlDisableTexture(void);
+function RL_rlDisableTexture(  ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->rlDisableTexture(  ); }
+
+/// Enable texture cubemap
+// void rlEnableTextureCubemap(unsigned int id);
+function RL_rlEnableTextureCubemap( int $id ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->rlEnableTextureCubemap( $id ); }
+
+/// Disable texture cubemap
+// void rlDisableTextureCubemap(void);
+function RL_rlDisableTextureCubemap(  ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->rlDisableTextureCubemap(  ); }
+
+/// Set texture parameters (filter, wrap)
+// void rlTextureParameters(unsigned int id , int param , int value);
+function RL_rlTextureParameters( int $id , int $param , int $value ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->rlTextureParameters( $id , $param , $value ); }
+
+/// Set cubemap parameters (filter, wrap)
+// void rlCubemapParameters(unsigned int id , int param , int value);
+function RL_rlCubemapParameters( int $id , int $param , int $value ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->rlCubemapParameters( $id , $param , $value ); }
+
+/// Enable shader program
+// void rlEnableShader(unsigned int id);
+function RL_rlEnableShader( int $id ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->rlEnableShader( $id ); }
+
+/// Disable shader program
+// void rlDisableShader(void);
+function RL_rlDisableShader(  ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->rlDisableShader(  ); }
+
+/// Enable render texture (fbo)
+// void rlEnableFramebuffer(unsigned int id);
+function RL_rlEnableFramebuffer( int $id ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->rlEnableFramebuffer( $id ); }
+
+/// Disable render texture (fbo), return to default framebuffer
+// void rlDisableFramebuffer(void);
+function RL_rlDisableFramebuffer(  ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->rlDisableFramebuffer(  ); }
+
+/// Activate multiple draw color buffers
+// void rlActiveDrawBuffers(int count);
+function RL_rlActiveDrawBuffers( int $count ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->rlActiveDrawBuffers( $count ); }
+
+/// Enable color blending
+// void rlEnableColorBlend(void);
+function RL_rlEnableColorBlend(  ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->rlEnableColorBlend(  ); }
+
+/// Disable color blending
+// void rlDisableColorBlend(void);
+function RL_rlDisableColorBlend(  ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->rlDisableColorBlend(  ); }
+
+/// Enable depth test
+// void rlEnableDepthTest(void);
+function RL_rlEnableDepthTest(  ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->rlEnableDepthTest(  ); }
+
+/// Disable depth test
+// void rlDisableDepthTest(void);
+function RL_rlDisableDepthTest(  ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->rlDisableDepthTest(  ); }
+
+/// Enable depth write
+// void rlEnableDepthMask(void);
+function RL_rlEnableDepthMask(  ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->rlEnableDepthMask(  ); }
+
+/// Disable depth write
+// void rlDisableDepthMask(void);
+function RL_rlDisableDepthMask(  ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->rlDisableDepthMask(  ); }
+
+/// Enable backface culling
+// void rlEnableBackfaceCulling(void);
+function RL_rlEnableBackfaceCulling(  ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->rlEnableBackfaceCulling(  ); }
+
+/// Disable backface culling
+// void rlDisableBackfaceCulling(void);
+function RL_rlDisableBackfaceCulling(  ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->rlDisableBackfaceCulling(  ); }
+
+/// Set face culling mode
+// void rlSetCullFace(int mode);
+function RL_rlSetCullFace( int $mode ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->rlSetCullFace( $mode ); }
+
+/// Enable scissor test
+// void rlEnableScissorTest(void);
+function RL_rlEnableScissorTest(  ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->rlEnableScissorTest(  ); }
+
+/// Disable scissor test
+// void rlDisableScissorTest(void);
+function RL_rlDisableScissorTest(  ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->rlDisableScissorTest(  ); }
+
+/// Scissor test
+// void rlScissor(int x , int y , int width , int height);
+function RL_rlScissor( int $x , int $y , int $width , int $height ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->rlScissor( $x , $y , $width , $height ); }
+
+/// Enable wire mode
+// void rlEnableWireMode(void);
+function RL_rlEnableWireMode(  ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->rlEnableWireMode(  ); }
+
+/// Disable wire mode
+// void rlDisableWireMode(void);
+function RL_rlDisableWireMode(  ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->rlDisableWireMode(  ); }
+
+/// Set the line drawing width
+// void rlSetLineWidth(float width);
+function RL_rlSetLineWidth( float $width ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->rlSetLineWidth( $width ); }
+
+/// Get the line drawing width
+// float rlGetLineWidth(void);
+function RL_rlGetLineWidth(  ) : float { global $RAYLIB_FFI; return $RAYLIB_FFI->rlGetLineWidth(  ); }
+
+/// Enable line aliasing
+// void rlEnableSmoothLines(void);
+function RL_rlEnableSmoothLines(  ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->rlEnableSmoothLines(  ); }
+
+/// Disable line aliasing
+// void rlDisableSmoothLines(void);
+function RL_rlDisableSmoothLines(  ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->rlDisableSmoothLines(  ); }
+
+/// Enable stereo rendering
+// void rlEnableStereoRender(void);
+function RL_rlEnableStereoRender(  ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->rlEnableStereoRender(  ); }
+
+/// Disable stereo rendering
+// void rlDisableStereoRender(void);
+function RL_rlDisableStereoRender(  ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->rlDisableStereoRender(  ); }
+
+/// Check if stereo render is enabled
+// bool rlIsStereoRenderEnabled(void);
+function RL_rlIsStereoRenderEnabled(  ) : bool { global $RAYLIB_FFI; return $RAYLIB_FFI->rlIsStereoRenderEnabled(  ); }
+
+/// Clear color buffer with color
+// void rlClearColor(unsigned char r , unsigned char g , unsigned char b , unsigned char a);
+function RL_rlClearColor( int $r , int $g , int $b , int $a ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->rlClearColor( $r , $g , $b , $a ); }
+
+/// Clear used screen buffers (color and depth)
+// void rlClearScreenBuffers(void);
+function RL_rlClearScreenBuffers(  ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->rlClearScreenBuffers(  ); }
+
+/// Check and log OpenGL error codes
+// void rlCheckErrors(void);
+function RL_rlCheckErrors(  ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->rlCheckErrors(  ); }
+
+/// Set blending mode
+// void rlSetBlendMode(int mode);
+function RL_rlSetBlendMode( int $mode ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->rlSetBlendMode( $mode ); }
+
+/// Set blending mode factor and equation (using OpenGL factors)
+// void rlSetBlendFactors(int glSrcFactor , int glDstFactor , int glEquation);
+function RL_rlSetBlendFactors( int $glSrcFactor , int $glDstFactor , int $glEquation ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->rlSetBlendFactors( $glSrcFactor , $glDstFactor , $glEquation ); }
+
+/// Set blending mode factors and equations separately (using OpenGL factors)
+// void rlSetBlendFactorsSeparate(int glSrcRGB , int glDstRGB , int glSrcAlpha , int glDstAlpha , int glEqRGB , int glEqAlpha);
+function RL_rlSetBlendFactorsSeparate( int $glSrcRGB , int $glDstRGB , int $glSrcAlpha , int $glDstAlpha , int $glEqRGB , int $glEqAlpha ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->rlSetBlendFactorsSeparate( $glSrcRGB , $glDstRGB , $glSrcAlpha , $glDstAlpha , $glEqRGB , $glEqAlpha ); }
+
+/// Initialize rlgl (buffers, shaders, textures, states)
+// void rlglInit(int width , int height);
+function RL_rlglInit( int $width , int $height ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->rlglInit( $width , $height ); }
+
+/// De-initialize rlgl (buffers, shaders, textures)
+// void rlglClose(void);
+function RL_rlglClose(  ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->rlglClose(  ); }
+
+/// Load OpenGL extensions (loader function required)
+// void rlLoadExtensions(void* loader);
+function RL_rlLoadExtensions( object $loader ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->rlLoadExtensions( $loader ); }
+
+/// Get current OpenGL version
+// int rlGetVersion(void);
+function RL_rlGetVersion(  ) : int { global $RAYLIB_FFI; return $RAYLIB_FFI->rlGetVersion(  ); }
+
+/// Set current framebuffer width
+// void rlSetFramebufferWidth(int width);
+function RL_rlSetFramebufferWidth( int $width ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->rlSetFramebufferWidth( $width ); }
+
+/// Get default framebuffer width
+// int rlGetFramebufferWidth(void);
+function RL_rlGetFramebufferWidth(  ) : int { global $RAYLIB_FFI; return $RAYLIB_FFI->rlGetFramebufferWidth(  ); }
+
+/// Set current framebuffer height
+// void rlSetFramebufferHeight(int height);
+function RL_rlSetFramebufferHeight( int $height ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->rlSetFramebufferHeight( $height ); }
+
+/// Get default framebuffer height
+// int rlGetFramebufferHeight(void);
+function RL_rlGetFramebufferHeight(  ) : int { global $RAYLIB_FFI; return $RAYLIB_FFI->rlGetFramebufferHeight(  ); }
+
+/// Get default texture id
+// unsigned int rlGetTextureIdDefault(void);
+function RL_rlGetTextureIdDefault(  ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->rlGetTextureIdDefault(  ); }
+
+/// Get default shader id
+// unsigned int rlGetShaderIdDefault(void);
+function RL_rlGetShaderIdDefault(  ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->rlGetShaderIdDefault(  ); }
+
+/// Get default shader locations
+// int* rlGetShaderLocsDefault(void);
+function RL_rlGetShaderLocsDefault(  ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->rlGetShaderLocsDefault(  ); }
+
+/// Load a render batch system
+// rlRenderBatch rlLoadRenderBatch(int numBuffers , int bufferElements);
+function RL_rlLoadRenderBatch( int $numBuffers , int $bufferElements ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->rlLoadRenderBatch( $numBuffers , $bufferElements ); }
+
+/// Unload render batch system
+// void rlUnloadRenderBatch(rlRenderBatch batch);
+function RL_rlUnloadRenderBatch( object $batch ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->rlUnloadRenderBatch( $batch ); }
+
+/// Draw render batch data (Update->Draw->Reset)
+// void rlDrawRenderBatch(rlRenderBatch* batch);
+function RL_rlDrawRenderBatch( object $batch ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->rlDrawRenderBatch( $batch ); }
+
+/// Set the active render batch for rlgl (NULL for default internal)
+// void rlSetRenderBatchActive(rlRenderBatch* batch);
+function RL_rlSetRenderBatchActive( object $batch ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->rlSetRenderBatchActive( $batch ); }
+
+/// Update and draw internal render batch
+// void rlDrawRenderBatchActive(void);
+function RL_rlDrawRenderBatchActive(  ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->rlDrawRenderBatchActive(  ); }
+
+/// Check internal buffer overflow for a given number of vertex
+// bool rlCheckRenderBatchLimit(int vCount);
+function RL_rlCheckRenderBatchLimit( int $vCount ) : bool { global $RAYLIB_FFI; return $RAYLIB_FFI->rlCheckRenderBatchLimit( $vCount ); }
+
+/// Set current texture for render batch and check buffers limits
+// void rlSetTexture(unsigned int id);
+function RL_rlSetTexture( int $id ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->rlSetTexture( $id ); }
+
+/// Load vertex array (vao) if supported
+// unsigned int rlLoadVertexArray(void);
+function RL_rlLoadVertexArray(  ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->rlLoadVertexArray(  ); }
+
+/// Load a vertex buffer attribute
+// unsigned int rlLoadVertexBuffer(const void* buffer , int size , bool dynamic);
+function RL_rlLoadVertexBuffer( object $buffer , int $size , bool $dynamic ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->rlLoadVertexBuffer( $buffer , $size , $dynamic ); }
+
+/// Load a new attributes element buffer
+// unsigned int rlLoadVertexBufferElement(const void* buffer , int size , bool dynamic);
+function RL_rlLoadVertexBufferElement( object $buffer , int $size , bool $dynamic ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->rlLoadVertexBufferElement( $buffer , $size , $dynamic ); }
+
+/// Update GPU buffer with new data
+// void rlUpdateVertexBuffer(unsigned int bufferId , const void* data , int dataSize , int offset);
+function RL_rlUpdateVertexBuffer( int $bufferId , object $data , int $dataSize , int $offset ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->rlUpdateVertexBuffer( $bufferId , $data , $dataSize , $offset ); }
+
+/// Update vertex buffer elements with new data
+// void rlUpdateVertexBufferElements(unsigned int id , const void* data , int dataSize , int offset);
+function RL_rlUpdateVertexBufferElements( int $id , object $data , int $dataSize , int $offset ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->rlUpdateVertexBufferElements( $id , $data , $dataSize , $offset ); }
+
+/// //
+// void rlUnloadVertexArray(unsigned int vaoId);
+function RL_rlUnloadVertexArray( int $vaoId ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->rlUnloadVertexArray( $vaoId ); }
+
+/// //
+// void rlUnloadVertexBuffer(unsigned int vboId);
+function RL_rlUnloadVertexBuffer( int $vboId ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->rlUnloadVertexBuffer( $vboId ); }
+
+/// //
+// void rlSetVertexAttribute(unsigned int index , int compSize , int type , bool normalized , int stride , const void* pointer);
+function RL_rlSetVertexAttribute( int $index , int $compSize , int $type , bool $normalized , int $stride , object $pointer ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->rlSetVertexAttribute( $index , $compSize , $type , $normalized , $stride , $pointer ); }
+
+/// //
+// void rlSetVertexAttributeDivisor(unsigned int index , int divisor);
+function RL_rlSetVertexAttributeDivisor( int $index , int $divisor ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->rlSetVertexAttributeDivisor( $index , $divisor ); }
+
+/// Set vertex attribute default value
+// void rlSetVertexAttributeDefault(int locIndex , const void* value , int attribType , int count);
+function RL_rlSetVertexAttributeDefault( int $locIndex , object $value , int $attribType , int $count ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->rlSetVertexAttributeDefault( $locIndex , $value , $attribType , $count ); }
+
+/// //
+// void rlDrawVertexArray(int offset , int count);
+function RL_rlDrawVertexArray( int $offset , int $count ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->rlDrawVertexArray( $offset , $count ); }
+
+/// //
+// void rlDrawVertexArrayElements(int offset , int count , const void* buffer);
+function RL_rlDrawVertexArrayElements( int $offset , int $count , object $buffer ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->rlDrawVertexArrayElements( $offset , $count , $buffer ); }
+
+/// //
+// void rlDrawVertexArrayInstanced(int offset , int count , int instances);
+function RL_rlDrawVertexArrayInstanced( int $offset , int $count , int $instances ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->rlDrawVertexArrayInstanced( $offset , $count , $instances ); }
+
+/// //
+// void rlDrawVertexArrayElementsInstanced(int offset , int count , const void* buffer , int instances);
+function RL_rlDrawVertexArrayElementsInstanced( int $offset , int $count , object $buffer , int $instances ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->rlDrawVertexArrayElementsInstanced( $offset , $count , $buffer , $instances ); }
+
+/// Load texture in GPU
+// unsigned int rlLoadTexture(const void* data , int width , int height , int format , int mipmapCount);
+function RL_rlLoadTexture( object $data , int $width , int $height , int $format , int $mipmapCount ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->rlLoadTexture( $data , $width , $height , $format , $mipmapCount ); }
+
+/// Load depth texture/renderbuffer (to be attached to fbo)
+// unsigned int rlLoadTextureDepth(int width , int height , bool useRenderBuffer);
+function RL_rlLoadTextureDepth( int $width , int $height , bool $useRenderBuffer ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->rlLoadTextureDepth( $width , $height , $useRenderBuffer ); }
+
+/// Load texture cubemap
+// unsigned int rlLoadTextureCubemap(const void* data , int size , int format);
+function RL_rlLoadTextureCubemap( object $data , int $size , int $format ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->rlLoadTextureCubemap( $data , $size , $format ); }
+
+/// Update GPU texture with new data
+// void rlUpdateTexture(unsigned int id , int offsetX , int offsetY , int width , int height , int format , const void* data);
+function RL_rlUpdateTexture( int $id , int $offsetX , int $offsetY , int $width , int $height , int $format , object $data ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->rlUpdateTexture( $id , $offsetX , $offsetY , $width , $height , $format , $data ); }
+
+/// Get OpenGL internal formats
+// void rlGetGlTextureFormats(int format , unsigned int* glInternalFormat , unsigned int* glFormat , unsigned int* glType);
+function RL_rlGetGlTextureFormats( int $format , int &$glInternalFormat , int &$glFormat , int &$glType ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->rlGetGlTextureFormats( $format , $glInternalFormat , $glFormat , $glType ); }
+
+/// Get name string for pixel format
+// const char* rlGetPixelFormatName(unsigned int format);
+function RL_rlGetPixelFormatName( int $format ) : string { global $RAYLIB_FFI; return $RAYLIB_FFI->rlGetPixelFormatName( $format ); }
+
+/// Unload texture from GPU memory
+// void rlUnloadTexture(unsigned int id);
+function RL_rlUnloadTexture( int $id ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->rlUnloadTexture( $id ); }
+
+/// Generate mipmap data for selected texture
+// void rlGenTextureMipmaps(unsigned int id , int width , int height , int format , int* mipmaps);
+function RL_rlGenTextureMipmaps( int $id , int $width , int $height , int $format , int &$mipmaps ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->rlGenTextureMipmaps( $id , $width , $height , $format , $mipmaps ); }
+
+/// Read texture pixel data
+// void* rlReadTexturePixels(unsigned int id , int width , int height , int format);
+function RL_rlReadTexturePixels( int $id , int $width , int $height , int $format ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->rlReadTexturePixels( $id , $width , $height , $format ); }
+
+/// Read screen pixel data (color buffer)
+// unsigned char* rlReadScreenPixels(int width , int height);
+function RL_rlReadScreenPixels( int $width , int $height ) : string { global $RAYLIB_FFI; return $RAYLIB_FFI->rlReadScreenPixels( $width , $height ); }
+
+/// Load an empty framebuffer
+// unsigned int rlLoadFramebuffer(int width , int height);
+function RL_rlLoadFramebuffer( int $width , int $height ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->rlLoadFramebuffer( $width , $height ); }
+
+/// Attach texture/renderbuffer to a framebuffer
+// void rlFramebufferAttach(unsigned int fboId , unsigned int texId , int attachType , int texType , int mipLevel);
+function RL_rlFramebufferAttach( int $fboId , int $texId , int $attachType , int $texType , int $mipLevel ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->rlFramebufferAttach( $fboId , $texId , $attachType , $texType , $mipLevel ); }
+
+/// Verify framebuffer is complete
+// bool rlFramebufferComplete(unsigned int id);
+function RL_rlFramebufferComplete( int $id ) : bool { global $RAYLIB_FFI; return $RAYLIB_FFI->rlFramebufferComplete( $id ); }
+
+/// Delete framebuffer from GPU
+// void rlUnloadFramebuffer(unsigned int id);
+function RL_rlUnloadFramebuffer( int $id ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->rlUnloadFramebuffer( $id ); }
+
+/// Load shader from code strings
+// unsigned int rlLoadShaderCode(const char* vsCode , const char* fsCode);
+function RL_rlLoadShaderCode( string $vsCode , string $fsCode ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->rlLoadShaderCode( $vsCode , $fsCode ); }
+
+/// Compile custom shader and return shader id (type: RL_VERTEX_SHADER, RL_FRAGMENT_SHADER, RL_COMPUTE_SHADER)
+// unsigned int rlCompileShader(const char* shaderCode , int type);
+function RL_rlCompileShader( string $shaderCode , int $type ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->rlCompileShader( $shaderCode , $type ); }
+
+/// Load custom shader program
+// unsigned int rlLoadShaderProgram(unsigned int vShaderId , unsigned int fShaderId);
+function RL_rlLoadShaderProgram( int $vShaderId , int $fShaderId ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->rlLoadShaderProgram( $vShaderId , $fShaderId ); }
+
+/// Unload shader program
+// void rlUnloadShaderProgram(unsigned int id);
+function RL_rlUnloadShaderProgram( int $id ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->rlUnloadShaderProgram( $id ); }
+
+/// Get shader location uniform
+// int rlGetLocationUniform(unsigned int shaderId , const char* uniformName);
+function RL_rlGetLocationUniform( int $shaderId , string $uniformName ) : int { global $RAYLIB_FFI; return $RAYLIB_FFI->rlGetLocationUniform( $shaderId , $uniformName ); }
+
+/// Get shader location attribute
+// int rlGetLocationAttrib(unsigned int shaderId , const char* attribName);
+function RL_rlGetLocationAttrib( int $shaderId , string $attribName ) : int { global $RAYLIB_FFI; return $RAYLIB_FFI->rlGetLocationAttrib( $shaderId , $attribName ); }
+
+/// Set shader value uniform
+// void rlSetUniform(int locIndex , const void* value , int uniformType , int count);
+function RL_rlSetUniform( int $locIndex , object $value , int $uniformType , int $count ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->rlSetUniform( $locIndex , $value , $uniformType , $count ); }
+
+/// Set shader value matrix
+// void rlSetUniformMatrix(int locIndex , Matrix mat);
+function RL_rlSetUniformMatrix( int $locIndex , object $mat ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->rlSetUniformMatrix( $locIndex , $mat ); }
+
+/// Set shader value sampler
+// void rlSetUniformSampler(int locIndex , unsigned int textureId);
+function RL_rlSetUniformSampler( int $locIndex , int $textureId ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->rlSetUniformSampler( $locIndex , $textureId ); }
+
+/// Set shader currently active (id and locations)
+// void rlSetShader(unsigned int id , int* locs);
+function RL_rlSetShader( int $id , int &$locs ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->rlSetShader( $id , $locs ); }
+
+/// Load compute shader program
+// unsigned int rlLoadComputeShaderProgram(unsigned int shaderId);
+function RL_rlLoadComputeShaderProgram( int $shaderId ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->rlLoadComputeShaderProgram( $shaderId ); }
+
+/// Dispatch compute shader (equivalent to *draw* for graphics pipeline)
+// void rlComputeShaderDispatch(unsigned int groupX , unsigned int groupY , unsigned int groupZ);
+function RL_rlComputeShaderDispatch( int $groupX , int $groupY , int $groupZ ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->rlComputeShaderDispatch( $groupX , $groupY , $groupZ ); }
+
+/// Load shader storage buffer object (SSBO)
+// unsigned int rlLoadShaderBuffer(unsigned int size , const void* data , int usageHint);
+function RL_rlLoadShaderBuffer( int $size , object $data , int $usageHint ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->rlLoadShaderBuffer( $size , $data , $usageHint ); }
+
+/// Unload shader storage buffer object (SSBO)
+// void rlUnloadShaderBuffer(unsigned int ssboId);
+function RL_rlUnloadShaderBuffer( int $ssboId ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->rlUnloadShaderBuffer( $ssboId ); }
+
+/// Update SSBO buffer data
+// void rlUpdateShaderBuffer(unsigned int id , const void* data , unsigned int dataSize , unsigned int offset);
+function RL_rlUpdateShaderBuffer( int $id , object $data , int $dataSize , int $offset ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->rlUpdateShaderBuffer( $id , $data , $dataSize , $offset ); }
+
+/// Bind SSBO buffer
+// void rlBindShaderBuffer(unsigned int id , unsigned int index);
+function RL_rlBindShaderBuffer( int $id , int $index ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->rlBindShaderBuffer( $id , $index ); }
+
+/// Read SSBO buffer data (GPU->CPU)
+// void rlReadShaderBuffer(unsigned int id , void* dest , unsigned int count , unsigned int offset);
+function RL_rlReadShaderBuffer( int $id , object $dest , int $count , int $offset ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->rlReadShaderBuffer( $id , $dest , $count , $offset ); }
+
+/// Copy SSBO data between buffers
+// void rlCopyShaderBuffer(unsigned int destId , unsigned int srcId , unsigned int destOffset , unsigned int srcOffset , unsigned int count);
+function RL_rlCopyShaderBuffer( int $destId , int $srcId , int $destOffset , int $srcOffset , int $count ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->rlCopyShaderBuffer( $destId , $srcId , $destOffset , $srcOffset , $count ); }
+
+/// Get SSBO buffer size
+// unsigned int rlGetShaderBufferSize(unsigned int id);
+function RL_rlGetShaderBufferSize( int $id ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->rlGetShaderBufferSize( $id ); }
+
+/// Bind image texture
+// void rlBindImageTexture(unsigned int id , unsigned int index , int format , bool readonly);
+function RL_rlBindImageTexture( int $id , int $index , int $format , bool $readonly ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->rlBindImageTexture( $id , $index , $format , $readonly ); }
+
+/// Get internal modelview matrix
+// Matrix rlGetMatrixModelview(void);
+function RL_rlGetMatrixModelview(  ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->rlGetMatrixModelview(  ); }
+
+/// Get internal projection matrix
+// Matrix rlGetMatrixProjection(void);
+function RL_rlGetMatrixProjection(  ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->rlGetMatrixProjection(  ); }
+
+/// Get internal accumulated transform matrix
+// Matrix rlGetMatrixTransform(void);
+function RL_rlGetMatrixTransform(  ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->rlGetMatrixTransform(  ); }
+
+/// Get internal projection matrix for stereo render (selected eye)
+// Matrix rlGetMatrixProjectionStereo(int eye);
+function RL_rlGetMatrixProjectionStereo( int $eye ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->rlGetMatrixProjectionStereo( $eye ); }
+
+/// Get internal view offset matrix for stereo render (selected eye)
+// Matrix rlGetMatrixViewOffsetStereo(int eye);
+function RL_rlGetMatrixViewOffsetStereo( int $eye ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->rlGetMatrixViewOffsetStereo( $eye ); }
+
+/// Set a custom projection matrix (replaces internal projection matrix)
+// void rlSetMatrixProjection(Matrix proj);
+function RL_rlSetMatrixProjection( object $proj ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->rlSetMatrixProjection( $proj ); }
+
+/// Set a custom modelview matrix (replaces internal modelview matrix)
+// void rlSetMatrixModelview(Matrix view);
+function RL_rlSetMatrixModelview( object $view ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->rlSetMatrixModelview( $view ); }
+
+/// Set eyes projection matrices for stereo rendering
+// void rlSetMatrixProjectionStereo(Matrix right , Matrix left);
+function RL_rlSetMatrixProjectionStereo( object $right , object $left ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->rlSetMatrixProjectionStereo( $right , $left ); }
+
+/// Set eyes view offsets matrices for stereo rendering
+// void rlSetMatrixViewOffsetStereo(Matrix right , Matrix left);
+function RL_rlSetMatrixViewOffsetStereo( object $right , object $left ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->rlSetMatrixViewOffsetStereo( $right , $left ); }
+
+/// Load and draw a cube
+// void rlLoadDrawCube(void);
+function RL_rlLoadDrawCube(  ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->rlLoadDrawCube(  ); }
+
+/// Load and draw a quad
+// void rlLoadDrawQuad(void);
+function RL_rlLoadDrawQuad(  ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->rlLoadDrawQuad(  ); }
+
+
 
 // ------------------- ^ RLAPI WRAPPER ^ -------------------
 
