@@ -1663,13 +1663,14 @@ function _RAYLIB_REBUILD_WRAPPER_FROM_SCRATCH() : string
 	{
 		$RLAPI_PHP .= "define( 'RAYLIB_FFI_$TYPE_NAME' , \$RAYLIB_FFI->type( '$TYPE_NAME' ) );".PHP_EOL ;
 
-		$RLAPI_PHP .= "function RL_$TYPE_NAME( ...\$_ ) : object { \$OBJ = FFI::new( RAYLIB_FFI_$TYPE_NAME ); foreach( RAYLIB_FFI_${TYPE_NAME}->getStructFieldNames() as \$INDEX => \$FIELD ) { \$OBJ->\$FIELD = \$_[\$INDEX];	} return \$OBJ ; }".PHP_EOL;
+		$RLAPI_PHP .= "function RL_$TYPE_NAME( ...\$_ ) : object { \$OBJ = FFI::new( RAYLIB_FFI_$TYPE_NAME ); \$FIELDS = RAYLIB_FFI_${TYPE_NAME}->getStructFieldNames() ; if ( count( \$FIELDS ) == count( \$_ ) ) foreach( \$FIELDS as \$INDEX => \$FIELD ) { \$OBJ->\$FIELD = \$_[\$INDEX]; } return \$OBJ ; }".PHP_EOL;
 
 		$RLAPI_PHP .= "function RL_${TYPE_NAME}_array( ...\$DIMENSIONS ) : object { \$ARR = FFI::new( FFI::arrayType( RAYLIB_FFI_$TYPE_NAME , \$DIMENSIONS ) ); return \$ARR ; }".PHP_EOL;
 
 		$RLAPI_PHP .= PHP_EOL ;
 	}
 
+//return $RLAPI_PHP ;
 
 	$RAYLIB_PHP .= '_RAYLIB_define_colors_when_ready();'.PHP_EOL.PHP_EOL;
 
@@ -1846,131 +1847,131 @@ function _RAYLIB_REBUILD_WRAPPER_FROM_SCRATCH() : string
 // ------------------- RLAPI WRAPPER ----------------------
 
 define( 'RAYLIB_FFI_Vector2' , $RAYLIB_FFI->type( 'Vector2' ) );
-function RL_Vector2( ...$_ ) : object { $OBJ = FFI::new( RAYLIB_FFI_Vector2 ); foreach( RAYLIB_FFI_Vector2->getStructFieldNames() as $INDEX => $FIELD ) { $OBJ->$FIELD = $_[$INDEX];	} return $OBJ ; }
+function RL_Vector2( ...$_ ) : object { $OBJ = FFI::new( RAYLIB_FFI_Vector2 ); $FIELDS = RAYLIB_FFI_Vector2->getStructFieldNames() ; if ( count( $FIELDS ) == count( $_ ) ) foreach( $FIELDS as $INDEX => $FIELD ) { $OBJ->$FIELD = $_[$INDEX]; } return $OBJ ; }
 function RL_Vector2_array( ...$DIMENSIONS ) : object { $ARR = FFI::new( FFI::arrayType( RAYLIB_FFI_Vector2 , $DIMENSIONS ) ); return $ARR ; }
 
 define( 'RAYLIB_FFI_Vector3' , $RAYLIB_FFI->type( 'Vector3' ) );
-function RL_Vector3( ...$_ ) : object { $OBJ = FFI::new( RAYLIB_FFI_Vector3 ); foreach( RAYLIB_FFI_Vector3->getStructFieldNames() as $INDEX => $FIELD ) { $OBJ->$FIELD = $_[$INDEX];	} return $OBJ ; }
+function RL_Vector3( ...$_ ) : object { $OBJ = FFI::new( RAYLIB_FFI_Vector3 ); $FIELDS = RAYLIB_FFI_Vector3->getStructFieldNames() ; if ( count( $FIELDS ) == count( $_ ) ) foreach( $FIELDS as $INDEX => $FIELD ) { $OBJ->$FIELD = $_[$INDEX]; } return $OBJ ; }
 function RL_Vector3_array( ...$DIMENSIONS ) : object { $ARR = FFI::new( FFI::arrayType( RAYLIB_FFI_Vector3 , $DIMENSIONS ) ); return $ARR ; }
 
 define( 'RAYLIB_FFI_Vector4' , $RAYLIB_FFI->type( 'Vector4' ) );
-function RL_Vector4( ...$_ ) : object { $OBJ = FFI::new( RAYLIB_FFI_Vector4 ); foreach( RAYLIB_FFI_Vector4->getStructFieldNames() as $INDEX => $FIELD ) { $OBJ->$FIELD = $_[$INDEX];	} return $OBJ ; }
+function RL_Vector4( ...$_ ) : object { $OBJ = FFI::new( RAYLIB_FFI_Vector4 ); $FIELDS = RAYLIB_FFI_Vector4->getStructFieldNames() ; if ( count( $FIELDS ) == count( $_ ) ) foreach( $FIELDS as $INDEX => $FIELD ) { $OBJ->$FIELD = $_[$INDEX]; } return $OBJ ; }
 function RL_Vector4_array( ...$DIMENSIONS ) : object { $ARR = FFI::new( FFI::arrayType( RAYLIB_FFI_Vector4 , $DIMENSIONS ) ); return $ARR ; }
 
 define( 'RAYLIB_FFI_Matrix' , $RAYLIB_FFI->type( 'Matrix' ) );
-function RL_Matrix( ...$_ ) : object { $OBJ = FFI::new( RAYLIB_FFI_Matrix ); foreach( RAYLIB_FFI_Matrix->getStructFieldNames() as $INDEX => $FIELD ) { $OBJ->$FIELD = $_[$INDEX];	} return $OBJ ; }
+function RL_Matrix( ...$_ ) : object { $OBJ = FFI::new( RAYLIB_FFI_Matrix ); $FIELDS = RAYLIB_FFI_Matrix->getStructFieldNames() ; if ( count( $FIELDS ) == count( $_ ) ) foreach( $FIELDS as $INDEX => $FIELD ) { $OBJ->$FIELD = $_[$INDEX]; } return $OBJ ; }
 function RL_Matrix_array( ...$DIMENSIONS ) : object { $ARR = FFI::new( FFI::arrayType( RAYLIB_FFI_Matrix , $DIMENSIONS ) ); return $ARR ; }
 
 define( 'RAYLIB_FFI_Color' , $RAYLIB_FFI->type( 'Color' ) );
-function RL_Color( ...$_ ) : object { $OBJ = FFI::new( RAYLIB_FFI_Color ); foreach( RAYLIB_FFI_Color->getStructFieldNames() as $INDEX => $FIELD ) { $OBJ->$FIELD = $_[$INDEX];	} return $OBJ ; }
+function RL_Color( ...$_ ) : object { $OBJ = FFI::new( RAYLIB_FFI_Color ); $FIELDS = RAYLIB_FFI_Color->getStructFieldNames() ; if ( count( $FIELDS ) == count( $_ ) ) foreach( $FIELDS as $INDEX => $FIELD ) { $OBJ->$FIELD = $_[$INDEX]; } return $OBJ ; }
 function RL_Color_array( ...$DIMENSIONS ) : object { $ARR = FFI::new( FFI::arrayType( RAYLIB_FFI_Color , $DIMENSIONS ) ); return $ARR ; }
 
 define( 'RAYLIB_FFI_Rectangle' , $RAYLIB_FFI->type( 'Rectangle' ) );
-function RL_Rectangle( ...$_ ) : object { $OBJ = FFI::new( RAYLIB_FFI_Rectangle ); foreach( RAYLIB_FFI_Rectangle->getStructFieldNames() as $INDEX => $FIELD ) { $OBJ->$FIELD = $_[$INDEX];	} return $OBJ ; }
+function RL_Rectangle( ...$_ ) : object { $OBJ = FFI::new( RAYLIB_FFI_Rectangle ); $FIELDS = RAYLIB_FFI_Rectangle->getStructFieldNames() ; if ( count( $FIELDS ) == count( $_ ) ) foreach( $FIELDS as $INDEX => $FIELD ) { $OBJ->$FIELD = $_[$INDEX]; } return $OBJ ; }
 function RL_Rectangle_array( ...$DIMENSIONS ) : object { $ARR = FFI::new( FFI::arrayType( RAYLIB_FFI_Rectangle , $DIMENSIONS ) ); return $ARR ; }
 
 define( 'RAYLIB_FFI_Image' , $RAYLIB_FFI->type( 'Image' ) );
-function RL_Image( ...$_ ) : object { $OBJ = FFI::new( RAYLIB_FFI_Image ); foreach( RAYLIB_FFI_Image->getStructFieldNames() as $INDEX => $FIELD ) { $OBJ->$FIELD = $_[$INDEX];	} return $OBJ ; }
+function RL_Image( ...$_ ) : object { $OBJ = FFI::new( RAYLIB_FFI_Image ); $FIELDS = RAYLIB_FFI_Image->getStructFieldNames() ; if ( count( $FIELDS ) == count( $_ ) ) foreach( $FIELDS as $INDEX => $FIELD ) { $OBJ->$FIELD = $_[$INDEX]; } return $OBJ ; }
 function RL_Image_array( ...$DIMENSIONS ) : object { $ARR = FFI::new( FFI::arrayType( RAYLIB_FFI_Image , $DIMENSIONS ) ); return $ARR ; }
 
 define( 'RAYLIB_FFI_Texture' , $RAYLIB_FFI->type( 'Texture' ) );
-function RL_Texture( ...$_ ) : object { $OBJ = FFI::new( RAYLIB_FFI_Texture ); foreach( RAYLIB_FFI_Texture->getStructFieldNames() as $INDEX => $FIELD ) { $OBJ->$FIELD = $_[$INDEX];	} return $OBJ ; }
+function RL_Texture( ...$_ ) : object { $OBJ = FFI::new( RAYLIB_FFI_Texture ); $FIELDS = RAYLIB_FFI_Texture->getStructFieldNames() ; if ( count( $FIELDS ) == count( $_ ) ) foreach( $FIELDS as $INDEX => $FIELD ) { $OBJ->$FIELD = $_[$INDEX]; } return $OBJ ; }
 function RL_Texture_array( ...$DIMENSIONS ) : object { $ARR = FFI::new( FFI::arrayType( RAYLIB_FFI_Texture , $DIMENSIONS ) ); return $ARR ; }
 
 define( 'RAYLIB_FFI_RenderTexture' , $RAYLIB_FFI->type( 'RenderTexture' ) );
-function RL_RenderTexture( ...$_ ) : object { $OBJ = FFI::new( RAYLIB_FFI_RenderTexture ); foreach( RAYLIB_FFI_RenderTexture->getStructFieldNames() as $INDEX => $FIELD ) { $OBJ->$FIELD = $_[$INDEX];	} return $OBJ ; }
+function RL_RenderTexture( ...$_ ) : object { $OBJ = FFI::new( RAYLIB_FFI_RenderTexture ); $FIELDS = RAYLIB_FFI_RenderTexture->getStructFieldNames() ; if ( count( $FIELDS ) == count( $_ ) ) foreach( $FIELDS as $INDEX => $FIELD ) { $OBJ->$FIELD = $_[$INDEX]; } return $OBJ ; }
 function RL_RenderTexture_array( ...$DIMENSIONS ) : object { $ARR = FFI::new( FFI::arrayType( RAYLIB_FFI_RenderTexture , $DIMENSIONS ) ); return $ARR ; }
 
 define( 'RAYLIB_FFI_NPatchInfo' , $RAYLIB_FFI->type( 'NPatchInfo' ) );
-function RL_NPatchInfo( ...$_ ) : object { $OBJ = FFI::new( RAYLIB_FFI_NPatchInfo ); foreach( RAYLIB_FFI_NPatchInfo->getStructFieldNames() as $INDEX => $FIELD ) { $OBJ->$FIELD = $_[$INDEX];	} return $OBJ ; }
+function RL_NPatchInfo( ...$_ ) : object { $OBJ = FFI::new( RAYLIB_FFI_NPatchInfo ); $FIELDS = RAYLIB_FFI_NPatchInfo->getStructFieldNames() ; if ( count( $FIELDS ) == count( $_ ) ) foreach( $FIELDS as $INDEX => $FIELD ) { $OBJ->$FIELD = $_[$INDEX]; } return $OBJ ; }
 function RL_NPatchInfo_array( ...$DIMENSIONS ) : object { $ARR = FFI::new( FFI::arrayType( RAYLIB_FFI_NPatchInfo , $DIMENSIONS ) ); return $ARR ; }
 
 define( 'RAYLIB_FFI_GlyphInfo' , $RAYLIB_FFI->type( 'GlyphInfo' ) );
-function RL_GlyphInfo( ...$_ ) : object { $OBJ = FFI::new( RAYLIB_FFI_GlyphInfo ); foreach( RAYLIB_FFI_GlyphInfo->getStructFieldNames() as $INDEX => $FIELD ) { $OBJ->$FIELD = $_[$INDEX];	} return $OBJ ; }
+function RL_GlyphInfo( ...$_ ) : object { $OBJ = FFI::new( RAYLIB_FFI_GlyphInfo ); $FIELDS = RAYLIB_FFI_GlyphInfo->getStructFieldNames() ; if ( count( $FIELDS ) == count( $_ ) ) foreach( $FIELDS as $INDEX => $FIELD ) { $OBJ->$FIELD = $_[$INDEX]; } return $OBJ ; }
 function RL_GlyphInfo_array( ...$DIMENSIONS ) : object { $ARR = FFI::new( FFI::arrayType( RAYLIB_FFI_GlyphInfo , $DIMENSIONS ) ); return $ARR ; }
 
 define( 'RAYLIB_FFI_Font' , $RAYLIB_FFI->type( 'Font' ) );
-function RL_Font( ...$_ ) : object { $OBJ = FFI::new( RAYLIB_FFI_Font ); foreach( RAYLIB_FFI_Font->getStructFieldNames() as $INDEX => $FIELD ) { $OBJ->$FIELD = $_[$INDEX];	} return $OBJ ; }
+function RL_Font( ...$_ ) : object { $OBJ = FFI::new( RAYLIB_FFI_Font ); $FIELDS = RAYLIB_FFI_Font->getStructFieldNames() ; if ( count( $FIELDS ) == count( $_ ) ) foreach( $FIELDS as $INDEX => $FIELD ) { $OBJ->$FIELD = $_[$INDEX]; } return $OBJ ; }
 function RL_Font_array( ...$DIMENSIONS ) : object { $ARR = FFI::new( FFI::arrayType( RAYLIB_FFI_Font , $DIMENSIONS ) ); return $ARR ; }
 
 define( 'RAYLIB_FFI_Camera3D' , $RAYLIB_FFI->type( 'Camera3D' ) );
-function RL_Camera3D( ...$_ ) : object { $OBJ = FFI::new( RAYLIB_FFI_Camera3D ); foreach( RAYLIB_FFI_Camera3D->getStructFieldNames() as $INDEX => $FIELD ) { $OBJ->$FIELD = $_[$INDEX];	} return $OBJ ; }
+function RL_Camera3D( ...$_ ) : object { $OBJ = FFI::new( RAYLIB_FFI_Camera3D ); $FIELDS = RAYLIB_FFI_Camera3D->getStructFieldNames() ; if ( count( $FIELDS ) == count( $_ ) ) foreach( $FIELDS as $INDEX => $FIELD ) { $OBJ->$FIELD = $_[$INDEX]; } return $OBJ ; }
 function RL_Camera3D_array( ...$DIMENSIONS ) : object { $ARR = FFI::new( FFI::arrayType( RAYLIB_FFI_Camera3D , $DIMENSIONS ) ); return $ARR ; }
 
 define( 'RAYLIB_FFI_Camera2D' , $RAYLIB_FFI->type( 'Camera2D' ) );
-function RL_Camera2D( ...$_ ) : object { $OBJ = FFI::new( RAYLIB_FFI_Camera2D ); foreach( RAYLIB_FFI_Camera2D->getStructFieldNames() as $INDEX => $FIELD ) { $OBJ->$FIELD = $_[$INDEX];	} return $OBJ ; }
+function RL_Camera2D( ...$_ ) : object { $OBJ = FFI::new( RAYLIB_FFI_Camera2D ); $FIELDS = RAYLIB_FFI_Camera2D->getStructFieldNames() ; if ( count( $FIELDS ) == count( $_ ) ) foreach( $FIELDS as $INDEX => $FIELD ) { $OBJ->$FIELD = $_[$INDEX]; } return $OBJ ; }
 function RL_Camera2D_array( ...$DIMENSIONS ) : object { $ARR = FFI::new( FFI::arrayType( RAYLIB_FFI_Camera2D , $DIMENSIONS ) ); return $ARR ; }
 
 define( 'RAYLIB_FFI_Mesh' , $RAYLIB_FFI->type( 'Mesh' ) );
-function RL_Mesh( ...$_ ) : object { $OBJ = FFI::new( RAYLIB_FFI_Mesh ); foreach( RAYLIB_FFI_Mesh->getStructFieldNames() as $INDEX => $FIELD ) { $OBJ->$FIELD = $_[$INDEX];	} return $OBJ ; }
+function RL_Mesh( ...$_ ) : object { $OBJ = FFI::new( RAYLIB_FFI_Mesh ); $FIELDS = RAYLIB_FFI_Mesh->getStructFieldNames() ; if ( count( $FIELDS ) == count( $_ ) ) foreach( $FIELDS as $INDEX => $FIELD ) { $OBJ->$FIELD = $_[$INDEX]; } return $OBJ ; }
 function RL_Mesh_array( ...$DIMENSIONS ) : object { $ARR = FFI::new( FFI::arrayType( RAYLIB_FFI_Mesh , $DIMENSIONS ) ); return $ARR ; }
 
 define( 'RAYLIB_FFI_Shader' , $RAYLIB_FFI->type( 'Shader' ) );
-function RL_Shader( ...$_ ) : object { $OBJ = FFI::new( RAYLIB_FFI_Shader ); foreach( RAYLIB_FFI_Shader->getStructFieldNames() as $INDEX => $FIELD ) { $OBJ->$FIELD = $_[$INDEX];	} return $OBJ ; }
+function RL_Shader( ...$_ ) : object { $OBJ = FFI::new( RAYLIB_FFI_Shader ); $FIELDS = RAYLIB_FFI_Shader->getStructFieldNames() ; if ( count( $FIELDS ) == count( $_ ) ) foreach( $FIELDS as $INDEX => $FIELD ) { $OBJ->$FIELD = $_[$INDEX]; } return $OBJ ; }
 function RL_Shader_array( ...$DIMENSIONS ) : object { $ARR = FFI::new( FFI::arrayType( RAYLIB_FFI_Shader , $DIMENSIONS ) ); return $ARR ; }
 
 define( 'RAYLIB_FFI_MaterialMap' , $RAYLIB_FFI->type( 'MaterialMap' ) );
-function RL_MaterialMap( ...$_ ) : object { $OBJ = FFI::new( RAYLIB_FFI_MaterialMap ); foreach( RAYLIB_FFI_MaterialMap->getStructFieldNames() as $INDEX => $FIELD ) { $OBJ->$FIELD = $_[$INDEX];	} return $OBJ ; }
+function RL_MaterialMap( ...$_ ) : object { $OBJ = FFI::new( RAYLIB_FFI_MaterialMap ); $FIELDS = RAYLIB_FFI_MaterialMap->getStructFieldNames() ; if ( count( $FIELDS ) == count( $_ ) ) foreach( $FIELDS as $INDEX => $FIELD ) { $OBJ->$FIELD = $_[$INDEX]; } return $OBJ ; }
 function RL_MaterialMap_array( ...$DIMENSIONS ) : object { $ARR = FFI::new( FFI::arrayType( RAYLIB_FFI_MaterialMap , $DIMENSIONS ) ); return $ARR ; }
 
 define( 'RAYLIB_FFI_Material' , $RAYLIB_FFI->type( 'Material' ) );
-function RL_Material( ...$_ ) : object { $OBJ = FFI::new( RAYLIB_FFI_Material ); foreach( RAYLIB_FFI_Material->getStructFieldNames() as $INDEX => $FIELD ) { $OBJ->$FIELD = $_[$INDEX];	} return $OBJ ; }
+function RL_Material( ...$_ ) : object { $OBJ = FFI::new( RAYLIB_FFI_Material ); $FIELDS = RAYLIB_FFI_Material->getStructFieldNames() ; if ( count( $FIELDS ) == count( $_ ) ) foreach( $FIELDS as $INDEX => $FIELD ) { $OBJ->$FIELD = $_[$INDEX]; } return $OBJ ; }
 function RL_Material_array( ...$DIMENSIONS ) : object { $ARR = FFI::new( FFI::arrayType( RAYLIB_FFI_Material , $DIMENSIONS ) ); return $ARR ; }
 
 define( 'RAYLIB_FFI_Transform' , $RAYLIB_FFI->type( 'Transform' ) );
-function RL_Transform( ...$_ ) : object { $OBJ = FFI::new( RAYLIB_FFI_Transform ); foreach( RAYLIB_FFI_Transform->getStructFieldNames() as $INDEX => $FIELD ) { $OBJ->$FIELD = $_[$INDEX];	} return $OBJ ; }
+function RL_Transform( ...$_ ) : object { $OBJ = FFI::new( RAYLIB_FFI_Transform ); $FIELDS = RAYLIB_FFI_Transform->getStructFieldNames() ; if ( count( $FIELDS ) == count( $_ ) ) foreach( $FIELDS as $INDEX => $FIELD ) { $OBJ->$FIELD = $_[$INDEX]; } return $OBJ ; }
 function RL_Transform_array( ...$DIMENSIONS ) : object { $ARR = FFI::new( FFI::arrayType( RAYLIB_FFI_Transform , $DIMENSIONS ) ); return $ARR ; }
 
 define( 'RAYLIB_FFI_BoneInfo' , $RAYLIB_FFI->type( 'BoneInfo' ) );
-function RL_BoneInfo( ...$_ ) : object { $OBJ = FFI::new( RAYLIB_FFI_BoneInfo ); foreach( RAYLIB_FFI_BoneInfo->getStructFieldNames() as $INDEX => $FIELD ) { $OBJ->$FIELD = $_[$INDEX];	} return $OBJ ; }
+function RL_BoneInfo( ...$_ ) : object { $OBJ = FFI::new( RAYLIB_FFI_BoneInfo ); $FIELDS = RAYLIB_FFI_BoneInfo->getStructFieldNames() ; if ( count( $FIELDS ) == count( $_ ) ) foreach( $FIELDS as $INDEX => $FIELD ) { $OBJ->$FIELD = $_[$INDEX]; } return $OBJ ; }
 function RL_BoneInfo_array( ...$DIMENSIONS ) : object { $ARR = FFI::new( FFI::arrayType( RAYLIB_FFI_BoneInfo , $DIMENSIONS ) ); return $ARR ; }
 
 define( 'RAYLIB_FFI_Model' , $RAYLIB_FFI->type( 'Model' ) );
-function RL_Model( ...$_ ) : object { $OBJ = FFI::new( RAYLIB_FFI_Model ); foreach( RAYLIB_FFI_Model->getStructFieldNames() as $INDEX => $FIELD ) { $OBJ->$FIELD = $_[$INDEX];	} return $OBJ ; }
+function RL_Model( ...$_ ) : object { $OBJ = FFI::new( RAYLIB_FFI_Model ); $FIELDS = RAYLIB_FFI_Model->getStructFieldNames() ; if ( count( $FIELDS ) == count( $_ ) ) foreach( $FIELDS as $INDEX => $FIELD ) { $OBJ->$FIELD = $_[$INDEX]; } return $OBJ ; }
 function RL_Model_array( ...$DIMENSIONS ) : object { $ARR = FFI::new( FFI::arrayType( RAYLIB_FFI_Model , $DIMENSIONS ) ); return $ARR ; }
 
 define( 'RAYLIB_FFI_ModelAnimation' , $RAYLIB_FFI->type( 'ModelAnimation' ) );
-function RL_ModelAnimation( ...$_ ) : object { $OBJ = FFI::new( RAYLIB_FFI_ModelAnimation ); foreach( RAYLIB_FFI_ModelAnimation->getStructFieldNames() as $INDEX => $FIELD ) { $OBJ->$FIELD = $_[$INDEX];	} return $OBJ ; }
+function RL_ModelAnimation( ...$_ ) : object { $OBJ = FFI::new( RAYLIB_FFI_ModelAnimation ); $FIELDS = RAYLIB_FFI_ModelAnimation->getStructFieldNames() ; if ( count( $FIELDS ) == count( $_ ) ) foreach( $FIELDS as $INDEX => $FIELD ) { $OBJ->$FIELD = $_[$INDEX]; } return $OBJ ; }
 function RL_ModelAnimation_array( ...$DIMENSIONS ) : object { $ARR = FFI::new( FFI::arrayType( RAYLIB_FFI_ModelAnimation , $DIMENSIONS ) ); return $ARR ; }
 
 define( 'RAYLIB_FFI_Ray' , $RAYLIB_FFI->type( 'Ray' ) );
-function RL_Ray( ...$_ ) : object { $OBJ = FFI::new( RAYLIB_FFI_Ray ); foreach( RAYLIB_FFI_Ray->getStructFieldNames() as $INDEX => $FIELD ) { $OBJ->$FIELD = $_[$INDEX];	} return $OBJ ; }
+function RL_Ray( ...$_ ) : object { $OBJ = FFI::new( RAYLIB_FFI_Ray ); $FIELDS = RAYLIB_FFI_Ray->getStructFieldNames() ; if ( count( $FIELDS ) == count( $_ ) ) foreach( $FIELDS as $INDEX => $FIELD ) { $OBJ->$FIELD = $_[$INDEX]; } return $OBJ ; }
 function RL_Ray_array( ...$DIMENSIONS ) : object { $ARR = FFI::new( FFI::arrayType( RAYLIB_FFI_Ray , $DIMENSIONS ) ); return $ARR ; }
 
 define( 'RAYLIB_FFI_RayCollision' , $RAYLIB_FFI->type( 'RayCollision' ) );
-function RL_RayCollision( ...$_ ) : object { $OBJ = FFI::new( RAYLIB_FFI_RayCollision ); foreach( RAYLIB_FFI_RayCollision->getStructFieldNames() as $INDEX => $FIELD ) { $OBJ->$FIELD = $_[$INDEX];	} return $OBJ ; }
+function RL_RayCollision( ...$_ ) : object { $OBJ = FFI::new( RAYLIB_FFI_RayCollision ); $FIELDS = RAYLIB_FFI_RayCollision->getStructFieldNames() ; if ( count( $FIELDS ) == count( $_ ) ) foreach( $FIELDS as $INDEX => $FIELD ) { $OBJ->$FIELD = $_[$INDEX]; } return $OBJ ; }
 function RL_RayCollision_array( ...$DIMENSIONS ) : object { $ARR = FFI::new( FFI::arrayType( RAYLIB_FFI_RayCollision , $DIMENSIONS ) ); return $ARR ; }
 
 define( 'RAYLIB_FFI_BoundingBox' , $RAYLIB_FFI->type( 'BoundingBox' ) );
-function RL_BoundingBox( ...$_ ) : object { $OBJ = FFI::new( RAYLIB_FFI_BoundingBox ); foreach( RAYLIB_FFI_BoundingBox->getStructFieldNames() as $INDEX => $FIELD ) { $OBJ->$FIELD = $_[$INDEX];	} return $OBJ ; }
+function RL_BoundingBox( ...$_ ) : object { $OBJ = FFI::new( RAYLIB_FFI_BoundingBox ); $FIELDS = RAYLIB_FFI_BoundingBox->getStructFieldNames() ; if ( count( $FIELDS ) == count( $_ ) ) foreach( $FIELDS as $INDEX => $FIELD ) { $OBJ->$FIELD = $_[$INDEX]; } return $OBJ ; }
 function RL_BoundingBox_array( ...$DIMENSIONS ) : object { $ARR = FFI::new( FFI::arrayType( RAYLIB_FFI_BoundingBox , $DIMENSIONS ) ); return $ARR ; }
 
 define( 'RAYLIB_FFI_Wave' , $RAYLIB_FFI->type( 'Wave' ) );
-function RL_Wave( ...$_ ) : object { $OBJ = FFI::new( RAYLIB_FFI_Wave ); foreach( RAYLIB_FFI_Wave->getStructFieldNames() as $INDEX => $FIELD ) { $OBJ->$FIELD = $_[$INDEX];	} return $OBJ ; }
+function RL_Wave( ...$_ ) : object { $OBJ = FFI::new( RAYLIB_FFI_Wave ); $FIELDS = RAYLIB_FFI_Wave->getStructFieldNames() ; if ( count( $FIELDS ) == count( $_ ) ) foreach( $FIELDS as $INDEX => $FIELD ) { $OBJ->$FIELD = $_[$INDEX]; } return $OBJ ; }
 function RL_Wave_array( ...$DIMENSIONS ) : object { $ARR = FFI::new( FFI::arrayType( RAYLIB_FFI_Wave , $DIMENSIONS ) ); return $ARR ; }
 
 define( 'RAYLIB_FFI_AudioStream' , $RAYLIB_FFI->type( 'AudioStream' ) );
-function RL_AudioStream( ...$_ ) : object { $OBJ = FFI::new( RAYLIB_FFI_AudioStream ); foreach( RAYLIB_FFI_AudioStream->getStructFieldNames() as $INDEX => $FIELD ) { $OBJ->$FIELD = $_[$INDEX];	} return $OBJ ; }
+function RL_AudioStream( ...$_ ) : object { $OBJ = FFI::new( RAYLIB_FFI_AudioStream ); $FIELDS = RAYLIB_FFI_AudioStream->getStructFieldNames() ; if ( count( $FIELDS ) == count( $_ ) ) foreach( $FIELDS as $INDEX => $FIELD ) { $OBJ->$FIELD = $_[$INDEX]; } return $OBJ ; }
 function RL_AudioStream_array( ...$DIMENSIONS ) : object { $ARR = FFI::new( FFI::arrayType( RAYLIB_FFI_AudioStream , $DIMENSIONS ) ); return $ARR ; }
 
 define( 'RAYLIB_FFI_Sound' , $RAYLIB_FFI->type( 'Sound' ) );
-function RL_Sound( ...$_ ) : object { $OBJ = FFI::new( RAYLIB_FFI_Sound ); foreach( RAYLIB_FFI_Sound->getStructFieldNames() as $INDEX => $FIELD ) { $OBJ->$FIELD = $_[$INDEX];	} return $OBJ ; }
+function RL_Sound( ...$_ ) : object { $OBJ = FFI::new( RAYLIB_FFI_Sound ); $FIELDS = RAYLIB_FFI_Sound->getStructFieldNames() ; if ( count( $FIELDS ) == count( $_ ) ) foreach( $FIELDS as $INDEX => $FIELD ) { $OBJ->$FIELD = $_[$INDEX]; } return $OBJ ; }
 function RL_Sound_array( ...$DIMENSIONS ) : object { $ARR = FFI::new( FFI::arrayType( RAYLIB_FFI_Sound , $DIMENSIONS ) ); return $ARR ; }
 
 define( 'RAYLIB_FFI_Music' , $RAYLIB_FFI->type( 'Music' ) );
-function RL_Music( ...$_ ) : object { $OBJ = FFI::new( RAYLIB_FFI_Music ); foreach( RAYLIB_FFI_Music->getStructFieldNames() as $INDEX => $FIELD ) { $OBJ->$FIELD = $_[$INDEX];	} return $OBJ ; }
+function RL_Music( ...$_ ) : object { $OBJ = FFI::new( RAYLIB_FFI_Music ); $FIELDS = RAYLIB_FFI_Music->getStructFieldNames() ; if ( count( $FIELDS ) == count( $_ ) ) foreach( $FIELDS as $INDEX => $FIELD ) { $OBJ->$FIELD = $_[$INDEX]; } return $OBJ ; }
 function RL_Music_array( ...$DIMENSIONS ) : object { $ARR = FFI::new( FFI::arrayType( RAYLIB_FFI_Music , $DIMENSIONS ) ); return $ARR ; }
 
 define( 'RAYLIB_FFI_VrDeviceInfo' , $RAYLIB_FFI->type( 'VrDeviceInfo' ) );
-function RL_VrDeviceInfo( ...$_ ) : object { $OBJ = FFI::new( RAYLIB_FFI_VrDeviceInfo ); foreach( RAYLIB_FFI_VrDeviceInfo->getStructFieldNames() as $INDEX => $FIELD ) { $OBJ->$FIELD = $_[$INDEX];	} return $OBJ ; }
+function RL_VrDeviceInfo( ...$_ ) : object { $OBJ = FFI::new( RAYLIB_FFI_VrDeviceInfo ); $FIELDS = RAYLIB_FFI_VrDeviceInfo->getStructFieldNames() ; if ( count( $FIELDS ) == count( $_ ) ) foreach( $FIELDS as $INDEX => $FIELD ) { $OBJ->$FIELD = $_[$INDEX]; } return $OBJ ; }
 function RL_VrDeviceInfo_array( ...$DIMENSIONS ) : object { $ARR = FFI::new( FFI::arrayType( RAYLIB_FFI_VrDeviceInfo , $DIMENSIONS ) ); return $ARR ; }
 
 define( 'RAYLIB_FFI_VrStereoConfig' , $RAYLIB_FFI->type( 'VrStereoConfig' ) );
-function RL_VrStereoConfig( ...$_ ) : object { $OBJ = FFI::new( RAYLIB_FFI_VrStereoConfig ); foreach( RAYLIB_FFI_VrStereoConfig->getStructFieldNames() as $INDEX => $FIELD ) { $OBJ->$FIELD = $_[$INDEX];	} return $OBJ ; }
+function RL_VrStereoConfig( ...$_ ) : object { $OBJ = FFI::new( RAYLIB_FFI_VrStereoConfig ); $FIELDS = RAYLIB_FFI_VrStereoConfig->getStructFieldNames() ; if ( count( $FIELDS ) == count( $_ ) ) foreach( $FIELDS as $INDEX => $FIELD ) { $OBJ->$FIELD = $_[$INDEX]; } return $OBJ ; }
 function RL_VrStereoConfig_array( ...$DIMENSIONS ) : object { $ARR = FFI::new( FFI::arrayType( RAYLIB_FFI_VrStereoConfig , $DIMENSIONS ) ); return $ARR ; }
 
 define( 'RAYLIB_FFI_FilePathList' , $RAYLIB_FFI->type( 'FilePathList' ) );
-function RL_FilePathList( ...$_ ) : object { $OBJ = FFI::new( RAYLIB_FFI_FilePathList ); foreach( RAYLIB_FFI_FilePathList->getStructFieldNames() as $INDEX => $FIELD ) { $OBJ->$FIELD = $_[$INDEX];	} return $OBJ ; }
+function RL_FilePathList( ...$_ ) : object { $OBJ = FFI::new( RAYLIB_FFI_FilePathList ); $FIELDS = RAYLIB_FFI_FilePathList->getStructFieldNames() ; if ( count( $FIELDS ) == count( $_ ) ) foreach( $FIELDS as $INDEX => $FIELD ) { $OBJ->$FIELD = $_[$INDEX]; } return $OBJ ; }
 function RL_FilePathList_array( ...$DIMENSIONS ) : object { $ARR = FFI::new( FFI::arrayType( RAYLIB_FFI_FilePathList , $DIMENSIONS ) ); return $ARR ; }
 
 _RAYLIB_define_colors_when_ready();
