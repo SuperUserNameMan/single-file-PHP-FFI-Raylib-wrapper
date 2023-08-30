@@ -123,28 +123,18 @@ if ( ! defined( 'RL_RAD2DEG' ) )
     define( 'RL_RAD2DEG' , (180.0/RL_PI) );
 }
 
-// Allow custom memory allocators
-// NOTE: Require recompiling raylib sources
-#ifndef RL_MALLOC
-    #define RL_MALLOC(sz)       malloc(sz)
-#endif
-#ifndef RL_CALLOC
-    #define RL_CALLOC(n,sz)     calloc(n,sz)
-#endif
-#ifndef RL_REALLOC
-    #define RL_REALLOC(ptr,sz)  realloc(ptr,sz)
-#endif
-#ifndef RL_FREE
-    #define RL_FREE(ptr)        free(ptr)
-#endif
+if ( ! defined( 'RL_EPSILON' ) )
+{
+	define( 'RL_EPSILON' , 0.000001 );
+}
 
-// NOTE: MSVC C++ compiler does not support compound literals (C99 feature)
-// Plain structures in C++ (without constructors) can be initialized with { }
-#if defined(__cplusplus)
-    #define CLITERAL(type)      type
-#else
-    #define CLITERAL(type)      (type)
-#endif
+// Get float vector for Matrix
+function RL_MatrixToFloat( object $MAT ) : object { return RL_MatrixToFloatV( $MAT )->v ; }
+
+
+// Get float vector for Vector3
+function RL_Vector3ToFloat( object $VEC ) : object { return RL_Vector3ToFloatV( $VEC )->v ; }
+
 
 // NOTE: We set some defines with some data types declared by raylib
 // Other modules (raymath, rlgl) also require some of those types, so,
@@ -202,6 +192,15 @@ define( 'RL_RAYWHITE'   , RL_Color( 245, 245, 245, 255 ) );  // My own White (ra
 #endif
 
 $RAYLIB_H .= <<<'RAYLIB_H'
+
+// NOTE: Helper types to be used instead of array return types for *ToFloat functions
+typedef struct float3 {
+    float v[3];
+} float3;
+
+typedef struct float16 {
+    float v[16];
+} float16;
 
 // Vector2, 2 components
 typedef struct Vector2 {
@@ -1604,6 +1603,146 @@ typedef void (*AudioCallback)(void *bufferData, unsigned int frames);
 /*RLAPI*/ void DetachAudioMixedProcessor(AudioCallback processor); // Detach audio stream processor from the entire audio pipeline
 
 
+
+//----------------------------------------------------------------------------------
+// Module Functions Definition - Utils math
+//----------------------------------------------------------------------------------
+
+/*RMAPI*/ float Clamp(float value, float min, float max); // Clamp float value
+/*RMAPI*/ float Lerp(float start, float end, float amount); // Calculate linear interpolation between two floats
+/*RMAPI*/ float Normalize(float value, float start, float end); // Normalize input value within input range
+/*RMAPI*/ float Remap(float value, float inputStart, float inputEnd, float outputStart, float outputEnd); // Remap input value within input range to output range
+/*RMAPI*/ float Wrap(float value, float min, float max); // Wrap input value from min to max
+/*RMAPI*/ int FloatEquals(float x, float y); // Check whether two given floats are almost equal
+
+//----------------------------------------------------------------------------------
+// Module Functions Definition - Vector2 math
+//----------------------------------------------------------------------------------
+
+/*RMAPI*/ Vector2 Vector2Zero(void); // Vector with components value 0.0f
+/*RMAPI*/ Vector2 Vector2One(void); // Vector with components value 1.0f
+/*RMAPI*/ Vector2 Vector2Add(Vector2 v1, Vector2 v2); // Add two vectors (v1 + v2)
+/*RMAPI*/ Vector2 Vector2AddValue(Vector2 v, float add); // Add vector and float value
+/*RMAPI*/ Vector2 Vector2Subtract(Vector2 v1, Vector2 v2); // Subtract two vectors (v1 - v2)
+/*RMAPI*/ Vector2 Vector2SubtractValue(Vector2 v, float sub); // Subtract vector by float value
+/*RMAPI*/ float Vector2Length(Vector2 v); // Calculate vector length
+/*RMAPI*/ float Vector2LengthSqr(Vector2 v); // Calculate vector square length
+/*RMAPI*/ float Vector2DotProduct(Vector2 v1, Vector2 v2); // Calculate two vectors dot product
+/*RMAPI*/ float Vector2Distance(Vector2 v1, Vector2 v2); // Calculate distance between two vectors
+/*RMAPI*/ float Vector2DistanceSqr(Vector2 v1, Vector2 v2); // Calculate square distance between two vectors
+/*RMAPI*/ float Vector2Angle(Vector2 v1, Vector2 v2); // Calculate angle between two vectors. NOTE: Angle is calculated from origin point (0, 0)
+/*RMAPI*/ float Vector2LineAngle(Vector2 start, Vector2 end); // Calculate angle defined by a two vectors line. NOTE: Parameters need to be normalized. Current implementation should be aligned with glm::angle
+/*RMAPI*/ Vector2 Vector2Scale(Vector2 v, float scale); // Scale vector (multiply by value)
+/*RMAPI*/ Vector2 Vector2Multiply(Vector2 v1, Vector2 v2); // Multiply vector by vector
+/*RMAPI*/ Vector2 Vector2Negate(Vector2 v); // Negate vector
+/*RMAPI*/ Vector2 Vector2Divide(Vector2 v1, Vector2 v2); // Divide vector by vector
+/*RMAPI*/ Vector2 Vector2Normalize(Vector2 v); // Normalize provided vector
+/*RMAPI*/ Vector2 Vector2Transform(Vector2 v, Matrix mat); // Transforms a Vector2 by a given Matrix
+/*RMAPI*/ Vector2 Vector2Lerp(Vector2 v1, Vector2 v2, float amount); // Calculate linear interpolation between two vectors
+/*RMAPI*/ Vector2 Vector2Reflect(Vector2 v, Vector2 normal); // Calculate reflected vector to normal
+/*RMAPI*/ Vector2 Vector2Rotate(Vector2 v, float angle); // Rotate vector by angle
+/*RMAPI*/ Vector2 Vector2MoveTowards(Vector2 v, Vector2 target, float maxDistance); // Move Vector towards target
+/*RMAPI*/ Vector2 Vector2Invert(Vector2 v); // Invert the given vector
+/*RMAPI*/ Vector2 Vector2Clamp(Vector2 v, Vector2 min, Vector2 max); // Clamp the components of the vector between min and max values specified by the given vectors
+/*RMAPI*/ Vector2 Vector2ClampValue(Vector2 v, float min, float max); // Clamp the magnitude of the vector between two min and max values
+/*RMAPI*/ int Vector2Equals(Vector2 p, Vector2 q); // Check whether two given vectors are almost equal
+
+//----------------------------------------------------------------------------------
+// Module Functions Definition - Vector3 math
+//----------------------------------------------------------------------------------
+
+/*RMAPI*/ Vector3 Vector3Zero(void); // Vector with components value 0.0f
+/*RMAPI*/ Vector3 Vector3One(void); // Vector with components value 1.0f
+/*RMAPI*/ Vector3 Vector3Add(Vector3 v1, Vector3 v2); // Add two vectors
+/*RMAPI*/ Vector3 Vector3AddValue(Vector3 v, float add); // Add vector and float value
+/*RMAPI*/ Vector3 Vector3Subtract(Vector3 v1, Vector3 v2); // Subtract two vectors
+/*RMAPI*/ Vector3 Vector3SubtractValue(Vector3 v, float sub); // Subtract vector by float value
+/*RMAPI*/ Vector3 Vector3Scale(Vector3 v, float scalar); // Multiply vector by scalar
+/*RMAPI*/ Vector3 Vector3Multiply(Vector3 v1, Vector3 v2); // Multiply vector by vector
+/*RMAPI*/ Vector3 Vector3CrossProduct(Vector3 v1, Vector3 v2); // Calculate two vectors cross product
+/*RMAPI*/ Vector3 Vector3Perpendicular(Vector3 v); // Calculate one vector perpendicular vector
+/*RMAPI*/ float Vector3Length(const Vector3 v); // Calculate vector length
+/*RMAPI*/ float Vector3LengthSqr(const Vector3 v); // Calculate vector square length
+/*RMAPI*/ float Vector3DotProduct(Vector3 v1, Vector3 v2); // Calculate two vectors dot product
+/*RMAPI*/ float Vector3Distance(Vector3 v1, Vector3 v2); // Calculate distance between two vectors
+/*RMAPI*/ float Vector3DistanceSqr(Vector3 v1, Vector3 v2); // Calculate square distance between two vectors
+/*RMAPI*/ float Vector3Angle(Vector3 v1, Vector3 v2); // Calculate angle between two vectors
+/*RMAPI*/ Vector3 Vector3Negate(Vector3 v); // Negate provided vector (invert direction)
+/*RMAPI*/ Vector3 Vector3Divide(Vector3 v1, Vector3 v2); // Divide vector by vector
+/*RMAPI*/ Vector3 Vector3Normalize(Vector3 v); // Normalize provided vector
+/*RMAPI*/ void Vector3OrthoNormalize(Vector3 *v1, Vector3 *v2); // Orthonormalize provided vectors. Makes vectors normalized and orthogonal to each other Gram-Schmidt function implementation
+/*RMAPI*/ Vector3 Vector3Transform(Vector3 v, Matrix mat); // Transforms a Vector3 by a given Matrix
+/*RMAPI*/ Vector3 Vector3RotateByQuaternion(Vector3 v, Quaternion q); // Transform a vector by quaternion rotation
+/*RMAPI*/ Vector3 Vector3RotateByAxisAngle(Vector3 v, Vector3 axis, float angle); // Rotates a vector around an axis
+/*RMAPI*/ Vector3 Vector3Lerp(Vector3 v1, Vector3 v2, float amount); // Calculate linear interpolation between two vectors
+/*RMAPI*/ Vector3 Vector3Reflect(Vector3 v, Vector3 normal); // Calculate reflected vector to normal
+/*RMAPI*/ Vector3 Vector3Min(Vector3 v1, Vector3 v2); // Get min value for each pair of components
+/*RMAPI*/ Vector3 Vector3Max(Vector3 v1, Vector3 v2); // Get max value for each pair of components
+/*RMAPI*/ Vector3 Vector3Barycenter(Vector3 p, Vector3 a, Vector3 b, Vector3 c); // Compute barycenter coordinates (u, v, w) for point p with respect to triangle (a, b, c). NOTE: Assumes P is on the plane of the triangle
+/*RMAPI*/ Vector3 Vector3Unproject(Vector3 source, Matrix projection, Matrix view); // Projects a Vector3 from screen space into object space. NOTE: We are avoiding calling other raymath functions despite available
+/*RMAPI*/ float3 Vector3ToFloatV(Vector3 v); // Get Vector3 as float array
+/*RMAPI*/ Vector3 Vector3Invert(Vector3 v); // Invert the given vector
+/*RMAPI*/ Vector3 Vector3Clamp(Vector3 v, Vector3 min, Vector3 max); // Clamp the components of the vector between min and max values specified by the given vectors
+/*RMAPI*/ Vector3 Vector3ClampValue(Vector3 v, float min, float max); // Clamp the magnitude of the vector between two values
+/*RMAPI*/ int Vector3Equals(Vector3 p, Vector3 q); // Check whether two given vectors are almost equal
+/*RMAPI*/ Vector3 Vector3Refract(Vector3 v, Vector3 n, float r); // Compute the direction of a refracted ray where v specifies the normalized direction of the incoming ray, n specifies the normalized normal vector of the interface of two optical media, and r specifies the ratio of the refractive index of the medium from where the ray comes to the refractive index of the medium on the other side of the surface
+
+//----------------------------------------------------------------------------------
+// Module Functions Definition - Matrix math
+//----------------------------------------------------------------------------------
+
+/*RMAPI*/ float MatrixDeterminant(Matrix mat); // Compute matrix determinant
+/*RMAPI*/ float MatrixTrace(Matrix mat); // Get the trace of the matrix (sum of the values along the diagonal)
+/*RMAPI*/ Matrix MatrixTranspose(Matrix mat); // Transposes provided matrix
+/*RMAPI*/ Matrix MatrixInvert(Matrix mat); // Invert provided matrix
+/*RMAPI*/ Matrix MatrixIdentity(void); // Get identity matrix
+/*RMAPI*/ Matrix MatrixAdd(Matrix left, Matrix right); // Add two matrices
+/*RMAPI*/ Matrix MatrixSubtract(Matrix left, Matrix right); // Subtract two matrices (left - right)
+/*RMAPI*/ Matrix MatrixMultiply(Matrix left, Matrix right); // Get two matrix multiplication. NOTE: When multiplying matrices... the order matters!
+/*RMAPI*/ Matrix MatrixTranslate(float x, float y, float z); // Get translation matrix
+/*RMAPI*/ Matrix MatrixRotate(Vector3 axis, float angle); // Create rotation matrix from axis and angle. NOTE: Angle should be provided in radians
+/*RMAPI*/ Matrix MatrixRotateX(float angle); // Get x-rotation matrix. NOTE: Angle must be provided in radians
+/*RMAPI*/ Matrix MatrixRotateY(float angle); // Get y-rotation matrix. NOTE: Angle must be provided in radians
+/*RMAPI*/ Matrix MatrixRotateZ(float angle); // Get z-rotation matrix. NOTE: Angle must be provided in radians
+/*RMAPI*/ Matrix MatrixRotateXYZ(Vector3 angle); // Get xyz-rotation matrix. NOTE: Angle must be provided in radians
+/*RMAPI*/ Matrix MatrixRotateZYX(Vector3 angle); // Get zyx-rotation matrix. NOTE: Angle must be provided in radians
+/*RMAPI*/ Matrix MatrixScale(float x, float y, float z); // Get scaling matrix
+/*RMAPI*/ Matrix MatrixFrustum(double left, double right, double bottom, double top, double near, double far); // Get perspective projection matrix
+/*RMAPI*/ Matrix MatrixPerspective(double fovy, double aspect, double near, double far); // Get perspective projection matrix. NOTE: Fovy angle must be provided in radians
+/*RMAPI*/ Matrix MatrixOrtho(double left, double right, double bottom, double top, double near, double far); // Get orthographic projection matrix
+/*RMAPI*/ Matrix MatrixLookAt(Vector3 eye, Vector3 target, Vector3 up); // Get camera look-at matrix (view matrix)
+/*RMAPI*/ float16 MatrixToFloatV(Matrix mat); // Get float array of matrix data
+
+//----------------------------------------------------------------------------------
+// Module Functions Definition - Quaternion math
+//----------------------------------------------------------------------------------
+
+/*RMAPI*/ Quaternion QuaternionAdd(Quaternion q1, Quaternion q2); // Add two quaternions
+/*RMAPI*/ Quaternion QuaternionAddValue(Quaternion q, float add); // Add quaternion and float value
+/*RMAPI*/ Quaternion QuaternionSubtract(Quaternion q1, Quaternion q2); // Subtract two quaternions
+/*RMAPI*/ Quaternion QuaternionSubtractValue(Quaternion q, float sub); // Subtract quaternion and float value
+/*RMAPI*/ Quaternion QuaternionIdentity(void); // Get identity quaternion
+/*RMAPI*/ float QuaternionLength(Quaternion q); // Computes the length of a quaternion
+/*RMAPI*/ Quaternion QuaternionNormalize(Quaternion q); // Normalize provided quaternion
+/*RMAPI*/ Quaternion QuaternionInvert(Quaternion q); // Invert provided quaternion
+/*RMAPI*/ Quaternion QuaternionMultiply(Quaternion q1, Quaternion q2); // Calculate two quaternion multiplication
+/*RMAPI*/ Quaternion QuaternionScale(Quaternion q, float mul); // Scale quaternion by float value
+/*RMAPI*/ Quaternion QuaternionDivide(Quaternion q1, Quaternion q2); // Divide two quaternions
+/*RMAPI*/ Quaternion QuaternionLerp(Quaternion q1, Quaternion q2, float amount); // Calculate linear interpolation between two quaternions
+/*RMAPI*/ Quaternion QuaternionNlerp(Quaternion q1, Quaternion q2, float amount); // Calculate slerp-optimized interpolation between two quaternions
+/*RMAPI*/ Quaternion QuaternionSlerp(Quaternion q1, Quaternion q2, float amount); // Calculates spherical linear interpolation between two quaternions
+/*RMAPI*/ Quaternion QuaternionFromVector3ToVector3(Vector3 from, Vector3 to); // Calculate quaternion based on the rotation from one vector to another
+/*RMAPI*/ Quaternion QuaternionFromMatrix(Matrix mat); // Get a quaternion for a given rotation matrix
+/*RMAPI*/ Matrix QuaternionToMatrix(Quaternion q); // Get a matrix for a given quaternion
+/*RMAPI*/ Quaternion QuaternionFromAxisAngle(Vector3 axis, float angle); // Get rotation quaternion for an angle and axis. NOTE: Angle must be provided in radians
+/*RMAPI*/ void QuaternionToAxisAngle(Quaternion q, Vector3 *outAxis, float *outAngle); // Get the rotation angle and axis for a given quaternion
+/*RMAPI*/ Quaternion QuaternionFromEuler(float pitch, float yaw, float roll); // Get the quaternion equivalent to Euler angles. NOTE: Rotation order is ZYX
+/*RMAPI*/ Vector3 QuaternionToEuler(Quaternion q); // Get the Euler angles equivalent to quaternion (roll, pitch, yaw). NOTE: Angles are returned in a Vector3 struct in radians
+/*RMAPI*/ Quaternion QuaternionTransform(Quaternion q, Matrix mat); // Transform a quaternion given a transformation matrix
+/*RMAPI*/ int QuaternionEquals(Quaternion p, Quaternion q); // Check whether two given quaternions are almost equal
+
+
+
 RAYLIB_H.PHP_EOL;
 
 #if defined(__cplusplus)
@@ -1670,11 +1809,11 @@ function _RAYLIB_REBUILD_WRAPPER_FROM_SCRATCH() : string
 
 //return $RLAPI_PHP ;
 
-	$RAYLIB_PHP .= '_RAYLIB_define_colors_when_ready();'.PHP_EOL.PHP_EOL;
+	$RLAPI_PHP .= '_RAYLIB_define_colors_when_ready();'.PHP_EOL.PHP_EOL;
 
 	// Function list :
 
-	preg_match_all( '@/\*RLAPI\*/\h+(.*;.*)@' , $RAYLIB_H , $MATCHES , PREG_SET_ORDER );
+	preg_match_all( '@/\*R.API\*/\h+(.*;.*)@' , $RAYLIB_H , $MATCHES , PREG_SET_ORDER );
 
 	//print_r( $MATCHES );
 
@@ -1776,6 +1915,7 @@ function _RAYLIB_REBUILD_WRAPPER_FROM_SCRATCH() : string
 		$ARGS = str_replace( ' ModelAnimation* ' , ' object $', $ARGS );
 		$ARGS = str_replace( ' Music ' , ' object $', $ARGS );
 		$ARGS = str_replace( ' NPatchInfo ' , ' object $', $ARGS );
+		$ARGS = str_replace( ' Quaternion ' , ' object $', $ARGS );
 		$ARGS = str_replace( ' Ray ' , ' object $', $ARGS );
 		$ARGS = str_replace( ' Rectangle ' , ' object $', $ARGS );
 		$ARGS = str_replace( ' Rectangle** ' , ' object $', $ARGS );
@@ -1842,7 +1982,15 @@ function _RAYLIB_REBUILD_WRAPPER_FROM_SCRATCH() : string
 }
 
 
-// ------------------- RLAPI WRAPPER ----------------------
+// ------------------- v RLAPI WRAPPER v -------------------
+
+define( 'RAYLIB_FFI_float3' , $RAYLIB_FFI->type( 'float3' ) );
+function RL_float3( ...$_ ) : object { $OBJ = FFI::new( RAYLIB_FFI_float3 ); $FIELDS = RAYLIB_FFI_float3->getStructFieldNames() ; if ( count( $FIELDS ) == count( $_ ) ) foreach( $FIELDS as $INDEX => $FIELD ) { $OBJ->$FIELD = $_[$INDEX]; } return $OBJ ; }
+function RL_float3_array( ...$DIMENSIONS ) : object { $ARR = FFI::new( FFI::arrayType( RAYLIB_FFI_float3 , $DIMENSIONS ) ); return $ARR ; }
+
+define( 'RAYLIB_FFI_float16' , $RAYLIB_FFI->type( 'float16' ) );
+function RL_float16( ...$_ ) : object { $OBJ = FFI::new( RAYLIB_FFI_float16 ); $FIELDS = RAYLIB_FFI_float16->getStructFieldNames() ; if ( count( $FIELDS ) == count( $_ ) ) foreach( $FIELDS as $INDEX => $FIELD ) { $OBJ->$FIELD = $_[$INDEX]; } return $OBJ ; }
+function RL_float16_array( ...$DIMENSIONS ) : object { $ARR = FFI::new( FFI::arrayType( RAYLIB_FFI_float16 , $DIMENSIONS ) ); return $ARR ; }
 
 define( 'RAYLIB_FFI_Vector2' , $RAYLIB_FFI->type( 'Vector2' ) );
 function RL_Vector2( ...$_ ) : object { $OBJ = FFI::new( RAYLIB_FFI_Vector2 ); $FIELDS = RAYLIB_FFI_Vector2->getStructFieldNames() ; if ( count( $FIELDS ) == count( $_ ) ) foreach( $FIELDS as $INDEX => $FIELD ) { $OBJ->$FIELD = $_[$INDEX]; } return $OBJ ; }
@@ -4042,6 +4190,457 @@ function RL_SetAudioStreamBufferSizeDefault( int $size ) : void { global $RAYLIB
 // void DetachAudioMixedProcessor(AudioCallback processor);
 //XXX function RL_DetachAudioMixedProcessor( AudioCallback processor ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->DetachAudioMixedProcessor(  ); }
 
+/// Clamp float value
+// float Clamp(float value , float min , float max);
+function RL_Clamp( float $value , float $min , float $max ) : float { global $RAYLIB_FFI; return $RAYLIB_FFI->Clamp( $value , $min , $max ); }
+
+/// Calculate linear interpolation between two floats
+// float Lerp(float start , float end , float amount);
+function RL_Lerp( float $start , float $end , float $amount ) : float { global $RAYLIB_FFI; return $RAYLIB_FFI->Lerp( $start , $end , $amount ); }
+
+/// Normalize input value within input range
+// float Normalize(float value , float start , float end);
+function RL_Normalize( float $value , float $start , float $end ) : float { global $RAYLIB_FFI; return $RAYLIB_FFI->Normalize( $value , $start , $end ); }
+
+/// Remap input value within input range to output range
+// float Remap(float value , float inputStart , float inputEnd , float outputStart , float outputEnd);
+function RL_Remap( float $value , float $inputStart , float $inputEnd , float $outputStart , float $outputEnd ) : float { global $RAYLIB_FFI; return $RAYLIB_FFI->Remap( $value , $inputStart , $inputEnd , $outputStart , $outputEnd ); }
+
+/// Wrap input value from min to max
+// float Wrap(float value , float min , float max);
+function RL_Wrap( float $value , float $min , float $max ) : float { global $RAYLIB_FFI; return $RAYLIB_FFI->Wrap( $value , $min , $max ); }
+
+/// Check whether two given floats are almost equal
+// int FloatEquals(float x , float y);
+function RL_FloatEquals( float $x , float $y ) : int { global $RAYLIB_FFI; return $RAYLIB_FFI->FloatEquals( $x , $y ); }
+
+/// Vector with components value 0.0f
+// Vector2 Vector2Zero(void);
+function RL_Vector2Zero(  ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->Vector2Zero(  ); }
+
+/// Vector with components value 1.0f
+// Vector2 Vector2One(void);
+function RL_Vector2One(  ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->Vector2One(  ); }
+
+/// Add two vectors (v1 + v2)
+// Vector2 Vector2Add(Vector2 v1 , Vector2 v2);
+function RL_Vector2Add( object $v1 , object $v2 ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->Vector2Add( $v1 , $v2 ); }
+
+/// Add vector and float value
+// Vector2 Vector2AddValue(Vector2 v , float add);
+function RL_Vector2AddValue( object $v , float $add ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->Vector2AddValue( $v , $add ); }
+
+/// Subtract two vectors (v1 - v2)
+// Vector2 Vector2Subtract(Vector2 v1 , Vector2 v2);
+function RL_Vector2Subtract( object $v1 , object $v2 ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->Vector2Subtract( $v1 , $v2 ); }
+
+/// Subtract vector by float value
+// Vector2 Vector2SubtractValue(Vector2 v , float sub);
+function RL_Vector2SubtractValue( object $v , float $sub ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->Vector2SubtractValue( $v , $sub ); }
+
+/// Calculate vector length
+// float Vector2Length(Vector2 v);
+function RL_Vector2Length( object $v ) : float { global $RAYLIB_FFI; return $RAYLIB_FFI->Vector2Length( $v ); }
+
+/// Calculate vector square length
+// float Vector2LengthSqr(Vector2 v);
+function RL_Vector2LengthSqr( object $v ) : float { global $RAYLIB_FFI; return $RAYLIB_FFI->Vector2LengthSqr( $v ); }
+
+/// Calculate two vectors dot product
+// float Vector2DotProduct(Vector2 v1 , Vector2 v2);
+function RL_Vector2DotProduct( object $v1 , object $v2 ) : float { global $RAYLIB_FFI; return $RAYLIB_FFI->Vector2DotProduct( $v1 , $v2 ); }
+
+/// Calculate distance between two vectors
+// float Vector2Distance(Vector2 v1 , Vector2 v2);
+function RL_Vector2Distance( object $v1 , object $v2 ) : float { global $RAYLIB_FFI; return $RAYLIB_FFI->Vector2Distance( $v1 , $v2 ); }
+
+/// Calculate square distance between two vectors
+// float Vector2DistanceSqr(Vector2 v1 , Vector2 v2);
+function RL_Vector2DistanceSqr( object $v1 , object $v2 ) : float { global $RAYLIB_FFI; return $RAYLIB_FFI->Vector2DistanceSqr( $v1 , $v2 ); }
+
+/// Calculate angle between two vectors. NOTE: Angle is calculated from origin point (0, 0)
+// float Vector2Angle(Vector2 v1 , Vector2 v2);
+function RL_Vector2Angle( object $v1 , object $v2 ) : float { global $RAYLIB_FFI; return $RAYLIB_FFI->Vector2Angle( $v1 , $v2 ); }
+
+/// Calculate angle defined by a two vectors line. NOTE: Parameters need to be normalized. Current implementation should be aligned with glm::angle
+// float Vector2LineAngle(Vector2 start , Vector2 end);
+function RL_Vector2LineAngle( object $start , object $end ) : float { global $RAYLIB_FFI; return $RAYLIB_FFI->Vector2LineAngle( $start , $end ); }
+
+/// Scale vector (multiply by value)
+// Vector2 Vector2Scale(Vector2 v , float scale);
+function RL_Vector2Scale( object $v , float $scale ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->Vector2Scale( $v , $scale ); }
+
+/// Multiply vector by vector
+// Vector2 Vector2Multiply(Vector2 v1 , Vector2 v2);
+function RL_Vector2Multiply( object $v1 , object $v2 ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->Vector2Multiply( $v1 , $v2 ); }
+
+/// Negate vector
+// Vector2 Vector2Negate(Vector2 v);
+function RL_Vector2Negate( object $v ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->Vector2Negate( $v ); }
+
+/// Divide vector by vector
+// Vector2 Vector2Divide(Vector2 v1 , Vector2 v2);
+function RL_Vector2Divide( object $v1 , object $v2 ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->Vector2Divide( $v1 , $v2 ); }
+
+/// Normalize provided vector
+// Vector2 Vector2Normalize(Vector2 v);
+function RL_Vector2Normalize( object $v ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->Vector2Normalize( $v ); }
+
+/// Transforms a Vector2 by a given Matrix
+// Vector2 Vector2Transform(Vector2 v , Matrix mat);
+function RL_Vector2Transform( object $v , object $mat ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->Vector2Transform( $v , $mat ); }
+
+/// Calculate linear interpolation between two vectors
+// Vector2 Vector2Lerp(Vector2 v1 , Vector2 v2 , float amount);
+function RL_Vector2Lerp( object $v1 , object $v2 , float $amount ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->Vector2Lerp( $v1 , $v2 , $amount ); }
+
+/// Calculate reflected vector to normal
+// Vector2 Vector2Reflect(Vector2 v , Vector2 normal);
+function RL_Vector2Reflect( object $v , object $normal ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->Vector2Reflect( $v , $normal ); }
+
+/// Rotate vector by angle
+// Vector2 Vector2Rotate(Vector2 v , float angle);
+function RL_Vector2Rotate( object $v , float $angle ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->Vector2Rotate( $v , $angle ); }
+
+/// Move Vector towards target
+// Vector2 Vector2MoveTowards(Vector2 v , Vector2 target , float maxDistance);
+function RL_Vector2MoveTowards( object $v , object $target , float $maxDistance ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->Vector2MoveTowards( $v , $target , $maxDistance ); }
+
+/// Invert the given vector
+// Vector2 Vector2Invert(Vector2 v);
+function RL_Vector2Invert( object $v ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->Vector2Invert( $v ); }
+
+/// Clamp the components of the vector between min and max values specified by the given vectors
+// Vector2 Vector2Clamp(Vector2 v , Vector2 min , Vector2 max);
+function RL_Vector2Clamp( object $v , object $min , object $max ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->Vector2Clamp( $v , $min , $max ); }
+
+/// Clamp the magnitude of the vector between two min and max values
+// Vector2 Vector2ClampValue(Vector2 v , float min , float max);
+function RL_Vector2ClampValue( object $v , float $min , float $max ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->Vector2ClampValue( $v , $min , $max ); }
+
+/// Check whether two given vectors are almost equal
+// int Vector2Equals(Vector2 p , Vector2 q);
+function RL_Vector2Equals( object $p , object $q ) : int { global $RAYLIB_FFI; return $RAYLIB_FFI->Vector2Equals( $p , $q ); }
+
+/// Vector with components value 0.0f
+// Vector3 Vector3Zero(void);
+function RL_Vector3Zero(  ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->Vector3Zero(  ); }
+
+/// Vector with components value 1.0f
+// Vector3 Vector3One(void);
+function RL_Vector3One(  ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->Vector3One(  ); }
+
+/// Add two vectors
+// Vector3 Vector3Add(Vector3 v1 , Vector3 v2);
+function RL_Vector3Add( object $v1 , object $v2 ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->Vector3Add( $v1 , $v2 ); }
+
+/// Add vector and float value
+// Vector3 Vector3AddValue(Vector3 v , float add);
+function RL_Vector3AddValue( object $v , float $add ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->Vector3AddValue( $v , $add ); }
+
+/// Subtract two vectors
+// Vector3 Vector3Subtract(Vector3 v1 , Vector3 v2);
+function RL_Vector3Subtract( object $v1 , object $v2 ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->Vector3Subtract( $v1 , $v2 ); }
+
+/// Subtract vector by float value
+// Vector3 Vector3SubtractValue(Vector3 v , float sub);
+function RL_Vector3SubtractValue( object $v , float $sub ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->Vector3SubtractValue( $v , $sub ); }
+
+/// Multiply vector by scalar
+// Vector3 Vector3Scale(Vector3 v , float scalar);
+function RL_Vector3Scale( object $v , float $scalar ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->Vector3Scale( $v , $scalar ); }
+
+/// Multiply vector by vector
+// Vector3 Vector3Multiply(Vector3 v1 , Vector3 v2);
+function RL_Vector3Multiply( object $v1 , object $v2 ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->Vector3Multiply( $v1 , $v2 ); }
+
+/// Calculate two vectors cross product
+// Vector3 Vector3CrossProduct(Vector3 v1 , Vector3 v2);
+function RL_Vector3CrossProduct( object $v1 , object $v2 ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->Vector3CrossProduct( $v1 , $v2 ); }
+
+/// Calculate one vector perpendicular vector
+// Vector3 Vector3Perpendicular(Vector3 v);
+function RL_Vector3Perpendicular( object $v ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->Vector3Perpendicular( $v ); }
+
+/// Calculate vector length
+// float Vector3Length(const Vector3 v);
+function RL_Vector3Length( object $v ) : float { global $RAYLIB_FFI; return $RAYLIB_FFI->Vector3Length( $v ); }
+
+/// Calculate vector square length
+// float Vector3LengthSqr(const Vector3 v);
+function RL_Vector3LengthSqr( object $v ) : float { global $RAYLIB_FFI; return $RAYLIB_FFI->Vector3LengthSqr( $v ); }
+
+/// Calculate two vectors dot product
+// float Vector3DotProduct(Vector3 v1 , Vector3 v2);
+function RL_Vector3DotProduct( object $v1 , object $v2 ) : float { global $RAYLIB_FFI; return $RAYLIB_FFI->Vector3DotProduct( $v1 , $v2 ); }
+
+/// Calculate distance between two vectors
+// float Vector3Distance(Vector3 v1 , Vector3 v2);
+function RL_Vector3Distance( object $v1 , object $v2 ) : float { global $RAYLIB_FFI; return $RAYLIB_FFI->Vector3Distance( $v1 , $v2 ); }
+
+/// Calculate square distance between two vectors
+// float Vector3DistanceSqr(Vector3 v1 , Vector3 v2);
+function RL_Vector3DistanceSqr( object $v1 , object $v2 ) : float { global $RAYLIB_FFI; return $RAYLIB_FFI->Vector3DistanceSqr( $v1 , $v2 ); }
+
+/// Calculate angle between two vectors
+// float Vector3Angle(Vector3 v1 , Vector3 v2);
+function RL_Vector3Angle( object $v1 , object $v2 ) : float { global $RAYLIB_FFI; return $RAYLIB_FFI->Vector3Angle( $v1 , $v2 ); }
+
+/// Negate provided vector (invert direction)
+// Vector3 Vector3Negate(Vector3 v);
+function RL_Vector3Negate( object $v ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->Vector3Negate( $v ); }
+
+/// Divide vector by vector
+// Vector3 Vector3Divide(Vector3 v1 , Vector3 v2);
+function RL_Vector3Divide( object $v1 , object $v2 ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->Vector3Divide( $v1 , $v2 ); }
+
+/// Normalize provided vector
+// Vector3 Vector3Normalize(Vector3 v);
+function RL_Vector3Normalize( object $v ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->Vector3Normalize( $v ); }
+
+/// Orthonormalize provided vectors. Makes vectors normalized and orthogonal to each other Gram-Schmidt function implementation
+// void Vector3OrthoNormalize(Vector3* v1 , Vector3* v2);
+function RL_Vector3OrthoNormalize( object $v1 , object $v2 ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->Vector3OrthoNormalize( $v1 , $v2 ); }
+
+/// Transforms a Vector3 by a given Matrix
+// Vector3 Vector3Transform(Vector3 v , Matrix mat);
+function RL_Vector3Transform( object $v , object $mat ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->Vector3Transform( $v , $mat ); }
+
+/// Transform a vector by quaternion rotation
+// Vector3 Vector3RotateByQuaternion(Vector3 v , Quaternion q);
+function RL_Vector3RotateByQuaternion( object $v , object $q ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->Vector3RotateByQuaternion( $v , $q ); }
+
+/// Rotates a vector around an axis
+// Vector3 Vector3RotateByAxisAngle(Vector3 v , Vector3 axis , float angle);
+function RL_Vector3RotateByAxisAngle( object $v , object $axis , float $angle ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->Vector3RotateByAxisAngle( $v , $axis , $angle ); }
+
+/// Calculate linear interpolation between two vectors
+// Vector3 Vector3Lerp(Vector3 v1 , Vector3 v2 , float amount);
+function RL_Vector3Lerp( object $v1 , object $v2 , float $amount ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->Vector3Lerp( $v1 , $v2 , $amount ); }
+
+/// Calculate reflected vector to normal
+// Vector3 Vector3Reflect(Vector3 v , Vector3 normal);
+function RL_Vector3Reflect( object $v , object $normal ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->Vector3Reflect( $v , $normal ); }
+
+/// Get min value for each pair of components
+// Vector3 Vector3Min(Vector3 v1 , Vector3 v2);
+function RL_Vector3Min( object $v1 , object $v2 ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->Vector3Min( $v1 , $v2 ); }
+
+/// Get max value for each pair of components
+// Vector3 Vector3Max(Vector3 v1 , Vector3 v2);
+function RL_Vector3Max( object $v1 , object $v2 ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->Vector3Max( $v1 , $v2 ); }
+
+/// Compute barycenter coordinates (u, v, w) for point p with respect to triangle (a, b, c). NOTE: Assumes P is on the plane of the triangle
+// Vector3 Vector3Barycenter(Vector3 p , Vector3 a , Vector3 b , Vector3 c);
+function RL_Vector3Barycenter( object $p , object $a , object $b , object $c ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->Vector3Barycenter( $p , $a , $b , $c ); }
+
+/// Projects a Vector3 from screen space into object space. NOTE: We are avoiding calling other raymath functions despite available
+// Vector3 Vector3Unproject(Vector3 source , Matrix projection , Matrix view);
+function RL_Vector3Unproject( object $source , object $projection , object $view ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->Vector3Unproject( $source , $projection , $view ); }
+
+/// Get Vector3 as float array
+// float3 Vector3ToFloatV(Vector3 v);
+function RL_Vector3ToFloatV( object $v ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->Vector3ToFloatV( $v ); }
+
+/// Invert the given vector
+// Vector3 Vector3Invert(Vector3 v);
+function RL_Vector3Invert( object $v ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->Vector3Invert( $v ); }
+
+/// Clamp the components of the vector between min and max values specified by the given vectors
+// Vector3 Vector3Clamp(Vector3 v , Vector3 min , Vector3 max);
+function RL_Vector3Clamp( object $v , object $min , object $max ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->Vector3Clamp( $v , $min , $max ); }
+
+/// Clamp the magnitude of the vector between two values
+// Vector3 Vector3ClampValue(Vector3 v , float min , float max);
+function RL_Vector3ClampValue( object $v , float $min , float $max ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->Vector3ClampValue( $v , $min , $max ); }
+
+/// Check whether two given vectors are almost equal
+// int Vector3Equals(Vector3 p , Vector3 q);
+function RL_Vector3Equals( object $p , object $q ) : int { global $RAYLIB_FFI; return $RAYLIB_FFI->Vector3Equals( $p , $q ); }
+
+/// Compute the direction of a refracted ray where v specifies the normalized direction of the incoming ray, n specifies the normalized normal vector of the interface of two optical media, and r specifies the ratio of the refractive index of the medium from where the ray comes to the refractive index of the medium on the other side of the surface
+// Vector3 Vector3Refract(Vector3 v , Vector3 n , float r);
+function RL_Vector3Refract( object $v , object $n , float $r ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->Vector3Refract( $v , $n , $r ); }
+
+/// Compute matrix determinant
+// float MatrixDeterminant(Matrix mat);
+function RL_MatrixDeterminant( object $mat ) : float { global $RAYLIB_FFI; return $RAYLIB_FFI->MatrixDeterminant( $mat ); }
+
+/// Get the trace of the matrix (sum of the values along the diagonal)
+// float MatrixTrace(Matrix mat);
+function RL_MatrixTrace( object $mat ) : float { global $RAYLIB_FFI; return $RAYLIB_FFI->MatrixTrace( $mat ); }
+
+/// Transposes provided matrix
+// Matrix MatrixTranspose(Matrix mat);
+function RL_MatrixTranspose( object $mat ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->MatrixTranspose( $mat ); }
+
+/// Invert provided matrix
+// Matrix MatrixInvert(Matrix mat);
+function RL_MatrixInvert( object $mat ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->MatrixInvert( $mat ); }
+
+/// Get identity matrix
+// Matrix MatrixIdentity(void);
+function RL_MatrixIdentity(  ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->MatrixIdentity(  ); }
+
+/// Add two matrices
+// Matrix MatrixAdd(Matrix left , Matrix right);
+function RL_MatrixAdd( object $left , object $right ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->MatrixAdd( $left , $right ); }
+
+/// Subtract two matrices (left - right)
+// Matrix MatrixSubtract(Matrix left , Matrix right);
+function RL_MatrixSubtract( object $left , object $right ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->MatrixSubtract( $left , $right ); }
+
+/// Get two matrix multiplication. NOTE: When multiplying matrices... the order matters!
+// Matrix MatrixMultiply(Matrix left , Matrix right);
+function RL_MatrixMultiply( object $left , object $right ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->MatrixMultiply( $left , $right ); }
+
+/// Get translation matrix
+// Matrix MatrixTranslate(float x , float y , float z);
+function RL_MatrixTranslate( float $x , float $y , float $z ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->MatrixTranslate( $x , $y , $z ); }
+
+/// Create rotation matrix from axis and angle. NOTE: Angle should be provided in radians
+// Matrix MatrixRotate(Vector3 axis , float angle);
+function RL_MatrixRotate( object $axis , float $angle ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->MatrixRotate( $axis , $angle ); }
+
+/// Get x-rotation matrix. NOTE: Angle must be provided in radians
+// Matrix MatrixRotateX(float angle);
+function RL_MatrixRotateX( float $angle ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->MatrixRotateX( $angle ); }
+
+/// Get y-rotation matrix. NOTE: Angle must be provided in radians
+// Matrix MatrixRotateY(float angle);
+function RL_MatrixRotateY( float $angle ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->MatrixRotateY( $angle ); }
+
+/// Get z-rotation matrix. NOTE: Angle must be provided in radians
+// Matrix MatrixRotateZ(float angle);
+function RL_MatrixRotateZ( float $angle ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->MatrixRotateZ( $angle ); }
+
+/// Get xyz-rotation matrix. NOTE: Angle must be provided in radians
+// Matrix MatrixRotateXYZ(Vector3 angle);
+function RL_MatrixRotateXYZ( object $angle ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->MatrixRotateXYZ( $angle ); }
+
+/// Get zyx-rotation matrix. NOTE: Angle must be provided in radians
+// Matrix MatrixRotateZYX(Vector3 angle);
+function RL_MatrixRotateZYX( object $angle ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->MatrixRotateZYX( $angle ); }
+
+/// Get scaling matrix
+// Matrix MatrixScale(float x , float y , float z);
+function RL_MatrixScale( float $x , float $y , float $z ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->MatrixScale( $x , $y , $z ); }
+
+/// Get perspective projection matrix
+// Matrix MatrixFrustum(double left , double right , double bottom , double top , double near , double far);
+function RL_MatrixFrustum( float $left , float $right , float $bottom , float $top , float $near , float $far ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->MatrixFrustum( $left , $right , $bottom , $top , $near , $far ); }
+
+/// Get perspective projection matrix. NOTE: Fovy angle must be provided in radians
+// Matrix MatrixPerspective(double fovy , double aspect , double near , double far);
+function RL_MatrixPerspective( float $fovy , float $aspect , float $near , float $far ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->MatrixPerspective( $fovy , $aspect , $near , $far ); }
+
+/// Get orthographic projection matrix
+// Matrix MatrixOrtho(double left , double right , double bottom , double top , double near , double far);
+function RL_MatrixOrtho( float $left , float $right , float $bottom , float $top , float $near , float $far ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->MatrixOrtho( $left , $right , $bottom , $top , $near , $far ); }
+
+/// Get camera look-at matrix (view matrix)
+// Matrix MatrixLookAt(Vector3 eye , Vector3 target , Vector3 up);
+function RL_MatrixLookAt( object $eye , object $target , object $up ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->MatrixLookAt( $eye , $target , $up ); }
+
+/// Get float array of matrix data
+// float16 MatrixToFloatV(Matrix mat);
+function RL_MatrixToFloatV( object $mat ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->MatrixToFloatV( $mat ); }
+
+/// Add two quaternions
+// Quaternion QuaternionAdd(Quaternion q1 , Quaternion q2);
+function RL_QuaternionAdd( object $q1 , object $q2 ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->QuaternionAdd( $q1 , $q2 ); }
+
+/// Add quaternion and float value
+// Quaternion QuaternionAddValue(Quaternion q , float add);
+function RL_QuaternionAddValue( object $q , float $add ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->QuaternionAddValue( $q , $add ); }
+
+/// Subtract two quaternions
+// Quaternion QuaternionSubtract(Quaternion q1 , Quaternion q2);
+function RL_QuaternionSubtract( object $q1 , object $q2 ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->QuaternionSubtract( $q1 , $q2 ); }
+
+/// Subtract quaternion and float value
+// Quaternion QuaternionSubtractValue(Quaternion q , float sub);
+function RL_QuaternionSubtractValue( object $q , float $sub ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->QuaternionSubtractValue( $q , $sub ); }
+
+/// Get identity quaternion
+// Quaternion QuaternionIdentity(void);
+function RL_QuaternionIdentity(  ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->QuaternionIdentity(  ); }
+
+/// Computes the length of a quaternion
+// float QuaternionLength(Quaternion q);
+function RL_QuaternionLength( object $q ) : float { global $RAYLIB_FFI; return $RAYLIB_FFI->QuaternionLength( $q ); }
+
+/// Normalize provided quaternion
+// Quaternion QuaternionNormalize(Quaternion q);
+function RL_QuaternionNormalize( object $q ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->QuaternionNormalize( $q ); }
+
+/// Invert provided quaternion
+// Quaternion QuaternionInvert(Quaternion q);
+function RL_QuaternionInvert( object $q ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->QuaternionInvert( $q ); }
+
+/// Calculate two quaternion multiplication
+// Quaternion QuaternionMultiply(Quaternion q1 , Quaternion q2);
+function RL_QuaternionMultiply( object $q1 , object $q2 ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->QuaternionMultiply( $q1 , $q2 ); }
+
+/// Scale quaternion by float value
+// Quaternion QuaternionScale(Quaternion q , float mul);
+function RL_QuaternionScale( object $q , float $mul ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->QuaternionScale( $q , $mul ); }
+
+/// Divide two quaternions
+// Quaternion QuaternionDivide(Quaternion q1 , Quaternion q2);
+function RL_QuaternionDivide( object $q1 , object $q2 ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->QuaternionDivide( $q1 , $q2 ); }
+
+/// Calculate linear interpolation between two quaternions
+// Quaternion QuaternionLerp(Quaternion q1 , Quaternion q2 , float amount);
+function RL_QuaternionLerp( object $q1 , object $q2 , float $amount ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->QuaternionLerp( $q1 , $q2 , $amount ); }
+
+/// Calculate slerp-optimized interpolation between two quaternions
+// Quaternion QuaternionNlerp(Quaternion q1 , Quaternion q2 , float amount);
+function RL_QuaternionNlerp( object $q1 , object $q2 , float $amount ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->QuaternionNlerp( $q1 , $q2 , $amount ); }
+
+/// Calculates spherical linear interpolation between two quaternions
+// Quaternion QuaternionSlerp(Quaternion q1 , Quaternion q2 , float amount);
+function RL_QuaternionSlerp( object $q1 , object $q2 , float $amount ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->QuaternionSlerp( $q1 , $q2 , $amount ); }
+
+/// Calculate quaternion based on the rotation from one vector to another
+// Quaternion QuaternionFromVector3ToVector3(Vector3 from , Vector3 to);
+function RL_QuaternionFromVector3ToVector3( object $from , object $to ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->QuaternionFromVector3ToVector3( $from , $to ); }
+
+/// Get a quaternion for a given rotation matrix
+// Quaternion QuaternionFromMatrix(Matrix mat);
+function RL_QuaternionFromMatrix( object $mat ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->QuaternionFromMatrix( $mat ); }
+
+/// Get a matrix for a given quaternion
+// Matrix QuaternionToMatrix(Quaternion q);
+function RL_QuaternionToMatrix( object $q ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->QuaternionToMatrix( $q ); }
+
+/// Get rotation quaternion for an angle and axis. NOTE: Angle must be provided in radians
+// Quaternion QuaternionFromAxisAngle(Vector3 axis , float angle);
+function RL_QuaternionFromAxisAngle( object $axis , float $angle ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->QuaternionFromAxisAngle( $axis , $angle ); }
+
+/// Get the rotation angle and axis for a given quaternion
+// void QuaternionToAxisAngle(Quaternion q , Vector3* outAxis , float* outAngle);
+function RL_QuaternionToAxisAngle( object $q , object $outAxis , object $outAngle ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->QuaternionToAxisAngle( $q , $outAxis , $outAngle ); }
+
+/// Get the quaternion equivalent to Euler angles. NOTE: Rotation order is ZYX
+// Quaternion QuaternionFromEuler(float pitch , float yaw , float roll);
+function RL_QuaternionFromEuler( float $pitch , float $yaw , float $roll ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->QuaternionFromEuler( $pitch , $yaw , $roll ); }
+
+/// Get the Euler angles equivalent to quaternion (roll, pitch, yaw). NOTE: Angles are returned in a Vector3 struct in radians
+// Vector3 QuaternionToEuler(Quaternion q);
+function RL_QuaternionToEuler( object $q ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->QuaternionToEuler( $q ); }
+
+/// Transform a quaternion given a transformation matrix
+// Quaternion QuaternionTransform(Quaternion q , Matrix mat);
+function RL_QuaternionTransform( object $q , object $mat ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->QuaternionTransform( $q , $mat ); }
+
+/// Check whether two given quaternions are almost equal
+// int QuaternionEquals(Quaternion p , Quaternion q);
+function RL_QuaternionEquals( object $p , object $q ) : int { global $RAYLIB_FFI; return $RAYLIB_FFI->QuaternionEquals( $p , $q ); }
+
+
+
+// ------------------- ^ RLAPI WRAPPER ^ -------------------
 
 } #endif // RAYLIB_H
 
