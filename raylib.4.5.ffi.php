@@ -2446,111 +2446,109 @@ function _RAYLIB_REBUILD_WRAPPER_FROM_SCRATCH() : string
 
 		list( $DEF , $DESC ) = $FOO ;
 
-		$DEF = trim( $DEF );
+		$DEF  = trim( $DEF  );
 		$DESC = trim( $DESC );
 
-		$DEF = preg_replace( '|\h+\*\*|' , '** ' , $DEF );
-		$DEF = preg_replace( '|\h+\*|' , '* ' , $DEF );
-		$DEF = preg_replace( '|(\H),|' , '$1 , ' , $DEF );
-		$DEF = preg_replace( '|\h+|' , ' ' , $DEF );
+		$DEF = preg_replace( '|\h+\*\*|' , '** '   , $DEF );
+		$DEF = preg_replace( '|\h+\*|'   , '* '    , $DEF );
+		$DEF = preg_replace( '|(\H),|'   , '$1 , ' , $DEF );
+		$DEF = preg_replace( '|\h+|'     , ' '     , $DEF );
 
 
 		preg_match( '|^(?<type>.+?)\h+(?<name>\H+)\((?<args>.*)\);|' , $DEF , $PARTS );
 
 
-		$NAME = $PARTS['name'];
+		$NAME =     $PARTS['name'];
 		$ARGS = ' '.$PARTS['args'].' ';
-		$TYPE = $PARTS['type'];
+		$TYPE =     $PARTS['type'];
 
-		$ARGS = str_replace( ' void ' , '' , $ARGS );
-		$ARGS = str_replace( ' const ' , ' ' , $ARGS );
+		$ARGS = str_replace( ' void '            , ''          , $ARGS );
+		$ARGS = str_replace( ' const '           , ' '         , $ARGS );
 
-		$ARGS = str_replace( ' void* ', ' object $' , $ARGS );
+		$ARGS = str_replace( ' void* '           , ' object $' , $ARGS );
 
-		$ARGS = str_replace( ' int ' , ' int $' , $ARGS );
-		$ARGS = str_replace( ' int* ', ' int &$' , $ARGS );
-		$ARGS = str_replace( ' unsigned int ', ' int ' , $ARGS );
+		$ARGS = str_replace( ' int '             , ' int $'    , $ARGS );
+		$ARGS = str_replace( ' int* '            , ' int &$'   , $ARGS );
+		$ARGS = str_replace( ' unsigned int '    , ' int '     , $ARGS );
 
-		$ARGS = str_replace( ' unsigned char* ' , ' string $' , $ARGS );
-		$ARGS = str_replace( ' unsigned char ' , ' int $' , $ARGS );
-		$ARGS = str_replace( ' char* ' , ' string $' , $ARGS );
-		$ARGS = str_replace( ' char** ' , ' object $' , $ARGS );
-		$ARGS = str_replace( ' char ' , ' string $' , $ARGS );
+		$ARGS = str_replace( ' unsigned char* '  , ' string $' , $ARGS );
+		$ARGS = str_replace( ' unsigned char '   , ' int $'    , $ARGS );
+		$ARGS = str_replace( ' char* '           , ' string $' , $ARGS );
+		$ARGS = str_replace( ' char** '          , ' object $' , $ARGS );
+		$ARGS = str_replace( ' char '            , ' string $' , $ARGS );
 
-		$ARGS = str_replace( ' float ' , ' float $' , $ARGS );
-		$ARGS = str_replace( ' float* ' , ' object $' , $ARGS );
+		$ARGS = str_replace( ' float '           , ' float $'  , $ARGS );
+		$ARGS = str_replace( ' float* '          , ' object $' , $ARGS );
 
-		$ARGS = str_replace( ' double ' , ' float $' , $ARGS );
+		$ARGS = str_replace( ' double '          , ' float $'  , $ARGS );
 
-		$ARGS = str_replace( ' bool ' , ' bool $' , $ARGS );
+		$ARGS = str_replace( ' bool '            , ' bool $'   , $ARGS );
 
+		$ARGS = str_replace( ' ... '             , ' ...$_'    , $ARGS );
 
-
-		$ARGS = str_replace( ' ... ' , ' ...$_' , $ARGS );
-
-		$ARGS = str_replace( ' AudioStream ' , ' object $', $ARGS );
-		$ARGS = str_replace( ' BoundingBox ' , ' object $', $ARGS );
-		$ARGS = str_replace( ' Camera ' , ' object $', $ARGS );
-		$ARGS = str_replace( ' Camera* ' , ' object $', $ARGS );
-		$ARGS = str_replace( ' Camera2D ' , ' object $', $ARGS );
-		$ARGS = str_replace( ' Camera3D ' , ' object $', $ARGS );
-		$ARGS = str_replace( ' Color* ' , ' array $' , $ARGS );
-		$ARGS = str_replace( ' Color ' , ' object $' , $ARGS );
-		$ARGS = str_replace( ' Font ' , ' object $', $ARGS );
-		$ARGS = str_replace( ' FilePathList ' , ' object $', $ARGS );
-		$ARGS = str_replace( ' GlyphInfo ' , ' object $', $ARGS );
-		$ARGS = str_replace( ' GlyphInfo* ' , ' object $', $ARGS );
-		$ARGS = str_replace( ' Image* ' , ' array $' , $ARGS );
-		$ARGS = str_replace( ' Image ' , ' object $' , $ARGS );
-		$ARGS = str_replace( ' Material ' , ' object $', $ARGS );
-		$ARGS = str_replace( ' Material* ' , ' object $', $ARGS );
-		$ARGS = str_replace( ' Matrix ' , ' object $', $ARGS );
-		$ARGS = str_replace( ' Matrix* ' , ' object $', $ARGS );
-		$ARGS = str_replace( ' Mesh ' , ' object $' , $ARGS );
-		$ARGS = str_replace( ' Mesh* ' , ' object $' , $ARGS );
-		$ARGS = str_replace( ' Model ' , ' object $', $ARGS );
-		$ARGS = str_replace( ' Model* ' , ' object $', $ARGS );
-		$ARGS = str_replace( ' ModelAnimation ' , ' object $', $ARGS );
-		$ARGS = str_replace( ' ModelAnimation* ' , ' object $', $ARGS );
-		$ARGS = str_replace( ' Music ' , ' object $', $ARGS );
-		$ARGS = str_replace( ' NPatchInfo ' , ' object $', $ARGS );
-		$ARGS = str_replace( ' Quaternion ' , ' object $', $ARGS );
-		$ARGS = str_replace( ' Ray ' , ' object $', $ARGS );
-		$ARGS = str_replace( ' Rectangle ' , ' object $', $ARGS );
-		$ARGS = str_replace( ' Rectangle** ' , ' object $', $ARGS );
-		$ARGS = str_replace( ' RenderTexture2D ' , ' object $', $ARGS );
-		$ARGS = str_replace( ' Shader ' , ' object $', $ARGS );
-		$ARGS = str_replace( ' Sound ' , ' object $', $ARGS );
-		$ARGS = str_replace( ' Texture2D ' , ' object $', $ARGS );
-		$ARGS = str_replace( ' Texture2D* ' , ' object $', $ARGS );
-		$ARGS = str_replace( ' Vector2 ' , ' object $', $ARGS );
-		$ARGS = str_replace( ' Vector2* ' , ' object $', $ARGS );
-		$ARGS = str_replace( ' Vector3 ' , ' object $', $ARGS );
-		$ARGS = str_replace( ' Vector3* ' , ' object $', $ARGS );
-		$ARGS = str_replace( ' Vector4 ' , ' object $', $ARGS );
-		$ARGS = str_replace( ' VrDeviceInfo ' , ' object $', $ARGS );
-		$ARGS = str_replace( ' VrStereoConfig ' , ' object $', $ARGS );
-		$ARGS = str_replace( ' Wave ' , ' object $', $ARGS );
-		$ARGS = str_replace( ' Wave* ' , ' object $', $ARGS );
-		$ARGS = str_replace( ' rlDrawCall ' , ' object $' , $ARGS );
-		$ARGS = str_replace( ' rlRenderBatch ' , ' object $' , $ARGS );
-		$ARGS = str_replace( ' rlVertexBuffer ' , ' object $' , $ARGS );
-		$ARGS = str_replace( ' rlDrawCall* ' , ' object $' , $ARGS );
-		$ARGS = str_replace( ' rlRenderBatch* ' , ' object $' , $ARGS );
+		$ARGS = str_replace( ' AudioStream '     , ' object $' , $ARGS );
+		$ARGS = str_replace( ' BoundingBox '     , ' object $' , $ARGS );
+		$ARGS = str_replace( ' Camera '          , ' object $' , $ARGS );
+		$ARGS = str_replace( ' Camera* '         , ' object $' , $ARGS );
+		$ARGS = str_replace( ' Camera2D '        , ' object $' , $ARGS );
+		$ARGS = str_replace( ' Camera3D '        , ' object $' , $ARGS );
+		$ARGS = str_replace( ' Color* '          , ' array $'  , $ARGS );
+		$ARGS = str_replace( ' Color '           , ' object $' , $ARGS );
+		$ARGS = str_replace( ' Font '            , ' object $' , $ARGS );
+		$ARGS = str_replace( ' FilePathList '    , ' object $' , $ARGS );
+		$ARGS = str_replace( ' GlyphInfo '       , ' object $' , $ARGS );
+		$ARGS = str_replace( ' GlyphInfo* '      , ' object $' , $ARGS );
+		$ARGS = str_replace( ' Image* '          , ' array $'  , $ARGS );
+		$ARGS = str_replace( ' Image '           , ' object $' , $ARGS );
+		$ARGS = str_replace( ' Material '        , ' object $' , $ARGS );
+		$ARGS = str_replace( ' Material* '       , ' object $' , $ARGS );
+		$ARGS = str_replace( ' Matrix '          , ' object $' , $ARGS );
+		$ARGS = str_replace( ' Matrix* '         , ' object $' , $ARGS );
+		$ARGS = str_replace( ' Mesh '            , ' object $' , $ARGS );
+		$ARGS = str_replace( ' Mesh* '           , ' object $' , $ARGS );
+		$ARGS = str_replace( ' Model '           , ' object $' , $ARGS );
+		$ARGS = str_replace( ' Model* '          , ' object $' , $ARGS );
+		$ARGS = str_replace( ' ModelAnimation '  , ' object $' , $ARGS );
+		$ARGS = str_replace( ' ModelAnimation* ' , ' object $' , $ARGS );
+		$ARGS = str_replace( ' Music '           , ' object $' , $ARGS );
+		$ARGS = str_replace( ' NPatchInfo '      , ' object $' , $ARGS );
+		$ARGS = str_replace( ' Quaternion '      , ' object $' , $ARGS );
+		$ARGS = str_replace( ' Ray '             , ' object $' , $ARGS );
+		$ARGS = str_replace( ' Rectangle '       , ' object $' , $ARGS );
+		$ARGS = str_replace( ' Rectangle** '     , ' object $' , $ARGS );
+		$ARGS = str_replace( ' RenderTexture2D ' , ' object $' , $ARGS );
+		$ARGS = str_replace( ' Shader '          , ' object $' , $ARGS );
+		$ARGS = str_replace( ' Sound '           , ' object $' , $ARGS );
+		$ARGS = str_replace( ' Texture2D '       , ' object $' , $ARGS );
+		$ARGS = str_replace( ' Texture2D* '      , ' object $' , $ARGS );
+		$ARGS = str_replace( ' Vector2 '         , ' object $' , $ARGS );
+		$ARGS = str_replace( ' Vector2* '        , ' object $' , $ARGS );
+		$ARGS = str_replace( ' Vector3 '         , ' object $' , $ARGS );
+		$ARGS = str_replace( ' Vector3* '        , ' object $' , $ARGS );
+		$ARGS = str_replace( ' Vector4 '         , ' object $' , $ARGS );
+		$ARGS = str_replace( ' VrDeviceInfo '    , ' object $' , $ARGS );
+		$ARGS = str_replace( ' VrStereoConfig '  , ' object $' , $ARGS );
+		$ARGS = str_replace( ' Wave '            , ' object $' , $ARGS );
+		$ARGS = str_replace( ' Wave* '           , ' object $' , $ARGS );
+		$ARGS = str_replace( ' rlDrawCall '      , ' object $' , $ARGS );
+		$ARGS = str_replace( ' rlRenderBatch '   , ' object $' , $ARGS );
+		$ARGS = str_replace( ' rlVertexBuffer '  , ' object $' , $ARGS );
+		$ARGS = str_replace( ' rlDrawCall* '     , ' object $' , $ARGS );
+		$ARGS = str_replace( ' rlRenderBatch* '  , ' object $' , $ARGS );
 		$ARGS = str_replace( ' rlVertexBuffer* ' , ' object $' , $ARGS );
 
 		$ARGS = trim( $ARGS );
 
 
 		$TYPE = str_replace( 'unsigned char*' , 'string' , $TYPE );
-		$TYPE = str_replace( 'const char*' , 'string' , $TYPE );
-		$TYPE = str_replace( 'char*' , 'string' , $TYPE );
-		$TYPE = str_replace( 'void*' , 'object' , $TYPE );
-		$TYPE = str_replace( 'long' , 'int' , $TYPE );
+		$TYPE = str_replace( 'const char*'    , 'string' , $TYPE );
+		$TYPE = str_replace( 'char*'          , 'string' , $TYPE );
+		$TYPE = str_replace( 'void*'          , 'object' , $TYPE );
+		$TYPE = str_replace( 'long'           , 'int'    , $TYPE );
 
 		if ( ! in_array( $TYPE , [ 'void' , 'bool' , 'int' , 'float' , 'string' , 'array' , 'object' ]) )
 		{
-			$TYPE = 'object' ; //$RETURN_TYPES[ $TYPE ]++;
+			$TYPE = 'object' ;
 		}
 
 		if ( empty( $ARGS ) )
