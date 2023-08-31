@@ -5,13 +5,13 @@ Very W.I.P.
 
 Meant to work out of the box with official precompiled library releases.
 
-The wrapper integrates RLAPI + RMAPI + RLGL API.
+The wrapper integrates `raylib.h` + `raymath.h` + `rlgl.h` API.
 
-Only need `libraylib.so` or `raylib.dll` into a `.\raylib\`, or `.\lib` or `.\` sub directory.
+Only requires `libraylib.so` or `raylib.dll` into a `.\raylib\`, or `.\lib` or `.\` sub directory.
 
 ## Notes :
 
-All `raylib.h` and `rlmath.h` functions, enums, consts and typedefs are prefixed with `RL_`.
+All `raylib.h` and `raymath.h` functions, enums, consts and typedefs are prefixed with `RL_`.
 
 ```PHP
 RL_ClearBackground( RL_WHITE );
@@ -22,6 +22,7 @@ RL_ClearBackground( RL_WHITE );
 ```PHP
 RL_rlMatrixMode( RLGL_PROJECTION );
 ```
+( Note : adding prefixes was required because some Raylib names were conflicting with PHP, and `RLGL_` was also required to be different than `RL_` because `rlgl.h` contains some duplicates names with different values. )
 
 Raylib's structs can be created this way :
 
