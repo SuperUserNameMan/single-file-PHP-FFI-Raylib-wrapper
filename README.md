@@ -101,6 +101,9 @@ $B = $A ;          // <= $A and $B refers to the same object
 $A = RL_Vector2();
 $B = RL_Vector2();
 $B = $A ;          // <= $A and $B refers to the same object
+                   //    and the object previously refered
+                   //    by $B is sent to garbage collector
+                   //    because no one refers to it anymore.
 ```
 
 ```PHP
