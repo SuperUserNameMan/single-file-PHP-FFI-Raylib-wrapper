@@ -2489,7 +2489,7 @@ function _RAYLIB_REBUILD_WRAPPER_FROM_SCRATCH() : string
 		$ARGS = str_replace( ' AudioStream '     , ' object $' , $ARGS );
 		$ARGS = str_replace( ' BoundingBox '     , ' object $' , $ARGS );
 		$ARGS = str_replace( ' Camera '          , ' object $' , $ARGS );
-		$ARGS = str_replace( ' Camera* '         , ' object $' , $ARGS );
+		$ARGS = str_replace( ' Camera* '         , ' object /*ref*/$' , $ARGS );
 		$ARGS = str_replace( ' Camera2D '        , ' object $' , $ARGS );
 		$ARGS = str_replace( ' Camera3D '        , ' object $' , $ARGS );
 		$ARGS = str_replace( ' Color* '          , ' array $'  , $ARGS );
@@ -2558,9 +2558,10 @@ function _RAYLIB_REBUILD_WRAPPER_FROM_SCRATCH() : string
 		else
 		{
 			$VARS = explode( ' ' , $ARGS ) ;
-			$VARS = array_filter( $VARS , function( $TOK ) { return $TOK == ',' || $TOK[0] == '$' || $TOK[0] == '&' || $TOK[0] == '.' ; } );
+			$VARS = array_filter( $VARS , function( $TOK ) { return $TOK == ',' || $TOK[0] == '$' || $TOK[0] == '&' || $TOK[0] == '.' || $TOK[0] == '/'; } );
 			$VARS = implode( ' ' , $VARS );
 
+			$VARS = preg_replace( '|/\*ref\*/(\$\H+)|' , 'FFI::addr($1)' , $VARS );
 			$VARS = str_replace( '&' , '' , $VARS );
 		}
 
@@ -3475,11 +3476,11 @@ function RL_GetGesturePinchAngle(  ) : float { global $RAYLIB_FFI; return $RAYLI
 
 /// Update camera position for selected mode
 // void UpdateCamera(Camera* camera , int mode);
-function RL_UpdateCamera( object $camera , int $mode ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->UpdateCamera( $camera , $mode ); }
+function RL_UpdateCamera( object /*ref*/$camera , int $mode ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->UpdateCamera( FFI::addr($camera) , $mode ); }
 
 /// Update camera movement/rotation
 // void UpdateCameraPro(Camera* camera , Vector3 movement , Vector3 rotation , float zoom);
-function RL_UpdateCameraPro( object $camera , object $movement , object $rotation , float $zoom ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->UpdateCameraPro( $camera , $movement , $rotation , $zoom ); }
+function RL_UpdateCameraPro( object /*ref*/$camera , object $movement , object $rotation , float $zoom ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->UpdateCameraPro( FFI::addr($camera) , $movement , $rotation , $zoom ); }
 
 /// Set texture and rectangle to be used on shapes drawing
 // void SetShapesTexture(Texture2D texture , Rectangle source);
@@ -5832,7 +5833,6 @@ function RL_rlLoadDrawCube(  ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->rlLoadD
 /// Load and draw a quad
 // void rlLoadDrawQuad(void);
 function RL_rlLoadDrawQuad(  ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->rlLoadDrawQuad(  ); }
-
 
 
 // ------------------- ^ RLAPI WRAPPER ^ -------------------
