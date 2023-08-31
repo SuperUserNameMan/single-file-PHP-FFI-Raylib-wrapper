@@ -205,5 +205,14 @@ RL_UpdateCamera( $CAMERA , RL_CAMERA_FREE );
 
 // or using FFI :
 
-$RAYLIB_FFI->UpdateCamera( FFI::addr( $CAMERA ) , RL_CAMERA_FREE ); }
+$RAYLIB_FFI->UpdateCamera( FFI::addr( $CAMERA ) , RL_CAMERA_FREE );
+```
+
+Same thing with predefined Raylib's colors :
+```PHP
+$COLOR = RL_WHITE ; // <= $COLOR refers to RL_WHITE whch is FFI/CData object
+$COLOR->r = 0 ;     // <= RL_WHITE is also be affected by this change
+
+$COLOR = clone RL_WHITE ; // <= $COLOR refers to a clone of RL_WHITE
+$COLOR->r = 0 :           // <= RL_WHITE remains untouched
 ```
