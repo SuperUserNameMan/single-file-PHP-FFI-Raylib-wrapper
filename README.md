@@ -115,6 +115,19 @@ $B = clone $A ;    // <= $B refers to a clone of $A's object
 $A = RL_Vector2();
 $B = RL_Vector2();
 $B = clone $A ;    // <= $B refers to a clone of $A's object
+                   //    and the object previously refered
+                   //    by $B is sent to garbage collector
+                   //    because no one refers to it anymore.
+```
+
+
+```PHP
+$A = RL_Vector2();
+$B = RL_Vector2();
+$C = $B ;
+$B = clone $A ;    // <= $B refers to a clone of $A's object
+                   //    and the object previously refered
+                   //    by $B is still refered by $C.
 ```
 
 ```PHP
