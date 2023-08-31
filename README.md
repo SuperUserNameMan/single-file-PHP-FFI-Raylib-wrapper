@@ -61,7 +61,8 @@ If Raylib is recompiled with customized OpenGL parameters, the wrapper has to be
 // 4 => OpenGL 4.3
 // 0xE2 => OpenGLES2
 
-define( 'RL_GRAPHICS_API_OPENGL_VERSION' , 4 ); // tell the wrapper Raylib was compiled for OpenGL 4.3
+// Tells the wrapper Raylib was compiled for OpenGL 4.3
+define( 'RL_GRAPHICS_API_OPENGL_VERSION' , 4 ); 
 
 // Default internal render batch elements limits
 define( 'RLGL_DEFAULT_BATCH_BUFFER_ELEMENTS' , 8192 );
@@ -72,7 +73,8 @@ define( 'RLGL_DEFAULT_BATCH_BUFFERS' , 1 );
 // Default number of batch draw calls (by state changes: mode, texture)
 define( 'RLGL_DEFAULT_BATCH_DRAWCALLS' , 256 );
 
-// Maximum number of textures units that can be activated on batch drawing (SetShaderValueTexture())
+// Maximum number of textures units that can be activated
+// on batch drawing (SetShaderValueTexture())
 define( 'RLGL_DEFAULT_BATCH_MAX_TEXTURE_UNITS' , 4 );
 
 // Maximum size of Matrix stack
@@ -92,24 +94,39 @@ define( 'RLGL_CULL_DISTANCE_FAR' , 1000.0 );
 
 ```PHP
 $A = RL_Vector2(); // <= $A refers to a FFI/CData object
-$B = $A ;          // <= $A and $B share the same reference
+$B = $A ;          // <= $A and $B refers to the same object
+```
 
+```PHP
 $A = RL_Vector2();
 $B = RL_Vector2();
-$B = $A ;          // <= $B reference dropped and replaced by same reference than $A
+$B = $A ;          // <= $A and $B refers to the same object
+```
 
+```PHP
 $A = RL_Vector2();
-$B = clone $A ;    // <= $B refers to a clone of $A
+$B = clone $A ;    // <= $B refers to a clone of $A's object
+```
 
+```PHP
 $A = RL_Vector2();
 $B = RL_Vector2();
-$B = clone $A ; // <= $B reference dropped and replaced by ref to a clone of $A
+$B = clone $A ;    // <= $B refers to a clone of $A's object
+```
+
+```PHP
+$A = RL_Vector2() ;
+$B = $A ;
+$A = null ;        // <= $A abandonned the reference to the object
+print_r( $B );     // <= $B still refers to the object
+$B = null ;        // <= $B abandonned the last reference to the object
+                   //       and the object is sent to garbage colllector.
 ```
 
 ```PHP
 function foo( object $A /*objects are passed by reference*/ ) : object
 {
-  return $A ; // <= returns reference 
+  return $A ; // <= returns the reference 
 }
 
 $A = RL_Vector2();
@@ -126,6 +143,18 @@ $A = RL_Vector2();
 $B = foo( $A );     // <= same as $B = clone $A ;
 ```
 
+
+```PHP
+function foo( object $A ) : void
+{
+  $A->x = 789 ;
+}
+
+$A = RL_Vector2( 123 , 456 );
+foo( $A );
+print_r( $A );    // <= content of $A's object altered inside foo()
+```
+
 ```PHP
 class Player
 {
@@ -136,12 +165,15 @@ $PLAYER = new Player();
 $PLAYER->POS = RL_Vector2();
 
 $CAMERA = RL_Camera2D();
-$CAMERA->target = $PLAYER->POS ; // <= copy, because $CAMERA->target is property of a FFI/CData object
+$CAMERA->target = $PLAYER->POS ; // <= copy of content
+                                 //    because $CAMERA->target
+                                 //    is property of a FFI/CData object
 
 $PLAYER->POS = $CAMERA->target ; // <= $PLAYER->POS refers to $CAMERA->target
 
 $PLAYER->POS = clone $CAMERA->target ; // <= $PLAYER->POS refers to a clone of $CAMERA->target
 ```
+
 Regarding the Raylib's C API, some function requires a pointer to an object :
 ```C
 void UpdateCamera( Camera* camera , int mode );
