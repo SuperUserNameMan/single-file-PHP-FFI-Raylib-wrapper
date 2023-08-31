@@ -90,7 +90,7 @@ define( 'RLGL_CULL_DISTANCE_NEAR' , 0.01 );
 define( 'RLGL_CULL_DISTANCE_FAR' , 1000.0 );
 ```
 
-## Passing structs by reference or by value ?
+## Passing structs by reference or by value ? `malloc()` and `free()` ?
 
 ```PHP
 $A = RL_Vector2(); // <= $A refers to a FFI/CData object
