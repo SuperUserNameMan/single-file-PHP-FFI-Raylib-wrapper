@@ -91,39 +91,39 @@ define( 'RLGL_CULL_DISTANCE_FAR' , 1000.0 );
 ## Passing structs by reference or by value ?
 
 ```PHP
-$A = RL_Vector2();
-$B = $A ; // <= same reference
+$A = RL_Vector2(); // <= $A refers to a FFI/CData object
+$B = $A ;          // <= $A and $B share the same reference
 
 $A = RL_Vector2();
 $B = RL_Vector2();
-$B = $A ; // <= replaced by same reference
+$B = $A ;          // <= $B reference dropped and replaced by same reference than $A
 
 $A = RL_Vector2();
-$B = clone $A ; // <= clone of $A
+$B = clone $A ;    // <= $B refers to a clone of $A
 
 $A = RL_Vector2();
 $B = RL_Vector2();
-$B = clone $A ; // <= replaced by clone of $A
+$B = clone $A ; // <= $B reference dropped and replaced by ref to a clone of $A
 ```
 
 ```PHP
-function foo( object $A /*object passed by reference*/ ) : object
+function foo( object $A /*objects are passed by reference*/ ) : object
 {
-  return $A ; // object returned as reference
+  return $A ; // <= returns reference 
 }
 
 $A = RL_Vector2();
-$B = foo( $A ); // same as $B = $A ;
+$B = foo( $A ); // <= same as $B = $A ;
 ```
 
 ```PHP
-function foo( object $A /*object passed by reference*/ ) : object
+function foo( object $A ) : object
 {
-  return clone $A ; // object returned as clone
+  return clone $A ; // <= returns clone of refered object
 }
 
 $A = RL_Vector2();
-$B = foo( $A ); // same as $B = clone $A ;
+$B = foo( $A );     // <= same as $B = clone $A ;
 ```
 
 ```PHP
@@ -136,7 +136,9 @@ $PLAYER = new Player();
 $PLAYER->POS = RL_Vector2();
 
 $CAMERA = RL_Camera2D();
-$CAMERA->target = $PLAYER->POS ; // copy, because $CAMERA->target is property of a FFI/CData object
+$CAMERA->target = $PLAYER->POS ; // <= copy, because $CAMERA->target is property of a FFI/CData object
 
-$PLAYER->POS = $CAMERA->target ; // same reference (content of $A replaced by reference to $CAMERA->target)
+$PLAYER->POS = $CAMERA->target ; // <= $PLAYER->POS refers to $CAMERA->target
+
+$PLAYER->POS = clone $CAMERA->target ; // <= $PLAYER->POS refers to a clone of $CAMERA->target
 ```
