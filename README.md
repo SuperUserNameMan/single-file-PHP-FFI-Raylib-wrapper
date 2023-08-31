@@ -49,3 +49,41 @@ $my_palette = FFI::new( FFI::arrayType( RAYLIB_FFI_Color ) , [ 1 ] );
 $my_color_map = FFI::new( FFI::arrayType( RAYLIB_FFI_Color ) , [ 320 , 240 ] );
 $my_cube_array = FFI::new( FFI::arrayType( RAYLIB_FFI_Vector3D ) , [ 3 , 5 , 8 ] );
 ```
+
+## Customized compilation
+
+If Raylib is recompiled with customized OpenGL parameters, the wrapper has to be made aware of these new parameters before `include()`.
+
+```PHP
+// 1 => OpenGL 1.1
+// 2 => OpenGL 2.1
+// 3 => OpenGL 3.3
+// 4 => OpenGL 4.3
+// 0xE2 => OpenGLES2
+
+define( 'RL_GRAPHICS_API_OPENGL_VERSION' , 4 ); // tell the wrapper Raylib was compiled for OpenGL 4.3
+
+// Default internal render batch elements limits
+define( 'RLGL_DEFAULT_BATCH_BUFFER_ELEMENTS' , 8192 );
+
+// Default number of batch buffers (multi-buffering)
+define( 'RLGL_DEFAULT_BATCH_BUFFERS' , 1 );
+
+// Default number of batch draw calls (by state changes: mode, texture)
+define( 'RLGL_DEFAULT_BATCH_DRAWCALLS' , 256 );
+
+// Maximum number of textures units that can be activated on batch drawing (SetShaderValueTexture())
+define( 'RLGL_DEFAULT_BATCH_MAX_TEXTURE_UNITS' , 4 );
+
+// Maximum size of Matrix stack
+define( 'RLGL_MAX_MATRIX_STACK_SIZE' , 32 );
+
+// Maximum number of shader locations supported
+define( 'RLGL_MAX_SHADER_LOCATIONS' , 32 );
+
+// Default near cull distance
+define( 'RLGL_CULL_DISTANCE_NEAR' , 0.01 );
+
+// Default far cull distance
+define( 'RLGL_CULL_DISTANCE_FAR' , 1000.0 );
+```
