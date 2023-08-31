@@ -87,3 +87,56 @@ define( 'RLGL_CULL_DISTANCE_NEAR' , 0.01 );
 // Default far cull distance
 define( 'RLGL_CULL_DISTANCE_FAR' , 1000.0 );
 ```
+
+## Passing structs by reference or by value ?
+
+```PHP
+$A = RL_Vector2();
+$B = $A ; // <= same reference
+
+$A = RL_Vector2();
+$B = RL_Vector2();
+$B = $A ; // <= replaced by same reference
+
+$A = RL_Vector2();
+$B = clone $A ; // <= clone of $A
+
+$A = RL_Vector2();
+$B = RL_Vector2();
+$B = clone $A ; // <= replaced by clone of $A
+```
+
+```PHP
+function foo( object $A /*object passed by reference*/ ) : object
+{
+  return $A ; // object returned as reference
+}
+
+$A = RL_Vector2();
+$B = foo( $A ); // same as $B = $A ;
+```
+
+```PHP
+function foo( object $A /*object passed by reference*/ ) : object
+{
+  return clone $A ; // object returned as clone
+}
+
+$A = RL_Vector2();
+$B = foo( $A ); // same as $B = clone $A ;
+```
+
+```PHP
+class Player
+{
+  public object $POS ;
+}
+
+$PLAYER = new Player();
+$PLAYER->POS = RL_Vector2();
+
+$CAMERA = RL_Camera2D();
+$CAMERA->target = $PLAYER->POS ; // copy, because $CAMERA->target is property of a FFI/CData object
+
+$PLAYER->POS = $CAMERA->target ; // same reference (content of $A replaced by reference to $CAMERA->target)
+```
