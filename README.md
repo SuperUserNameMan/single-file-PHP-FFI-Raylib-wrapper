@@ -3,7 +3,7 @@ A single file [PHP8](https://github.com/php/php-src) FFI [Raylib 4.5](https://gi
 
 Very W.I.P.
 
-Meant to work out of the box with official precompiled library releases.
+Meant to work out of the box with [official precompiled library releases](https://github.com/raysan5/raylib/releases) on Windows (not really tested) and on Linux.
 
 The wrapper integrates `raylib.h` + `raymath.h` + `rlgl.h` API.
 
@@ -141,4 +141,21 @@ $CAMERA->target = $PLAYER->POS ; // <= copy, because $CAMERA->target is property
 $PLAYER->POS = $CAMERA->target ; // <= $PLAYER->POS refers to $CAMERA->target
 
 $PLAYER->POS = clone $CAMERA->target ; // <= $PLAYER->POS refers to a clone of $CAMERA->target
+```
+Regarding the Raylib's C API, some function requires a pointer to an object :
+```C
+void UpdateCamera( Camera* camera , int mode );
+```
+
+In PHP, you call it this way :
+```PHP
+$CAMERA = RL_Camera2D();
+
+// Using the wrapper :
+
+RL_UpdateCamera( $CAMERA , RL_CAMERA_FREE );
+
+// or using FFI :
+
+$RAYLIB_FFI->UpdateCamera( FFI::addr( $CAMERA ) , RL_CAMERA_FREE ); }
 ```
