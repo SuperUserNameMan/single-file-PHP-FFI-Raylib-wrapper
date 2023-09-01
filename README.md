@@ -5,13 +5,13 @@ Very W.I.P.
 
 Meant to work out of the box with [official precompiled library releases](https://github.com/raysan5/raylib/releases) on Windows (not really tested) and on Linux.
 
-The wrapper integrates `raylib.h` + `raymath.h` + `rlgl.h` API.
+The wrapper integrates `raylib.h` + `raymath.h` + `rlgl.h` + `rlcamera.h` API.
 
 Only requires `libraylib.so` or `raylib.dll` into a `.\raylib\`, or `.\lib` or `.\` sub directory.
 
 ## Notes :
 
-All `raylib.h` and `raymath.h` functions, enums, consts and typedefs are prefixed with `RL_`.
+All `raylib.h`, `raymath.h` and `rcamera.h` functions, enums, consts and typedefs are prefixed with `RL_`.
 
 ```PHP
 RL_ClearBackground( RL_WHITE );
