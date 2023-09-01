@@ -1,0 +1,51 @@
+<?php
+//TAB=4
+
+include('./raylib/raylib.ffi.php');
+
+
+$callback_CustomLog = function( int $MSG_TYPE , string $TEXT , ...$C_ARGS )
+{
+	$NOW = time();
+
+	$DATE = date( "Y-m-d H:i:s" , $NOW );
+
+	echo "[$DATE] ";
+
+	switch ( $MSG_TYPE )
+	{
+		case RL_LOG_INFO    : echo "[INFO] : " ; break;
+		case RL_LOG_ERROR   : echo "[ERROR]: " ; break;
+		case RL_LOG_WARNING : echo "[WARN] : " ; break;
+		case RL_LOG_DEBUG   : echo "[DEBUG]: " ; break;
+		default: break;
+	}
+
+	echo RL_TextFormat( $TEXT , ...$C_ARGS ).PHP_EOL; //XXX display garbage. Need to find a better way to handle va_list received from C
+};
+
+
+$SCREEN_W = 800 ;
+$SCREEN_H = 450 ;
+
+
+RL_SetTraceLogCallback( $callback_CustomLog );
+
+RL_InitWindow( $SCREEN_W , $SCREEN_H , "raylib [core] example - custom logging" );
+
+RL_SetTargetFPS( 60 );
+
+while( ! RL_WindowShouldClose() )
+{
+	RL_BeginDrawing();
+
+		RL_ClearBackground( RL_RAYWHITE );
+
+		RL_DrawText( "Check out the console output to see the custom logger in action!" , 60 , 200 , 20 , RL_LIGHTGRAY );
+
+	RL_EndDrawing();
+}
+
+RL_CloseWindow();
+
+//EOF
