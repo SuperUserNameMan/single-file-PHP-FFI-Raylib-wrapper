@@ -918,7 +918,6 @@ RAYLIB_H;
 
 $RAYLIB_H .=<<<'RAYLIB_H'
 
-
 // Window-related functions
 /*RLAPI*/ void InitWindow(int width, int height, const char *title);  // Initialize window and OpenGL context
 /*RLAPI*/ bool WindowShouldClose(void);                               // Check if KEY_ESCAPE pressed or Close icon pressed
@@ -2401,22 +2400,36 @@ $RLAPI_BLACKLISTED_FUNCTIONS = [
 	'AttachAudioMixedProcessor',
 	'DetachAudioMixedProcessor',
 
-	'MemAlloc',
-	'MemRealloc',
-	'MemFree',
-
 	'SetShaderValue',
 	'SetShaderValueV',
 
-	'SetTraceLogCallback',
+	'SetTraceLogCallback', // XXX problem with va_list parameters
+
 	'SetLoadFileDataCallback',
 	'SetSaveFileDataCallback',
 	'SetLoadFileTextCallback',
 	'SetSaveFileTextCallback',
 
-	'TraceLog',
-	'SetTraceLogLevel',
+	'LoadFileData',
+	'UnloadFileData',
 ];
+
+
+/// Load file data as byte array (read)
+// unsigned char *LoadFileData(const char *fileName, unsigned int *bytesRead);
+function RL_LoadFileData( string $FILE_PATH , int &$DATA_SIZE ) : ?object
+{
+	global $RAYLIB_FFI ;
+	$INT = FFI::new('unsigned int[1]');
+	$DATA = $RAYLIB_FFI->LoadFileData( $FILE_PATH , FFI::addr( $INT[0] ) );
+	$DATA_SIZE = $INT[0] ;
+	return $DATA ;
+}
+
+/// Unload file data allocated by LoadFileData()
+// void UnloadFileData(unsigned char* data);
+function RL_UnloadFileData( object $data ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->UnloadFileData( $data ); }
+
 
 
 // ------------------------------------------------------------------------------------
@@ -2975,23 +2988,23 @@ function RL_SetConfigFlags( int $flags ) : void { global $RAYLIB_FFI; $RAYLIB_FF
 
 /// Show trace log messages (LOG_DEBUG, LOG_INFO, LOG_WARNING, LOG_ERROR...)
 // void TraceLog(int logLevel , const char* text , ...);
-//XXX function RL_TraceLog( int $logLevel , string $text , ...$_ ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->TraceLog( $logLevel , $text , ...$_ ); }
+function RL_TraceLog( int $logLevel , string $text , ...$_ ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->TraceLog( $logLevel , $text , ...$_ ); }
 
 /// Set the current threshold (minimum) log level
 // void SetTraceLogLevel(int logLevel);
-//XXX function RL_SetTraceLogLevel( int $logLevel ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->SetTraceLogLevel( $logLevel ); }
+function RL_SetTraceLogLevel( int $logLevel ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->SetTraceLogLevel( $logLevel ); }
 
 /// Internal memory allocator
 // void* MemAlloc(unsigned int size);
-//XXX function RL_MemAlloc( int $size ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->MemAlloc( $size ); }
+function RL_MemAlloc( int $size ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->MemAlloc( $size ); }
 
 /// Internal memory reallocator
 // void* MemRealloc(void* ptr , unsigned int size);
-//XXX function RL_MemRealloc( object $ptr , int $size ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->MemRealloc( $ptr , $size ); }
+function RL_MemRealloc( object $ptr , int $size ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->MemRealloc( $ptr , $size ); }
 
 /// Internal memory free
 // void MemFree(void* ptr);
-//XXX function RL_MemFree( object $ptr ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->MemFree( $ptr ); }
+function RL_MemFree( object $ptr ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->MemFree( $ptr ); }
 
 /// Open URL with default system browser (if available)
 // void OpenURL(const char* url);
@@ -2999,7 +3012,7 @@ function RL_OpenURL( string $url ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->Ope
 
 /// Set custom trace log
 // void SetTraceLogCallback(TraceLogCallback callback);
-//XXX function RL_SetTraceLogCallback( TraceLogCallback callback ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->SetTraceLogCallback(  ); }
+//XXX function RL_SetTraceLogCallback( object $callback ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->SetTraceLogCallback( $callback ); }
 
 /// Set custom file binary data loader
 // void SetLoadFileDataCallback(LoadFileDataCallback callback);
@@ -3019,11 +3032,11 @@ function RL_OpenURL( string $url ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->Ope
 
 /// Load file data as byte array (read)
 // unsigned char* LoadFileData(const char* fileName , unsigned int* bytesRead);
-function RL_LoadFileData( string $fileName , int &$bytesRead ) : string { global $RAYLIB_FFI; return $RAYLIB_FFI->LoadFileData( $fileName , $bytesRead ); }
+//XXX function RL_LoadFileData( string $fileName , int &$bytesRead ) : string { global $RAYLIB_FFI; return $RAYLIB_FFI->LoadFileData( $fileName , $bytesRead ); }
 
 /// Unload file data allocated by LoadFileData()
 // void UnloadFileData(unsigned char* data);
-function RL_UnloadFileData( string $data ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->UnloadFileData( $data ); }
+//XXX function RL_UnloadFileData( string $data ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->UnloadFileData( $data ); }
 
 /// Save data to file from byte array (write), returns true on success
 // bool SaveFileData(const char* fileName , void* data , unsigned int bytesToWrite);
