@@ -86,6 +86,8 @@ define( 'RAYLIB_VERSION_MINOR' , 5 );
 define( 'RAYLIB_VERSION_PATCH' , 0 );
 define( 'RAYLIB_VERSION' , "4.5" );
 
+define( 'RL_PLATFORM_DESKTOP' , true );
+	
 //----------------------------------------------------------------------------------
 // Some basic Defines
 //----------------------------------------------------------------------------------
