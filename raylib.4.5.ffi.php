@@ -86,8 +86,12 @@ define( 'RAYLIB_VERSION_MINOR' , 5 );
 define( 'RAYLIB_VERSION_PATCH' , 0 );
 define( 'RAYLIB_VERSION' , "4.5" );
 
+
 define( 'RL_PLATFORM_DESKTOP' , true );
-	
+
+// TODO PLATFORM_ANDROID
+// TODO PLATFORM_RPI
+
 //----------------------------------------------------------------------------------
 // Some basic Defines
 //----------------------------------------------------------------------------------
@@ -2402,9 +2406,6 @@ $RLAPI_BLACKLISTED_FUNCTIONS = [
 	'AttachAudioMixedProcessor',
 	'DetachAudioMixedProcessor',
 
-	'SetShaderValue',
-	'SetShaderValueV',
-
 	'SetTraceLogCallback', // XXX problem with va_list parameters
 
 	'SetLoadFileDataCallback',
@@ -2910,11 +2911,11 @@ function RL_GetShaderLocationAttrib( object $shader , string $attribName ) : int
 
 /// Set shader uniform value
 // void SetShaderValue(Shader shader , int locIndex , const void* value , int uniformType);
-//XXX function RL_SetShaderValue( object $shader , int $locIndex , object $value , int $uniformType ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->SetShaderValue( $shader , $locIndex , $value , $uniformType ); }
+function RL_SetShaderValue( object $shader , int $locIndex , object $value , int $uniformType ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->SetShaderValue( $shader , $locIndex , $value , $uniformType ); }
 
 /// Set shader uniform value vector
 // void SetShaderValueV(Shader shader , int locIndex , const void* value , int uniformType , int count);
-//XXX function RL_SetShaderValueV( object $shader , int $locIndex , object $value , int $uniformType , int $count ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->SetShaderValueV( $shader , $locIndex , $value , $uniformType , $count ); }
+function RL_SetShaderValueV( object $shader , int $locIndex , object $value , int $uniformType , int $count ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->SetShaderValueV( $shader , $locIndex , $value , $uniformType , $count ); }
 
 /// Set shader uniform value (matrix 4x4)
 // void SetShaderValueMatrix(Shader shader , int locIndex , Matrix mat);
