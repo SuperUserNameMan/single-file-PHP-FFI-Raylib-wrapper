@@ -1,5 +1,12 @@
 <?php
 //TAB=4
+//---------------------------------------------------------------------------------------------
+//XXX This Raylib 4.5 PHP8 FFI single file wrapper is composed by Terminajones.com
+//XXX
+//XXX This PHP FFI wrapper is based uppon the officiel Raylib's 4.5 headers files which are
+//XXX available here https://github.com/raysan5/raylib
+//XXX and which were distributed under the following license :
+//--------------------------------------------------------------------------------------------
 /**********************************************************************************************
 *
 *   raylib v4.5 - A simple and easy-to-use library to enjoy videogames programming (www.raylib.com)
@@ -86,100 +93,208 @@ define( 'RAYLIB_VERSION_MINOR' , 5 );
 define( 'RAYLIB_VERSION_PATCH' , 0 );
 define( 'RAYLIB_VERSION' , "4.5" );
 
+function define_default( string $DEFNAME , $DEFVAL ) { defined( $DEFNAME ) || define( $DEFNAME , $DEFVAL ); }
+
 //----------------------------------------------------------------------------------
 // RL_PLATFORM_xxx definitions
 //----------------------------------------------------------------------------------
 
-if ( ! defined( 'RL_PLATFORM_DESKTOP' ) )
-{
-	define( 'RL_PLATFORM_DESKTOP' , true );
-}
-
-if ( ! defined( 'RL_PLATFORM_ANDROID' ) )
-{
-	define( 'RL_PLATFORM_ANDROID' , false );
-}
-
-if ( ! defined( 'RL_PLATFORM_RPI' ) )
-{
-	define( 'RL_PLATFORM_RPI' , false );
-}
-
-if ( ! defined( 'RL_SUPPORT_CUSTOM_FRAME_CONTROL' ) )
-{
-	define( 'RL_SUPPORT_CUSTOM_FRAME_CONTROL' , false );
-}
+define_default( 'RL_PLATFORM_DESKTOP' ,  true );
+define_default( 'RL_PLATFORM_ANDROID' , FALSE );
+define_default( 'RL_PLATFORM_RPI'     , FALSE );
 
 //----------------------------------------------------------------------------------
-// OpenGL & RLGL default definitions
+// Other compile-time default definitions :
 //----------------------------------------------------------------------------------
 
-if ( ! defined( 'RL_GRAPHICS_API_OPENGL_VERSION' ) )
-{
-	define( 'RL_GRAPHICS_API_OPENGL_VERSION' , 3 );
-}
+define_default( 'RL_SUPPORT_MODULE_RSHAPES'        , true );
+define_default( 'RL_SUPPORT_MODULE_RTEXTURES'      , true );
+define_default( 'RL_SUPPORT_MODULE_RTEXT'          , true );
+define_default( 'RL_SUPPORT_MODULE_RMODELS'        , true );
+define_default( 'RL_SUPPORT_MODULE_RAUDIO'         , true );
+define_default( 'RL_SUPPORT_CAMERA_SYSTEM'         , true );
+define_default( 'RL_SUPPORT_GESTURES_SYSTEM'       , true );
+define_default( 'RL_SUPPORT_MOUSE_GESTURES'        , true );
+define_default( 'RL_SUPPORT_SSH_KEYBOARD_RPI'      , true );
+define_default( 'RL_SUPPORT_WINMM_HIGHRES_TIMER'   , true );
+define_default( 'RL_SUPPORT_PARTIALBUSY_WAIT_LOOP' , true );
+define_default( 'RL_SUPPORT_SCREEN_CAPTURE'        , true );
+define_default( 'RL_SUPPORT_GIF_RECORDING'         , FALSE );
+define_default( 'RL_SUPPORT_COMPRESSION_API'       , true );
+define_default( 'RL_SUPPORT_CUSTOM_FRAME_CONTROL'  , FALSE );
 
-if ( ! defined( 'RLGL_DEFAULT_BATCH_BUFFERS' ) )
-{
-	define( 'RLGL_DEFAULT_BATCH_BUFFERS' , 1 );      // Default number of batch buffers (multi-buffering)
-}
+define_default( 'RL_MAX_FILEPATH_CAPACITY' , 8192 );
+define_default( 'RL_MAX_FILEPATH_LENGTH'   , 4096 );
 
-if ( ! defined( 'RLGL_DEFAULT_BATCH_DRAWCALLS' ) )
-{
-	define( 'RLGL_DEFAULT_BATCH_DRAWCALLS' , 256 );      // Default number of batch draw calls (by state changes: mode, texture)
-}
+define_default( 'RL_MAX_KEYBOARD_KEYS'     , 512 );
+define_default( 'RL_MAX_MOUSE_BUTTONS'     ,   8 );
+define_default( 'RL_MAX_GAMEPADS'          ,   4 );
+define_default( 'RL_MAX_GAMEPAD_AXIS'      ,   8 );
+define_default( 'RL_MAX_GAMEPAD_BUTTONS'   ,  32 );
+define_default( 'RL_MAX_TOUCH_POINTS'      ,   8 );
+define_default( 'RL_MAX_KEY_PRESSED_QUEUE' ,  16 );
+define_default( 'RL_MAX_CHAR_PRESSED_QUEUE',  16 );
 
-if ( ! defined( 'RLGL_DEFAULT_BATCH_MAX_TEXTURE_UNITS' ) )
-{
-	define( 'RLGL_DEFAULT_BATCH_MAX_TEXTURE_UNITS' , 4 );    // Maximum number of textures units that can be activated on batch drawing (SetShaderValueTexture())
-}
+define_default( 'RL_MAX_DECOMPRESSION_SIZE',  64 );
 
-// Internal Matrix stack
-if ( ! defined( 'RLGL_MAX_MATRIX_STACK_SIZE' ) )
-{
-	define( 'RLGL_MAX_MATRIX_STACK_SIZE' , 32 );   // Maximum size of Matrix stack
-}
 
-// Shader limits
-if ( ! defined( 'RLGL_MAX_SHADER_LOCATIONS' ) )
-{
-	define( 'RLGL_MAX_SHADER_LOCATIONS' , 32 );      // Maximum number of shader locations supported
-}
+//------------------------------------------------------------------------------------
+// Module: rlgl - Configuration values
+//------------------------------------------------------------------------------------
 
-// Projection matrix culling
-if ( ! defined( 'RLGL_CULL_DISTANCE_NEAR' ) )
-{
-	define( 'RLGL_CULL_DISTANCE_NEAR' , 0.01 );      // Default near cull distance
-}
+define_default( 'RL_GRAPHICS_API_OPENGL_VERSION'       ,   3 );
 
-if ( ! defined( 'RLGL_CULL_DISTANCE_FAR' ) )
-{
-	define( 'RLGL_CULL_DISTANCE_FAR' , 1000.0 );     // Default far cull distance
-}
+define_default( 'RLGL_DEFAULT_BATCH_BUFFERS'           ,   1 );
+define_default( 'RLGL_DEFAULT_BATCH_DRAWCALLS'         , 256 );
+define_default( 'RLGL_DEFAULT_BATCH_MAX_TEXTURE_UNITS' ,   4 );
+
+define_default( 'RLGL_MAX_MATRIX_STACK_SIZE'           ,  32 );
+
+define_default( 'RLGL_MAX_SHADER_LOCATIONS'            ,  32 );
+
+define_default( 'RLGL_CULL_DISTANCE_NEAR'          ,    0.01 );
+define_default( 'RLGL_CULL_DISTANCE_FAR'           , 1000.0  );
+
+
+define_default( 'RLGL_DEFAULT_SHADER_ATTRIB_NAME_POSITION'    , "vertexPosition"  );  // Bound by default to shader location: 0
+define_default( 'RLGL_DEFAULT_SHADER_ATTRIB_NAME_TEXCOORD'    , "vertexTexCoord"  );  // Bound by default to shader location: 1
+
+define_default( 'RLGL_DEFAULT_SHADER_ATTRIB_NAME_NORMAL'      , "vertexNormal"    );  // Bound by default to shader location: 2
+define_default( 'RLGL_DEFAULT_SHADER_ATTRIB_NAME_COLOR'       , "vertexColor"     );  // Bound by default to shader location: 3
+define_default( 'RLGL_DEFAULT_SHADER_ATTRIB_NAME_TANGENT'     , "vertexTangent"   );  // Bound by default to shader location: 4
+define_default( 'RLGL_DEFAULT_SHADER_ATTRIB_NAME_TEXCOORD2'   , "vertexTexCoord2" );  // Bound by default to shader location: 5
+
+define_default( 'RLGL_DEFAULT_SHADER_UNIFORM_NAME_MVP'        , "mvp"             );  // model-view-projection matrix
+define_default( 'RLGL_DEFAULT_SHADER_UNIFORM_NAME_VIEW'       , "matView"         );  // view matrix
+define_default( 'RLGL_DEFAULT_SHADER_UNIFORM_NAME_PROJECTION' , "matProjection"   );  // projection matrix
+define_default( 'RLGL_DEFAULT_SHADER_UNIFORM_NAME_MODEL'      , "matModel"        );  // model matrix
+define_default( 'RLGL_DEFAULT_SHADER_UNIFORM_NAME_NORMAL'     , "matNormal"       );  // normal matrix (transpose(inverse(matModelView))
+define_default( 'RLGL_DEFAULT_SHADER_UNIFORM_NAME_COLOR'      , "colDiffuse"      );  // color diffuse (base tint color, multiplied by texture color)
+define_default( 'RLGL_DEFAULT_SHADER_SAMPLER2D_NAME_TEXTURE0' , "texture0"        );  // texture0 (texture slot active 0)
+define_default( 'RLGL_DEFAULT_SHADER_SAMPLER2D_NAME_TEXTURE1' , "texture1"        );  // texture1 (texture slot active 1)
+define_default( 'RLGL_DEFAULT_SHADER_SAMPLER2D_NAME_TEXTURE2' , "texture2"        );  // texture2 (texture slot active 2)
+
+
+//------------------------------------------------------------------------------------
+// Module: rshapes - Configuration Flags
+//------------------------------------------------------------------------------------
+// Use QUADS instead of TRIANGLES for drawing when possible
+// Some lines-based shapes could still use lines
+define_default( 'RL_SUPPORT_QUADS_DRAW_MODE'       ,  true );
+
+//------------------------------------------------------------------------------------
+// Module: rtextures - Configuration Flags
+//------------------------------------------------------------------------------------
+// Select the desired fileformats to be supported for image data loading
+define_default( 'RL_SUPPORT_FILEFORMAT_PNG'  ,  true );
+define_default( 'RL_SUPPORT_FILEFORMAT_BMP'  , FALSE );
+define_default( 'RL_SUPPORT_FILEFORMAT_TGA'  , FALSE );
+define_default( 'RL_SUPPORT_FILEFORMAT_JPG'  , FALSE );
+define_default( 'RL_SUPPORT_FILEFORMAT_GIF'  ,  true );
+define_default( 'RL_SUPPORT_FILEFORMAT_QOI'  ,  true );
+define_default( 'RL_SUPPORT_FILEFORMAT_PSD'  , FALSE );
+define_default( 'RL_SUPPORT_FILEFORMAT_DDS'  ,  true );
+define_default( 'RL_SUPPORT_FILEFORMAT_HDR'  ,  true );
+define_default( 'RL_SUPPORT_FILEFORMAT_PIC'  , FALSE );
+define_default( 'RL_SUPPORT_FILEFORMAT_PNM'  , FALSE );
+define_default( 'RL_SUPPORT_FILEFORMAT_KTX'  , FALSE );
+define_default( 'RL_SUPPORT_FILEFORMAT_ASTC' , FALSE );
+define_default( 'RL_SUPPORT_FILEFORMAT_PKM'  , FALSE );
+define_default( 'RL_SUPPORT_FILEFORMAT_PVR'  , FALSE );
+
+// rtextures: Configuration values
+//------------------------------------------------------------------------------------
+define_default( 'RL_SUPPORT_IMAGE_EXPORT'       , true ); // Support image export functionality (.png, .bmp, .tga, .jpg, .qoi)
+define_default( 'RL_SUPPORT_IMAGE_GENERATION'   , true ); // Support procedural image generation functionality (gradient, spot, perlin-noise, cellular)
+define_default( 'RL_SUPPORT_IMAGE_MANIPULATION' , true ); // Support multiple image editing functions to scale, adjust colors, flip, draw on images, crop...
+                                                          // If not defined, still some functions are supported: ImageFormat(), ImageCrop(), ImageToPOT()
+
+//------------------------------------------------------------------------------------
+// Module: rtext - Configuration Flags
+//------------------------------------------------------------------------------------
+// Default font is loaded on window initialization to be available for the user to render simple text
+// NOTE: If enabled, uses external module functions to load default raylib font
+define_default( 'RL_SUPPORT_DEFAULT_FONT'        , true );
+// Selected desired font fileformats to be supported for loading
+define_default( 'RL_SUPPORT_FILEFORMAT_FNT'      , true );
+define_default( 'RL_SUPPORT_FILEFORMAT_TTF'      , true );
+
+// Support text management functions
+// If not defined, still some functions are supported: TextLength(), TextFormat()
+define_default( 'RL_SUPPORT_TEXT_MANIPULATION'   , true );
+
+// rtext: Configuration values
+//------------------------------------------------------------------------------------
+define_default( 'RL_MAX_TEXT_BUFFER_LENGTH'      , 1024 ); // Size of internal static buffers used on some functions:
+                                                           // TextFormat(), TextSubtext(), TextToUpper(), TextToLower(), TextToPascal(), TextSplit()
+define_default( 'RL_MAX_TEXTSPLIT_COUNT'         ,  128 ); // Maximum number of substrings to split: TextSplit()
+
+
+//------------------------------------------------------------------------------------
+// Module: rmodels - Configuration Flags
+//------------------------------------------------------------------------------------
+// Selected desired model fileformats to be supported for loading
+define_default( 'RL_SUPPORT_FILEFORMAT_OBJ'      , true );
+define_default( 'RL_SUPPORT_FILEFORMAT_MTL'      , true );
+define_default( 'RL_SUPPORT_FILEFORMAT_IQM'      , true );
+define_default( 'RL_SUPPORT_FILEFORMAT_GLTF'     , true );
+define_default( 'RL_SUPPORT_FILEFORMAT_VOX'      , true );
+define_default( 'RL_SUPPORT_FILEFORMAT_M3D'      , true );
+// Support procedural mesh generation functions, uses external par_shapes.h library
+// NOTE: Some generated meshes DO NOT include generated texture coordinates
+define_default( 'RL_SUPPORT_MESH_GENERATION'     , true );
+
+// rmodels: Configuration values
+//------------------------------------------------------------------------------------
+define_default( 'RL_MAX_MATERIAL_MAPS'           ,   12 ); // Maximum number of shader maps supported
+define_default( 'RL_MAX_MESH_VERTEX_BUFFERS'     ,    7 ); // Maximum vertex buffers (VBO) per mesh
+
+//------------------------------------------------------------------------------------
+// Module: raudio - Configuration Flags
+//------------------------------------------------------------------------------------
+// Desired audio fileformats to be supported for loading
+define_default( 'RL_SUPPORT_FILEFORMAT_WAV'       ,  true );
+define_default( 'RL_SUPPORT_FILEFORMAT_OGG'       ,  true );
+define_default( 'RL_SUPPORT_FILEFORMAT_MP3'       ,  true );
+define_default( 'RL_SUPPORT_FILEFORMAT_QOA'       ,  true );
+define_default( 'RL_SUPPORT_FILEFORMAT_FLAC'      , FALSE );
+define_default( 'RL_SUPPORT_FILEFORMAT_XM'        ,  true );
+define_default( 'RL_SUPPORT_FILEFORMAT_MOD'       ,  true );
+
+// raudio: Configuration values
+//------------------------------------------------------------------------------------
+define_default( 'RL_AUDIO_DEVICE_FORMAT'            , "ma_format_f32" );   // Device output format (miniaudio: float-32bit)
+define_default( 'RL_AUDIO_DEVICE_CHANNELS'          ,  2 );   // Device output channels: stereo
+define_default( 'RL_AUDIO_DEVICE_SAMPLE_RATE'       ,  0 );   // Device sample rate (device default)
+
+define_default( 'RL_MAX_AUDIO_BUFFER_POOL_CHANNELS' , 16 );  // Maximum number of audio pool channels
+
+//------------------------------------------------------------------------------------
+// Module: utils - Configuration Flags
+//------------------------------------------------------------------------------------
+// Standard file io library (stdio.h) included
+define_default( 'RL_SUPPORT_STANDARD_FILEIO'        , true );
+// Show TRACELOG() output messages
+// NOTE: By default LOG_DEBUG traces not shown
+define_default( 'RL_SUPPORT_TRACELOG'               , true );
+define_default( 'RL_SUPPORT_TRACELOG_DEBUG'         , FALSE );
+
+// utils: Configuration values
+//------------------------------------------------------------------------------------
+#define MAX_TRACELOG_MSG_LENGTH       256       // Max length of one trace-log message
+
 
 //----------------------------------------------------------------------------------
 // Some basic Defines
 //----------------------------------------------------------------------------------
 
-if ( ! defined( 'RL_PI' ) )
-{
-    define( 'RL_PI' , 3.14159265358979323846 );
-}
+define_default( 'RL_PI'      , 3.14159265358979323846 );
 
-if ( ! defined( 'RL_DEG2RAD' ) )
-{
-    define( 'RL_DEG2RAD' , (RL_PI/180.0) );
-}
+define_default( 'RL_DEG2RAD' , (RL_PI/180.0) );
+define_default( 'RL_RAD2DEG' , (180.0/RL_PI) );
 
-if ( ! defined( 'RL_RAD2DEG' ) )
-{
-    define( 'RL_RAD2DEG' , (180.0/RL_PI) );
-}
+define_default( 'RL_EPSILON' , 0.000001 );
 
-if ( ! defined( 'RL_EPSILON' ) )
-{
-	define( 'RL_EPSILON' , 0.000001 );
-}
 
 // Get float vector for Matrix
 function RL_MatrixToFloat( object $MAT ) : object { return RL_MatrixToFloatV( $MAT )->v ; }
