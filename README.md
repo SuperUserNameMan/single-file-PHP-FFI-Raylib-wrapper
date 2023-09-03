@@ -50,9 +50,13 @@ $my_color_map = FFI::new( FFI::arrayType( RAYLIB_FFI_Color ) , [ 320 , 240 ] );
 $my_cube_array = FFI::new( FFI::arrayType( RAYLIB_FFI_Vector3D ) , [ 3 , 5 , 8 ] );
 ```
 
-## Customized compilation
+## Customized `config.h` compilation
 
-If Raylib is recompiled with customized OpenGL parameters, the wrapper has to be made aware of these new parameters before `include()`.
+If Raylib is recompiled using customized `config.h` parameters, the wrapper has to be made aware of these new parameters before `include()`.
+
+Look at your `config.h` and redefine all your customised constants using `RL_` or `RLGL_` prefixes.
+
+Regarding custom OpenGL version, the wrapper makes use of the `RL_GRAPHICS_API_OPENGL_VERSION` definition :
 
 ```PHP
 // 1 => OpenGL 1.1
