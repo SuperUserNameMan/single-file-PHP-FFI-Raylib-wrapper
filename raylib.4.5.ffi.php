@@ -97,12 +97,12 @@ if ( ! defined( 'RL_PLATFORM_DESKTOP' ) )
 
 if ( ! defined( 'RL_PLATFORM_ANDROID' ) )
 {
-	define( 'RL_PLATFORM_DESKTOP' , false );
+	define( 'RL_PLATFORM_ANDROID' , false );
 }
 
 if ( ! defined( 'RL_PLATFORM_RPI' ) )
 {
-	define( 'RL_PLATFORM_DESKTOP' , false );
+	define( 'RL_PLATFORM_RPI' , false );
 }
 
 if ( ! defined( 'RL_SUPPORT_CUSTOM_FRAME_CONTROL' ) )
