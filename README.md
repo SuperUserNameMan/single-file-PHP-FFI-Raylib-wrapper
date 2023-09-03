@@ -56,6 +56,14 @@ If Raylib is recompiled using customized `config.h` parameters, the wrapper has 
 
 Look at your `config.h` and redefine all your customised constants using `RL_` or `RLGL_` prefixes.
 
+For example, if you recompiled Raylib with `.tga` image support, you'll have to do :
+
+```PHP
+define( 'RL_SUPPORT_FILEFORMAT_TGA'  , true );
+include('./your/path/to/raylib.ffi.php');
+```
+
+
 Regarding custom OpenGL version, the wrapper makes use of the `RL_GRAPHICS_API_OPENGL_VERSION` definition :
 
 ```PHP
