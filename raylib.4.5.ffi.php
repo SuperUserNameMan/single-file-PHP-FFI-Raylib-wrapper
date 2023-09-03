@@ -3,7 +3,7 @@
 //---------------------------------------------------------------------------------------------
 //XXX This Raylib 4.5 PHP8 FFI single file wrapper is composed by Terminajones.com
 //XXX
-//XXX This PHP FFI wrapper is based uppon the officiel Raylib's 4.5 headers files which are
+//XXX This PHP FFI wrapper is based uppon the official Raylib's 4.5 headers files which are
 //XXX available here https://github.com/raysan5/raylib
 //XXX and which were distributed under the following license :
 //--------------------------------------------------------------------------------------------
