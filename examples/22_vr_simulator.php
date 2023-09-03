@@ -4,7 +4,7 @@
 include('./raylib/raylib.ffi.php');
 
 
-if ( defined( 'RL_PLATFORM_DESKTOP' ) )
+if ( RL_PLATFORM_DESKTOP )
 {
 	define( 'GLSL_VERSION' ,    330 );
 }
