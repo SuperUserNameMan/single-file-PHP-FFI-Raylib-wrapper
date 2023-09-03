@@ -86,11 +86,76 @@ define( 'RAYLIB_VERSION_MINOR' , 5 );
 define( 'RAYLIB_VERSION_PATCH' , 0 );
 define( 'RAYLIB_VERSION' , "4.5" );
 
+//----------------------------------------------------------------------------------
+// RL_PLATFORM_xxx definitions
+//----------------------------------------------------------------------------------
 
-define( 'RL_PLATFORM_DESKTOP' , true );
+if ( ! defined( 'RL_PLATFORM_DESKTOP' ) )
+{
+	define( 'RL_PLATFORM_DESKTOP' , true );
+}
 
-// TODO PLATFORM_ANDROID
-// TODO PLATFORM_RPI
+if ( ! defined( 'RL_PLATFORM_ANDROID' ) )
+{
+	define( 'RL_PLATFORM_DESKTOP' , false );
+}
+
+if ( ! defined( 'RL_PLATFORM_RPI' ) )
+{
+	define( 'RL_PLATFORM_DESKTOP' , false );
+}
+
+if ( ! defined( 'RL_SUPPORT_CUSTOM_FRAME_CONTROL' ) )
+{
+	define( 'RL_SUPPORT_CUSTOM_FRAME_CONTROL' , false );
+}
+
+//----------------------------------------------------------------------------------
+// OpenGL & RLGL default definitions
+//----------------------------------------------------------------------------------
+
+if ( ! defined( 'RL_GRAPHICS_API_OPENGL_VERSION' ) )
+{
+	define( 'RL_GRAPHICS_API_OPENGL_VERSION' , 3 );
+}
+
+if ( ! defined( 'RLGL_DEFAULT_BATCH_BUFFERS' ) )
+{
+	define( 'RLGL_DEFAULT_BATCH_BUFFERS' , 1 );      // Default number of batch buffers (multi-buffering)
+}
+
+if ( ! defined( 'RLGL_DEFAULT_BATCH_DRAWCALLS' ) )
+{
+	define( 'RLGL_DEFAULT_BATCH_DRAWCALLS' , 256 );      // Default number of batch draw calls (by state changes: mode, texture)
+}
+
+if ( ! defined( 'RLGL_DEFAULT_BATCH_MAX_TEXTURE_UNITS' ) )
+{
+	define( 'RLGL_DEFAULT_BATCH_MAX_TEXTURE_UNITS' , 4 );    // Maximum number of textures units that can be activated on batch drawing (SetShaderValueTexture())
+}
+
+// Internal Matrix stack
+if ( ! defined( 'RLGL_MAX_MATRIX_STACK_SIZE' ) )
+{
+	define( 'RLGL_MAX_MATRIX_STACK_SIZE' , 32 );   // Maximum size of Matrix stack
+}
+
+// Shader limits
+if ( ! defined( 'RLGL_MAX_SHADER_LOCATIONS' ) )
+{
+	define( 'RLGL_MAX_SHADER_LOCATIONS' , 32 );      // Maximum number of shader locations supported
+}
+
+// Projection matrix culling
+if ( ! defined( 'RLGL_CULL_DISTANCE_NEAR' ) )
+{
+	define( 'RLGL_CULL_DISTANCE_NEAR' , 0.01 );      // Default near cull distance
+}
+
+if ( ! defined( 'RLGL_CULL_DISTANCE_FAR' ) )
+{
+	define( 'RLGL_CULL_DISTANCE_FAR' , 1000.0 );     // Default far cull distance
+}
 
 //----------------------------------------------------------------------------------
 // Some basic Defines
@@ -1735,10 +1800,7 @@ RAYLIB_H.PHP_EOL;
 
 define( 'RLGL_VERSION' ,  "4.5" );
 
-if ( ! defined( 'RL_GRAPHICS_API_OPENGL_VERSION' ) )
-{
-	define( 'RL_GRAPHICS_API_OPENGL_VERSION' , 3 );
-}
+
 
 switch( RL_GRAPHICS_API_OPENGL_VERSION )
 {
@@ -1778,43 +1840,6 @@ if ( ! defined( 'RLGL_DEFAULT_BATCH_BUFFER_ELEMENTS' ) )
 	}
 }
 
-if ( ! defined( 'RLGL_DEFAULT_BATCH_BUFFERS' ) )
-{
-	define( 'RLGL_DEFAULT_BATCH_BUFFERS' , 1 );      // Default number of batch buffers (multi-buffering)
-}
-
-if ( ! defined( 'RLGL_DEFAULT_BATCH_DRAWCALLS' ) )
-{
-	define( 'RLGL_DEFAULT_BATCH_DRAWCALLS' , 256 );      // Default number of batch draw calls (by state changes: mode, texture)
-}
-
-if ( ! defined( 'RLGL_DEFAULT_BATCH_MAX_TEXTURE_UNITS' ) )
-{
-	define( 'RLGL_DEFAULT_BATCH_MAX_TEXTURE_UNITS' , 4 );    // Maximum number of textures units that can be activated on batch drawing (SetShaderValueTexture())
-}
-
-// Internal Matrix stack
-if ( ! defined( 'RLGL_MAX_MATRIX_STACK_SIZE' ) )
-{
-	define( 'RLGL_MAX_MATRIX_STACK_SIZE' , 32 );   // Maximum size of Matrix stack
-}
-
-// Shader limits
-if ( ! defined( 'RLGL_MAX_SHADER_LOCATIONS' ) )
-{
-	define( 'RLGL_MAX_SHADER_LOCATIONS' , 32 );      // Maximum number of shader locations supported
-}
-
-// Projection matrix culling
-if ( ! defined( 'RLGL_CULL_DISTANCE_NEAR' ) )
-{
-	define( 'RLGL_CULL_DISTANCE_NEAR' , 0.01 );      // Default near cull distance
-}
-
-if ( ! defined( 'RLGL_CULL_DISTANCE_FAR' ) )
-{
-	define( 'RLGL_CULL_DISTANCE_FAR' , 1000.0 );     // Default far cull distance
-}
 
 // Texture parameters (equivalent to OpenGL defines)
 define( 'RLGL_TEXTURE_WRAP_S'                      , 0x2802 );     // GL_TEXTURE_WRAP_S
@@ -2413,8 +2438,8 @@ $RLAPI_BLACKLISTED_FUNCTIONS = [
 	'SetLoadFileTextCallback',
 	'SetSaveFileTextCallback',
 
-	'LoadFileData',
-	'UnloadFileData',
+	'LoadFileData'  , // handwritten
+	'UnloadFileData', // handwritten
 ];
 
 
