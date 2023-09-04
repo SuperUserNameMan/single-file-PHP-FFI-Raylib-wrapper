@@ -50,21 +50,22 @@ $my_color_map = FFI::new( FFI::arrayType( RAYLIB_FFI_Color ) , [ 320 , 240 ] );
 $my_cube_array = FFI::new( FFI::arrayType( RAYLIB_FFI_Vector3D ) , [ 3 , 5 , 8 ] );
 ```
 
-## Customized `config.h` compilation
+## Customized `src/config.h` compilation
 
-If Raylib is recompiled using customized `config.h` parameters, the wrapper has to be made aware of these new parameters before `include()`.
+If Raylib is recompiled using customized `src/config.h` parameters, the wrapper has to be made aware of these new parameters before `include()`.
 
-Look at your `config.h` and redefine all your customised constants using `RL_` or `RLGL_` prefixes.
+Look at your `src/config.h` and redefine all your customised constants in PHP using `RL_` or `RLGL_` prefixes.
 
 For example, if you recompiled Raylib with `.tga` image support, you'll have to do :
 
 ```PHP
 define( 'RL_SUPPORT_FILEFORMAT_TGA'  , true );
+
 include('./your/path/to/raylib.ffi.php');
 ```
 
 
-Regarding custom OpenGL version, the wrapper makes use of the `RL_GRAPHICS_API_OPENGL_VERSION` definition :
+Regarding custom OpenGL version, the wrapper makes use of special `RL_USES_OPENGL_VERSION` definition :
 
 ```PHP
 // 1 => OpenGL 1.1
@@ -74,8 +75,11 @@ Regarding custom OpenGL version, the wrapper makes use of the `RL_GRAPHICS_API_O
 // 0xE2 => OpenGLES2
 
 // Tells the wrapper Raylib was compiled for OpenGL 4.3
-define( 'RL_GRAPHICS_API_OPENGL_VERSION' , 4 ); 
+define( 'RL_USES_OPENGL_VERSION' , 4 ); 
+```
+Other OpenGL customized definitions must use the `RLGL_` prefix :
 
+```PHP
 // Default internal render batch elements limits
 define( 'RLGL_DEFAULT_BATCH_BUFFER_ELEMENTS' , 8192 );
 
@@ -101,6 +105,26 @@ define( 'RLGL_CULL_DISTANCE_NEAR' , 0.01 );
 // Default far cull distance
 define( 'RLGL_CULL_DISTANCE_FAR' , 1000.0 );
 ```
+
+## Choosing the OpenGL version at runtime :
+
+The wrapper is able to pick a different shared library (`.dll` or `.so`) according to the value of `RL_USES_OPENGL_VERSION`.
+
+| RL_USES_OPENGL_VERSION | OpenGL version | Lib name Linux | Lib name Windows |
+|-----|---|---|---|
+| 1 | OpenGL 1.1 | `libraylib_opengl1.so` | `raylib_opengl1.dll` |
+| 2 | OpenGL 2.1 | `libraylib_opengl2.so` | `raylib_opengl2.dll` |
+| 3 | OpenGL 3.3 (default) | `libraylib_opengl3.so` | `raylib_opengl3.dll` |
+| 4 | OpenGL 4.3 | `libraylib_opengl4.so` | `raylib_opengl4.dll` |
+| 0xE2 (or 226 in decimal) | OpenGLES2 | `libraylib_opengl226.so` | `raylib_opengl226.dll` |
+
+The wrapper will scan each one of these subdirectories in this order using the name that matches `RL_USES_OPENGL_VERSION` :
+- `./raylib/`
+- `./libs/`
+- `./lib/`
+- `./` (project root)
+
+If it fails, it tries again using `librarylib.so` or `raylib.dll`.
 
 ## Passing structs by reference or by value ? `malloc()` and `free()` ?
 
