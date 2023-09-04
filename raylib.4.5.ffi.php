@@ -2521,19 +2521,33 @@ $_RAYLIB_TEST_PATHES = [
 	'',
 ];
 
-$_RAYLIB_SHARED_LIBRARY = match( PHP_OS_FAMILY )
+
+$_RAYLIB_SHARED_LIBRARY_NAMES = match( PHP_OS_FAMILY )
 {
-	'Linux'   => 'libraylib.so' ,
-	'Windows' => 'raylib.dll'
+	'Linux'   => [
+		'libraylib_opengl'.RL_GRAPHICS_API_OPENGL_VERSION.'_raygui.so' ,
+		'libraylib_opengl'.RL_GRAPHICS_API_OPENGL_VERSION.'.so' ,
+		'libraylib_raygui.so' ,
+		'libraylib.so' ,
+	],
+	'Windows' => [
+		'raylib_opengl'.RL_GRAPHICS_API_OPENGL_VERSION.'_raygui.dll' ,
+		'raylib_opengl'.RL_GRAPHICS_API_OPENGL_VERSION.'.dll' ,
+		'raylib_raygui.dll' ,
+		'raylib.dll' ,
+	],
 };
 
-
-foreach( $_RAYLIB_TEST_PATHES as $_RAYLIB_TEST_PATH )
+foreach( $_RAYLIB_SHARED_LIBRARY_NAMES as $_RAYLIB_SHARED_LIBRARY )
 {
-	$_RAYLIB_PATH = $_RAYLIB_TEST_PATH.$_RAYLIB_SHARED_LIBRARY ;
-	if ( file_exists( $_RAYLIB_PATH ) )
+	foreach( $_RAYLIB_TEST_PATHES as $_RAYLIB_TEST_PATH )
 	{
-		break;
+		$_RAYLIB_PATH = $_RAYLIB_TEST_PATH.$_RAYLIB_SHARED_LIBRARY ;
+		if ( file_exists( $_RAYLIB_PATH ) )
+		{
+			echo "Found $_RAYLIB_PATH".PHP_EOL;
+			break 2;
+		}
 	}
 }
 
