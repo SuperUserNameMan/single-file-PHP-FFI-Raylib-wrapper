@@ -142,7 +142,7 @@ define_default( 'RL_MAX_DECOMPRESSION_SIZE',  64 );
 // Module: rlgl - Configuration values
 //------------------------------------------------------------------------------------
 
-define_default( 'RL_GRAPHICS_API_OPENGL_VERSION'       ,   3 );
+define_default( 'RL_USES_OPENGL_VERSION'       ,   3 );
 
 define_default( 'RLGL_DEFAULT_BATCH_BUFFERS'           ,   1 );
 define_default( 'RLGL_DEFAULT_BATCH_DRAWCALLS'         , 256 );
@@ -1917,14 +1917,14 @@ define( 'RLGL_VERSION' ,  "4.5" );
 
 
 
-switch( RL_GRAPHICS_API_OPENGL_VERSION )
+switch( RL_USES_OPENGL_VERSION )
 {
 	case    1 : define( 'RL_GRAPHICS_API_OPENGL_11'  , true ); break ;
 	case    2 : define( 'RL_GRAPHICS_API_OPENGL_21'  , true ); break ;
 	case    3 : define( 'RL_GRAPHICS_API_OPENGL_33'  , true ); break ;
 	case    4 : define( 'RL_GRAPHICS_API_OPENGL_43'  , true ); break ;
 	case 0xE2 : define( 'RL_GRAPHICS_API_OPENGL_ES2' , true ); break ;
-	default: exit( "Unsupported RL_GRAPHICS_API_OPENGL_VERSION = ".RLGL_GRAPHICS_API_OPENGL_VERSION );
+	default: exit( "Unsupported RL_USES_OPENGL_VERSION = ".RLGL_GRAPHICS_API_OPENGL_VERSION );
 }
 
 //----------------------------------------------------------------------------------
@@ -2525,15 +2525,11 @@ $_RAYLIB_TEST_PATHES = [
 $_RAYLIB_SHARED_LIBRARY_NAMES = match( PHP_OS_FAMILY )
 {
 	'Linux'   => [
-		'libraylib_opengl'.RL_GRAPHICS_API_OPENGL_VERSION.'_raygui.so' ,
-		'libraylib_opengl'.RL_GRAPHICS_API_OPENGL_VERSION.'.so' ,
-		'libraylib_raygui.so' ,
+		'libraylib_opengl'.RL_USES_OPENGL_VERSION.'.so' ,
 		'libraylib.so' ,
 	],
 	'Windows' => [
-		'raylib_opengl'.RL_GRAPHICS_API_OPENGL_VERSION.'_raygui.dll' ,
-		'raylib_opengl'.RL_GRAPHICS_API_OPENGL_VERSION.'.dll' ,
-		'raylib_raygui.dll' ,
+		'raylib_opengl'.RL_USES_OPENGL_VERSION.'.dll' ,
 		'raylib.dll' ,
 	],
 };
