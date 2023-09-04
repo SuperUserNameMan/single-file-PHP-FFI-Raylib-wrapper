@@ -124,7 +124,7 @@ The wrapper will scan each one of these subdirectories in this order using the n
 - `./lib/`
 - `./` (project root)
 
-If it fails, it tries again using `librarylib.so` or `raylib.dll`.
+If it fails, it tries again using `libraylib.so` or `raylib.dll`.
 
 ## Passing structs by reference or by value ? `malloc()` and `free()` ?
 
