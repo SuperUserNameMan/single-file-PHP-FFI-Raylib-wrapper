@@ -85,8 +85,11 @@
 *
 **********************************************************************************************/
 
+$_WRAPPER_SCRIPT_RUNNING_IN_UTILITY_MODE_87987987 = basename( $_SERVER['PHP_SELF'] ) == basename( __FILE__ ) ;
+
 if ( !isset( $RAYLIB_H ) ){
 $RAYLIB_H = '' ;
+$RAYGUI_H = '' ;
 
 define( 'RAYLIB_VERSION_MAJOR' , 4 );
 define( 'RAYLIB_VERSION_MINOR' , 5 );
@@ -112,6 +115,9 @@ define_default( 'RL_SUPPORT_MODULE_RTEXTURES'      , true );
 define_default( 'RL_SUPPORT_MODULE_RTEXT'          , true );
 define_default( 'RL_SUPPORT_MODULE_RMODELS'        , true );
 define_default( 'RL_SUPPORT_MODULE_RAUDIO'         , true );
+
+define_default( 'RL_SUPPORT_MODULE_RAYGUI'         , false );
+
 define_default( 'RL_SUPPORT_CAMERA_SYSTEM'         , true );
 define_default( 'RL_SUPPORT_GESTURES_SYSTEM'       , true );
 define_default( 'RL_SUPPORT_MOUSE_GESTURES'        , true );
@@ -1915,8 +1921,6 @@ RAYLIB_H.PHP_EOL;
 
 define( 'RLGL_VERSION' ,  "4.5" );
 
-
-
 switch( RL_USES_OPENGL_VERSION )
 {
 	case    1 : define( 'RL_GRAPHICS_API_OPENGL_11'  , true ); break ;
@@ -2263,10 +2267,6 @@ define( 'RLGL_CULL_FACE_BACK' , 1 );
 // Functions Declaration - Matrix operations
 //------------------------------------------------------------------------------------
 
-#if defined(__cplusplus)
-//extern "C" {            // Prevents name mangling of functions
-#endif
-
 $RAYLIB_H .=<<<'RAYLIB_H'
 
 /*RLAPI*/ void rlMatrixMode(int mode);                    // Choose the current matrix to be transformed
@@ -2481,12 +2481,15 @@ $RAYLIB_H .= <<<'RAYLIB_H'
 /*RLAPI*/ void rlLoadDrawCube(void);     // Load and draw a cube
 /*RLAPI*/ void rlLoadDrawQuad(void);     // Load and draw a quad
 
+RAYLIB_H;
 
 /*******************************************************************************************
 *
 *   rcamera - Basic camera system with support for multiple camera modes
 *
 *******************************************************************************************/
+
+$RAYLIB_H .= <<<'RAYLIB_H'
 
 /*RLAPI*/ Vector3 GetCameraForward(Camera *camera);
 /*RLAPI*/ Vector3 GetCameraUp(Camera *camera);
@@ -2508,10 +2511,530 @@ $RAYLIB_H .= <<<'RAYLIB_H'
 
 RAYLIB_H;
 
+if ( RL_SUPPORT_MODULE_RAYGUI || $_WRAPPER_SCRIPT_RUNNING_IN_UTILITY_MODE_87987987 )
+{
+/*******************************************************************************************
+*
+*   raygui - A simple and easy-to-use immediate-mode gui library
+*
+*   DESCRIPTION:
+*       raygui is a tools-dev-focused immediate-mode-gui library based on raylib but also
+*       available as a standalone library, as long as input and drawing functions are provided.
+*
+*   https://github.com/raysan5/raygui/
+*
+*******************************************************************************************/
 
-#if defined(__cplusplus)
-//}
-#endif
+define( 'RAYGUI_VERSION_MAJOR' , 3 );
+define( 'RAYGUI_VERSION_MINOR' , 6 );
+define( 'RAYGUI_VERSION_PATCH' , 0 );
+define( 'RAYGUI_VERSION'       ,  '3.6' );
+
+
+$RAYGUI_H .= <<<'RAYGUI_H'
+
+// Style property
+typedef struct GuiStyleProp {
+    unsigned short controlId;
+    unsigned short propertyId;
+    unsigned int propertyValue;
+} GuiStyleProp;
+
+RAYGUI_H;
+
+// Gui control state
+//typedef enum {
+define( 'RLGUI_STATE_NORMAL'   , 0 );
+define( 'RLGUI_STATE_FOCUSED'  , 1 );
+define( 'RLGUI_STATE_PRESSED'  , 2 );
+define( 'RLGUI_STATE_DISABLED' , 3 );
+//} GuiState;
+
+// Gui control text alignment
+//typedef enum {
+define( 'RLGUI_TEXT_ALIGN_LEFT'   , 0 );
+define( 'RLGUI_TEXT_ALIGN_CENTER' , 1 );
+define( 'RLGUI_TEXT_ALIGN_RIGHT'  , 2 );
+//} GuiTextAlignment;
+
+// Gui controls
+//typedef enum {
+	// Default -> populates to all controls when set
+define( 'RLGUI_DEFAULT'    ,  0 );
+    // Basic controls
+define( 'RLGUI_LABEL'      ,  1 ); // Used also for: LABELBUTTON
+define( 'RLGUI_BUTTON'     ,  2 );
+define( 'RLGUI_TOGGLE'     ,  3 ); // Used also for: TOGGLEGROUP
+define( 'RLGUI_SLIDER'     ,  4 ); // Used also for: SLIDERBAR
+define( 'RLGUI_PROGRESSBAR',  5 );
+define( 'RLGUI_CHECKBOX'   ,  6 );
+define( 'RLGUI_COMBOBOX'   ,  7 );
+define( 'RLGUI_DROPDOWNBOX',  8 );
+define( 'RLGUI_TEXTBOX'    ,  9 ); // Used also for: TEXTBOXMULTI
+define( 'RLGUI_VALUEBOX'   , 10 );
+define( 'RLGUI_SPINNER'    , 11 ); // Uses: BUTTON, VALUEBOX
+define( 'RLGUI_LISTVIEW'   , 12 );
+define( 'RLGUI_COLORPICKER', 13 );
+define( 'RLGUI_SCROLLBAR'  , 14 );
+define( 'RLGUI_STATUSBAR'  , 15 );
+//} GuiControl;
+
+// Gui base properties for every control
+// NOTE: RAYGUI_MAX_PROPS_BASE properties (by default 16 properties)
+//typedef enum {
+define( 'RLGUI_BORDER_COLOR_NORMAL'  ,  0 );
+define( 'RLGUI_BASE_COLOR_NORMAL'    ,  1 );
+define( 'RLGUI_TEXT_COLOR_NORMAL'    ,  2 );
+define( 'RLGUI_BORDER_COLOR_FOCUSED' ,  3 );
+define( 'RLGUI_BASE_COLOR_FOCUSED'   ,  4 );
+define( 'RLGUI_TEXT_COLOR_FOCUSED'   ,  5 );
+define( 'RLGUI_BORDER_COLOR_PRESSED' ,  6 );
+define( 'RLGUI_BASE_COLOR_PRESSED'   ,  7 );
+define( 'RLGUI_TEXT_COLOR_PRESSED'   ,  8 );
+define( 'RLGUI_BORDER_COLOR_DISABLED',  9 );
+define( 'RLGUI_BASE_COLOR_DISABLED'  , 10 );
+define( 'RLGUI_TEXT_COLOR_DISABLED'  , 11 );
+define( 'RLGUI_BORDER_WIDTH'         , 12 );
+define( 'RLGUI_TEXT_PADDING'         , 13 );
+define( 'RLGUI_TEXT_ALIGNMENT'       , 14 );
+define( 'RLGUI_RESERVED'             , 15 );
+//} GuiControlProperty;
+
+// Gui extended properties depend on control
+// NOTE: RAYGUI_MAX_PROPS_EXTENDED properties (by default 8 properties)
+//----------------------------------------------------------------------------------
+
+// DEFAULT extended properties
+// NOTE: Those properties are common to all controls or global
+//typedef enum {
+define( 'RLGUI_TEXT_SIZE'       , 16 );  // Text size (glyphs max height)
+define( 'RLGUI_TEXT_SPACING'    , 17 );  // Text spacing between glyphs
+define( 'RLGUI_LINE_COLOR'      , 18 );  // Line control color
+define( 'RLGUI_BACKGROUND_COLOR', 19 );  // Background color
+//} GuiDefaultProperty;
+
+// Toggle/ToggleGroup
+//typedef enum {
+define( 'RLGUI_GROUP_PADDING'   , 16 ); // ToggleGroup separation between toggles
+//} GuiToggleProperty;
+
+// Slider/SliderBar
+//typedef enum {
+define( 'RLGUI_SLIDER_WIDTH',   16 ); // Slider size of internal bar
+define( 'RLGUI_SLIDER_PADDING', 17 ); // Slider/SliderBar internal bar padding
+//} GuiSliderProperty;
+
+// ProgressBar
+//typedef enum {
+define( 'RLGUI_PROGRESS_PADDING' , 16 ); // ProgressBar internal padding
+//} GuiProgressBarProperty;
+
+// ScrollBar
+//typedef enum {
+define( 'RLGUI_ARROWS_SIZE'          , 16 );
+define( 'RLGUI_ARROWS_VISIBLE'       , 17 );
+define( 'RLGUI_SCROLL_SLIDER_PADDING', 18 ); // (SLIDERBAR, SLIDER_PADDING)
+define( 'RLGUI_SCROLL_SLIDER_SIZE'   , 19 );
+define( 'RLGUI_SCROLL_PADDING'       , 20 );
+define( 'RLGUI_SCROLL_SPEED'         , 21 );
+//} GuiScrollBarProperty;
+
+// CheckBox
+//typedef enum {
+define( 'RLGUI_CHECK_PADDING'        , 16 ); // CheckBox internal check padding
+//} GuiCheckBoxProperty;
+
+// ComboBox
+//typedef enum {
+define( 'RLGUI_COMBO_BUTTON_WIDTH'   , 16 ); // ComboBox right button width
+define( 'RLGUI_COMBO_BUTTON_SPACING' , 17 ); // ComboBox button separation
+//} GuiComboBoxProperty;
+
+// DropdownBox
+//typedef enum {
+define( 'RLGUI_ARROW_PADDING'          , 16 ); // DropdownBox arrow separation from border and items
+define( 'RLGUI_DROPDOWN_ITEMS_SPACING' , 17 ); // DropdownBox items separation
+//} GuiDropdownBoxProperty;
+
+// TextBox/TextBoxMulti/ValueBox/Spinner
+//typedef enum {
+define( 'RLGUI_TEXT_INNER_PADDING'     , 16 );  // TextBox/TextBoxMulti/ValueBox/Spinner inner text padding
+define( 'RLGUI_TEXT_LINES_SPACING'     , 17 );  // TextBoxMulti lines separation
+define( 'RLGUI_TEXT_ALIGNMENT_VERTICAL', 18 );  // TextBoxMulti vertical alignment: 0-CENTERED, 1-UP, 2-DOWN
+define( 'RLGUI_TEXT_MULTILINE'         , 19 );  // TextBox supports multiple lines
+define( 'RLGUI_TEXT_WRAP_MODE'         , 20 );  // TextBox wrap mode for multiline: 0-NO_WRAP, 1-CHAR_WRAP, 2-WORD_WRAP
+//} GuiTextBoxProperty;
+
+// Spinner
+//typedef enum {
+define( 'RLGUI_SPIN_BUTTON_WIDTH'  , 16 ); // Spinner left/right buttons width
+define( 'RLGUI_SPIN_BUTTON_SPACING', 17 ); // Spinner buttons separation
+//} GuiSpinnerProperty;
+
+// ListView
+//typedef enum {
+define( 'RLGUI_LIST_ITEMS_HEIGHT'  , 16 ); // ListView items height
+define( 'RLGUI_LIST_ITEMS_SPACING' , 17 ); // ListView items separation
+define( 'RLGUI_SCROLLBAR_WIDTH'    , 18 ); // ListView scrollbar size (usually width)
+define( 'RLGUI_SCROLLBAR_SIDE'     , 19 ); // ListView scrollbar side (0-left, 1-right)
+//} GuiListViewProperty;
+
+// ColorPicker
+//typedef enum {
+define( 'RLGUI_COLOR_SELECTOR_SIZE'     , 16 );
+define( 'RLGUI_HUEBAR_WIDTH'            , 17 ); // ColorPicker right hue bar width
+define( 'RLGUI_HUEBAR_PADDING'          , 18 ); // ColorPicker right hue bar separation from panel
+define( 'RLGUI_HUEBAR_SELECTOR_HEIGHT'  , 19 ); // ColorPicker right hue bar selector height
+define( 'RLGUI_HUEBAR_SELECTOR_OVERFLOW', 20 ); // ColorPicker right hue bar selector overflow
+//} GuiColorPickerProperty;
+
+define( 'RLGUI_SCROLLBAR_LEFT_SIDE'  , 0 );
+define( 'RLGUI_SCROLLBAR_RIGHT_SIDE' , 1 );
+
+//----------------------------------------------------------------------------------
+// Icons enumeration
+//----------------------------------------------------------------------------------
+//typedef enum {
+define( 'RLGUI_ICON_NONE'                     , 0 );
+define( 'RLGUI_ICON_FOLDER_FILE_OPEN'         , 1 );
+define( 'RLGUI_ICON_FILE_SAVE_CLASSIC'        , 2 );
+define( 'RLGUI_ICON_FOLDER_OPEN'              , 3 );
+define( 'RLGUI_ICON_FOLDER_SAVE'              , 4 );
+define( 'RLGUI_ICON_FILE_OPEN'                , 5 );
+define( 'RLGUI_ICON_FILE_SAVE'                , 6 );
+define( 'RLGUI_ICON_FILE_EXPORT'              , 7 );
+define( 'RLGUI_ICON_FILE_ADD'                 , 8 );
+define( 'RLGUI_ICON_FILE_DELETE'              , 9 );
+define( 'RLGUI_ICON_FILETYPE_TEXT'            , 10 );
+define( 'RLGUI_ICON_FILETYPE_AUDIO'           , 11 );
+define( 'RLGUI_ICON_FILETYPE_IMAGE'           , 12 );
+define( 'RLGUI_ICON_FILETYPE_PLAY'            , 13 );
+define( 'RLGUI_ICON_FILETYPE_VIDEO'           , 14 );
+define( 'RLGUI_ICON_FILETYPE_INFO'            , 15 );
+define( 'RLGUI_ICON_FILE_COPY'                , 16 );
+define( 'RLGUI_ICON_FILE_CUT'                 , 17 );
+define( 'RLGUI_ICON_FILE_PASTE'               , 18 );
+define( 'RLGUI_ICON_CURSOR_HAND'              , 19 );
+define( 'RLGUI_ICON_CURSOR_POINTER'           , 20 );
+define( 'RLGUI_ICON_CURSOR_CLASSIC'           , 21 );
+define( 'RLGUI_ICON_PENCIL'                   , 22 );
+define( 'RLGUI_ICON_PENCIL_BIG'               , 23 );
+define( 'RLGUI_ICON_BRUSH_CLASSIC'            , 24 );
+define( 'RLGUI_ICON_BRUSH_PAINTER'            , 25 );
+define( 'RLGUI_ICON_WATER_DROP'               , 26 );
+define( 'RLGUI_ICON_COLOR_PICKER'             , 27 );
+define( 'RLGUI_ICON_RUBBER'                   , 28 );
+define( 'RLGUI_ICON_COLOR_BUCKET'             , 29 );
+define( 'RLGUI_ICON_TEXT_T'                   , 30 );
+define( 'RLGUI_ICON_TEXT_A'                   , 31 );
+define( 'RLGUI_ICON_SCALE'                    , 32 );
+define( 'RLGUI_ICON_RESIZE'                   , 33 );
+define( 'RLGUI_ICON_FILTER_POINT'             , 34 );
+define( 'RLGUI_ICON_FILTER_BILINEAR'          , 35 );
+define( 'RLGUI_ICON_CROP'                     , 36 );
+define( 'RLGUI_ICON_CROP_ALPHA'               , 37 );
+define( 'RLGUI_ICON_SQUARE_TOGGLE'            , 38 );
+define( 'RLGUI_ICON_SYMMETRY'                 , 39 );
+define( 'RLGUI_ICON_SYMMETRY_HORIZONTAL'      , 40 );
+define( 'RLGUI_ICON_SYMMETRY_VERTICAL'        , 41 );
+define( 'RLGUI_ICON_LENS'                     , 42 );
+define( 'RLGUI_ICON_LENS_BIG'                 , 43 );
+define( 'RLGUI_ICON_EYE_ON'                   , 44 );
+define( 'RLGUI_ICON_EYE_OFF'                  , 45 );
+define( 'RLGUI_ICON_FILTER_TOP'               , 46 );
+define( 'RLGUI_ICON_FILTER'                   , 47 );
+define( 'RLGUI_ICON_TARGET_POINT'             , 48 );
+define( 'RLGUI_ICON_TARGET_SMALL'             , 49 );
+define( 'RLGUI_ICON_TARGET_BIG'               , 50 );
+define( 'RLGUI_ICON_TARGET_MOVE'              , 51 );
+define( 'RLGUI_ICON_CURSOR_MOVE'              , 52 );
+define( 'RLGUI_ICON_CURSOR_SCALE'             , 53 );
+define( 'RLGUI_ICON_CURSOR_SCALE_RIGHT'       , 54 );
+define( 'RLGUI_ICON_CURSOR_SCALE_LEFT'        , 55 );
+define( 'RLGUI_ICON_UNDO'                     , 56 );
+define( 'RLGUI_ICON_REDO'                     , 57 );
+define( 'RLGUI_ICON_REREDO'                   , 58 );
+define( 'RLGUI_ICON_MUTATE'                   , 59 );
+define( 'RLGUI_ICON_ROTATE'                   , 60 );
+define( 'RLGUI_ICON_REPEAT'                   , 61 );
+define( 'RLGUI_ICON_SHUFFLE'                  , 62 );
+define( 'RLGUI_ICON_EMPTYBOX'                 , 63 );
+define( 'RLGUI_ICON_TARGET'                   , 64 );
+define( 'RLGUI_ICON_TARGET_SMALL_FILL'        , 65 );
+define( 'RLGUI_ICON_TARGET_BIG_FILL'          , 66 );
+define( 'RLGUI_ICON_TARGET_MOVE_FILL'         , 67 );
+define( 'RLGUI_ICON_CURSOR_MOVE_FILL'         , 68 );
+define( 'RLGUI_ICON_CURSOR_SCALE_FILL'        , 69 );
+define( 'RLGUI_ICON_CURSOR_SCALE_RIGHT_FILL'  , 70 );
+define( 'RLGUI_ICON_CURSOR_SCALE_LEFT_FILL'   , 71 );
+define( 'RLGUI_ICON_UNDO_FILL'                , 72 );
+define( 'RLGUI_ICON_REDO_FILL'                , 73 );
+define( 'RLGUI_ICON_REREDO_FILL'              , 74 );
+define( 'RLGUI_ICON_MUTATE_FILL'              , 75 );
+define( 'RLGUI_ICON_ROTATE_FILL'              , 76 );
+define( 'RLGUI_ICON_REPEAT_FILL'              , 77 );
+define( 'RLGUI_ICON_SHUFFLE_FILL'             , 78 );
+define( 'RLGUI_ICON_EMPTYBOX_SMALL'           , 79 );
+define( 'RLGUI_ICON_BOX'                      , 80 );
+define( 'RLGUI_ICON_BOX_TOP'                  , 81 );
+define( 'RLGUI_ICON_BOX_TOP_RIGHT'            , 82 );
+define( 'RLGUI_ICON_BOX_RIGHT'                , 83 );
+define( 'RLGUI_ICON_BOX_BOTTOM_RIGHT'         , 84 );
+define( 'RLGUI_ICON_BOX_BOTTOM'               , 85 );
+define( 'RLGUI_ICON_BOX_BOTTOM_LEFT'          , 86 );
+define( 'RLGUI_ICON_BOX_LEFT'                 , 87 );
+define( 'RLGUI_ICON_BOX_TOP_LEFT'             , 88 );
+define( 'RLGUI_ICON_BOX_CENTER'               , 89 );
+define( 'RLGUI_ICON_BOX_CIRCLE_MASK'          , 90 );
+define( 'RLGUI_ICON_POT'                      , 91 );
+define( 'RLGUI_ICON_ALPHA_MULTIPLY'           , 92 );
+define( 'RLGUI_ICON_ALPHA_CLEAR'              , 93 );
+define( 'RLGUI_ICON_DITHERING'                , 94 );
+define( 'RLGUI_ICON_MIPMAPS'                  , 95 );
+define( 'RLGUI_ICON_BOX_GRID'                 , 96 );
+define( 'RLGUI_ICON_GRID'                     , 97 );
+define( 'RLGUI_ICON_BOX_CORNERS_SMALL'        , 98 );
+define( 'RLGUI_ICON_BOX_CORNERS_BIG'          , 99 );
+define( 'RLGUI_ICON_FOUR_BOXES'               , 100 );
+define( 'RLGUI_ICON_GRID_FILL'                , 101 );
+define( 'RLGUI_ICON_BOX_MULTISIZE'            , 102 );
+define( 'RLGUI_ICON_ZOOM_SMALL'               , 103 );
+define( 'RLGUI_ICON_ZOOM_MEDIUM'              , 104 );
+define( 'RLGUI_ICON_ZOOM_BIG'                 , 105 );
+define( 'RLGUI_ICON_ZOOM_ALL'                 , 106 );
+define( 'RLGUI_ICON_ZOOM_CENTER'              , 107 );
+define( 'RLGUI_ICON_BOX_DOTS_SMALL'           , 108 );
+define( 'RLGUI_ICON_BOX_DOTS_BIG'             , 109 );
+define( 'RLGUI_ICON_BOX_CONCENTRIC'           , 110 );
+define( 'RLGUI_ICON_BOX_GRID_BIG'             , 111 );
+define( 'RLGUI_ICON_OK_TICK'                  , 112 );
+define( 'RLGUI_ICON_CROSS'                    , 113 );
+define( 'RLGUI_ICON_ARROW_LEFT'               , 114 );
+define( 'RLGUI_ICON_ARROW_RIGHT'              , 115 );
+define( 'RLGUI_ICON_ARROW_DOWN'               , 116 );
+define( 'RLGUI_ICON_ARROW_UP'                 , 117 );
+define( 'RLGUI_ICON_ARROW_LEFT_FILL'          , 118 );
+define( 'RLGUI_ICON_ARROW_RIGHT_FILL'         , 119 );
+define( 'RLGUI_ICON_ARROW_DOWN_FILL'          , 120 );
+define( 'RLGUI_ICON_ARROW_UP_FILL'            , 121 );
+define( 'RLGUI_ICON_AUDIO'                    , 122 );
+define( 'RLGUI_ICON_FX'                       , 123 );
+define( 'RLGUI_ICON_WAVE'                     , 124 );
+define( 'RLGUI_ICON_WAVE_SINUS'               , 125 );
+define( 'RLGUI_ICON_WAVE_SQUARE'              , 126 );
+define( 'RLGUI_ICON_WAVE_TRIANGULAR'          , 127 );
+define( 'RLGUI_ICON_CROSS_SMALL'              , 128 );
+define( 'RLGUI_ICON_PLAYER_PREVIOUS'          , 129 );
+define( 'RLGUI_ICON_PLAYER_PLAY_BACK'         , 130 );
+define( 'RLGUI_ICON_PLAYER_PLAY'              , 131 );
+define( 'RLGUI_ICON_PLAYER_PAUSE'             , 132 );
+define( 'RLGUI_ICON_PLAYER_STOP'              , 133 );
+define( 'RLGUI_ICON_PLAYER_NEXT'              , 134 );
+define( 'RLGUI_ICON_PLAYER_RECORD'            , 135 );
+define( 'RLGUI_ICON_MAGNET'                   , 136 );
+define( 'RLGUI_ICON_LOCK_CLOSE'               , 137 );
+define( 'RLGUI_ICON_LOCK_OPEN'                , 138 );
+define( 'RLGUI_ICON_CLOCK'                    , 139 );
+define( 'RLGUI_ICON_TOOLS'                    , 140 );
+define( 'RLGUI_ICON_GEAR'                     , 141 );
+define( 'RLGUI_ICON_GEAR_BIG'                 , 142 );
+define( 'RLGUI_ICON_BIN'                      , 143 );
+define( 'RLGUI_ICON_HAND_POINTER'             , 144 );
+define( 'RLGUI_ICON_LASER'                    , 145 );
+define( 'RLGUI_ICON_COIN'                     , 146 );
+define( 'RLGUI_ICON_EXPLOSION'                , 147 );
+define( 'RLGUI_ICON_1UP'                      , 148 );
+define( 'RLGUI_ICON_PLAYER'                   , 149 );
+define( 'RLGUI_ICON_PLAYER_JUMP'              , 150 );
+define( 'RLGUI_ICON_KEY'                      , 151 );
+define( 'RLGUI_ICON_DEMON'                    , 152 );
+define( 'RLGUI_ICON_TEXT_POPUP'               , 153 );
+define( 'RLGUI_ICON_GEAR_EX'                  , 154 );
+define( 'RLGUI_ICON_CRACK'                    , 155 );
+define( 'RLGUI_ICON_CRACK_POINTS'             , 156 );
+define( 'RLGUI_ICON_STAR'                     , 157 );
+define( 'RLGUI_ICON_DOOR'                     , 158 );
+define( 'RLGUI_ICON_EXIT'                     , 159 );
+define( 'RLGUI_ICON_MODE_2D'                  , 160 );
+define( 'RLGUI_ICON_MODE_3D'                  , 161 );
+define( 'RLGUI_ICON_CUBE'                     , 162 );
+define( 'RLGUI_ICON_CUBE_FACE_TOP'            , 163 );
+define( 'RLGUI_ICON_CUBE_FACE_LEFT'           , 164 );
+define( 'RLGUI_ICON_CUBE_FACE_FRONT'          , 165 );
+define( 'RLGUI_ICON_CUBE_FACE_BOTTOM'         , 166 );
+define( 'RLGUI_ICON_CUBE_FACE_RIGHT'          , 167 );
+define( 'RLGUI_ICON_CUBE_FACE_BACK'           , 168 );
+define( 'RLGUI_ICON_CAMERA'                   , 169 );
+define( 'RLGUI_ICON_SPECIAL'                  , 170 );
+define( 'RLGUI_ICON_LINK_NET'                 , 171 );
+define( 'RLGUI_ICON_LINK_BOXES'               , 172 );
+define( 'RLGUI_ICON_LINK_MULTI'               , 173 );
+define( 'RLGUI_ICON_LINK'                     , 174 );
+define( 'RLGUI_ICON_LINK_BROKE'               , 175 );
+define( 'RLGUI_ICON_TEXT_NOTES'               , 176 );
+define( 'RLGUI_ICON_NOTEBOOK'                 , 177 );
+define( 'RLGUI_ICON_SUITCASE'                 , 178 );
+define( 'RLGUI_ICON_SUITCASE_ZIP'             , 179 );
+define( 'RLGUI_ICON_MAILBOX'                  , 180 );
+define( 'RLGUI_ICON_MONITOR'                  , 181 );
+define( 'RLGUI_ICON_PRINTER'                  , 182 );
+define( 'RLGUI_ICON_PHOTO_CAMERA'             , 183 );
+define( 'RLGUI_ICON_PHOTO_CAMERA_FLASH'       , 184 );
+define( 'RLGUI_ICON_HOUSE'                    , 185 );
+define( 'RLGUI_ICON_HEART'                    , 186 );
+define( 'RLGUI_ICON_CORNER'                   , 187 );
+define( 'RLGUI_ICON_VERTICAL_BARS'            , 188 );
+define( 'RLGUI_ICON_VERTICAL_BARS_FILL'       , 189 );
+define( 'RLGUI_ICON_LIFE_BARS'                , 190 );
+define( 'RLGUI_ICON_INFO'                     , 191 );
+define( 'RLGUI_ICON_CROSSLINE'                , 192 );
+define( 'RLGUI_ICON_HELP'                     , 193 );
+define( 'RLGUI_ICON_FILETYPE_ALPHA'           , 194 );
+define( 'RLGUI_ICON_FILETYPE_HOME'            , 195 );
+define( 'RLGUI_ICON_LAYERS_VISIBLE'           , 196 );
+define( 'RLGUI_ICON_LAYERS'                   , 197 );
+define( 'RLGUI_ICON_WINDOW'                   , 198 );
+define( 'RLGUI_ICON_HIDPI'                    , 199 );
+define( 'RLGUI_ICON_FILETYPE_BINARY'          , 200 );
+define( 'RLGUI_ICON_HEX'                      , 201 );
+define( 'RLGUI_ICON_SHIELD'                   , 202 );
+define( 'RLGUI_ICON_FILE_NEW'                 , 203 );
+define( 'RLGUI_ICON_FOLDER_ADD'               , 204 );
+define( 'RLGUI_ICON_ALARM'                    , 205 );
+define( 'RLGUI_ICON_CPU'                      , 206 );
+define( 'RLGUI_ICON_ROM'                      , 207 );
+define( 'RLGUI_ICON_STEP_OVER'                , 208 );
+define( 'RLGUI_ICON_STEP_INTO'                , 209 );
+define( 'RLGUI_ICON_STEP_OUT'                 , 210 );
+define( 'RLGUI_ICON_RESTART'                  , 211 );
+define( 'RLGUI_ICON_BREAKPOINT_ON'            , 212 );
+define( 'RLGUI_ICON_BREAKPOINT_OFF'           , 213 );
+define( 'RLGUI_ICON_BURGER_MENU'              , 214 );
+define( 'RLGUI_ICON_CASE_SENSITIVE'           , 215 );
+define( 'RLGUI_ICON_REG_EXP'                  , 216 );
+define( 'RLGUI_ICON_FOLDER'                   , 217 );
+define( 'RLGUI_ICON_FILE'                     , 218 );
+define( 'RLGUI_ICON_SAND_TIMER'               , 219 );
+define( 'RLGUI_ICON_220'                      , 220 );
+define( 'RLGUI_ICON_221'                      , 221 );
+define( 'RLGUI_ICON_222'                      , 222 );
+define( 'RLGUI_ICON_223'                      , 223 );
+define( 'RLGUI_ICON_224'                      , 224 );
+define( 'RLGUI_ICON_225'                      , 225 );
+define( 'RLGUI_ICON_226'                      , 226 );
+define( 'RLGUI_ICON_227'                      , 227 );
+define( 'RLGUI_ICON_228'                      , 228 );
+define( 'RLGUI_ICON_229'                      , 229 );
+define( 'RLGUI_ICON_230'                      , 230 );
+define( 'RLGUI_ICON_231'                      , 231 );
+define( 'RLGUI_ICON_232'                      , 232 );
+define( 'RLGUI_ICON_233'                      , 233 );
+define( 'RLGUI_ICON_234'                      , 234 );
+define( 'RLGUI_ICON_235'                      , 235 );
+define( 'RLGUI_ICON_236'                      , 236 );
+define( 'RLGUI_ICON_237'                      , 237 );
+define( 'RLGUI_ICON_238'                      , 238 );
+define( 'RLGUI_ICON_239'                      , 239 );
+define( 'RLGUI_ICON_240'                      , 240 );
+define( 'RLGUI_ICON_241'                      , 241 );
+define( 'RLGUI_ICON_242'                      , 242 );
+define( 'RLGUI_ICON_243'                      , 243 );
+define( 'RLGUI_ICON_244'                      , 244 );
+define( 'RLGUI_ICON_245'                      , 245 );
+define( 'RLGUI_ICON_246'                      , 246 );
+define( 'RLGUI_ICON_247'                      , 247 );
+define( 'RLGUI_ICON_248'                      , 248 );
+define( 'RLGUI_ICON_249'                      , 249 );
+define( 'RLGUI_ICON_250'                      , 250 );
+define( 'RLGUI_ICON_251'                      , 251 );
+define( 'RLGUI_ICON_252'                      , 252 );
+define( 'RLGUI_ICON_253'                      , 253 );
+define( 'RLGUI_ICON_254'                      , 254 );
+define( 'RLGUI_ICON_255'                      , 255 );
+//} GuiIconName;
+
+
+
+$RAYGUI_H .= <<<'RAYGUI_H'
+
+// Global gui state control functions
+/*RAYGUIAPI*/ void GuiEnable(void);                                 // Enable gui controls (global state)
+/*RAYGUIAPI*/ void GuiDisable(void);                                // Disable gui controls (global state)
+/*RAYGUIAPI*/ void GuiLock(void);                                   // Lock gui controls (global state)
+/*RAYGUIAPI*/ void GuiUnlock(void);                                 // Unlock gui controls (global state)
+/*RAYGUIAPI*/ bool GuiIsLocked(void);                               // Check if gui is locked (global state)
+/*RAYGUIAPI*/ void GuiFade(float alpha);                            // Set gui controls alpha (global state), alpha goes from 0.0f to 1.0f
+/*RAYGUIAPI*/ void GuiSetState(int state);                          // Set gui state (global state)
+/*RAYGUIAPI*/ int GuiGetState(void);                                // Get gui state (global state)
+
+// Font set/get functions
+/*RAYGUIAPI*/ void GuiSetFont(Font font);                           // Set gui custom font (global state)
+/*RAYGUIAPI*/ Font GuiGetFont(void);                                // Get gui custom font (global state)
+
+// Style set/get functions
+/*RAYGUIAPI*/ void GuiSetStyle(int control, int property, int value);   // Set one style property
+/*RAYGUIAPI*/ int GuiGetStyle(int control, int property);               // Get one style property
+
+// Container/separator controls, useful for controls organization
+/*RAYGUIAPI*/ bool GuiWindowBox(Rectangle bounds, const char *title);                                       // Window Box control, shows a window that can be closed
+/*RAYGUIAPI*/ void GuiGroupBox(Rectangle bounds, const char *text);                                         // Group Box control with text name
+/*RAYGUIAPI*/ void GuiLine(Rectangle bounds, const char *text);                                             // Line separator control, could contain text
+/*RAYGUIAPI*/ void GuiPanel(Rectangle bounds, const char *text);                                            // Panel control, useful to group controls
+/*RAYGUIAPI*/ int GuiTabBar(Rectangle bounds, const char **text, int count, int *active);                   // Tab Bar control, returns TAB to be closed or -1
+/*RAYGUIAPI*/ Rectangle GuiScrollPanel(Rectangle bounds, const char *text, Rectangle content, Vector2 *scroll); // Scroll Panel control
+
+// Basic controls set
+/*RAYGUIAPI*/ void GuiLabel(Rectangle bounds, const char *text);                                            // Label control, shows text
+/*RAYGUIAPI*/ bool GuiButton(Rectangle bounds, const char *text);                                           // Button control, returns true when clicked
+/*RAYGUIAPI*/ bool GuiLabelButton(Rectangle bounds, const char *text);                                      // Label button control, show true when clicked
+/*RAYGUIAPI*/ bool GuiToggle(Rectangle bounds, const char *text, bool active);                              // Toggle Button control, returns true when active
+/*RAYGUIAPI*/ int GuiToggleGroup(Rectangle bounds, const char *text, int active);                           // Toggle Group control, returns active toggle index
+/*RAYGUIAPI*/ bool GuiCheckBox(Rectangle bounds, const char *text, bool checked);                           // Check Box control, returns true when active
+/*RAYGUIAPI*/ int GuiComboBox(Rectangle bounds, const char *text, int active);                              // Combo Box control, returns selected item index
+/*RAYGUIAPI*/ bool GuiDropdownBox(Rectangle bounds, const char *text, int *active, bool editMode);          // Dropdown Box control, returns selected item
+/*RAYGUIAPI*/ bool GuiSpinner(Rectangle bounds, const char *text, int *value, int minValue, int maxValue, bool editMode); // Spinner control, returns selected value
+/*RAYGUIAPI*/ bool GuiValueBox(Rectangle bounds, const char *text, int *value, int minValue, int maxValue, bool editMode); // Value Box control, updates input text with numbers
+/*RAYGUIAPI*/ bool GuiTextBox(Rectangle bounds, char *text, int textSize, bool editMode);                   // Text Box control, updates input text
+/*RAYGUIAPI*/ float GuiSlider(Rectangle bounds, const char *textLeft, const char *textRight, float value, float minValue, float maxValue); // Slider control, returns selected value
+/*RAYGUIAPI*/ float GuiSliderBar(Rectangle bounds, const char *textLeft, const char *textRight, float value, float minValue, float maxValue); // Slider Bar control, returns selected value
+/*RAYGUIAPI*/ float GuiProgressBar(Rectangle bounds, const char *textLeft, const char *textRight, float value, float minValue, float maxValue); // Progress Bar control, shows current progress value
+/*RAYGUIAPI*/ void GuiStatusBar(Rectangle bounds, const char *text);                                        // Status Bar control, shows info text
+/*RAYGUIAPI*/ void GuiDummyRec(Rectangle bounds, const char *text);                                         // Dummy control for placeholders
+/*RAYGUIAPI*/ Vector2 GuiGrid(Rectangle bounds, const char *text, float spacing, int subdivs);              // Grid control, returns mouse cell position
+
+// Advance controls set
+/*RAYGUIAPI*/ int GuiListView(Rectangle bounds, const char *text, int *scrollIndex, int active);            // List View control, returns selected list item index
+/*RAYGUIAPI*/ int GuiListViewEx(Rectangle bounds, const char **text, int count, int *focus, int *scrollIndex, int active); // List View with extended parameters
+/*RAYGUIAPI*/ int GuiMessageBox(Rectangle bounds, const char *title, const char *message, const char *buttons); // Message Box control, displays a message
+/*RAYGUIAPI*/ int GuiTextInputBox(Rectangle bounds, const char *title, const char *message, const char *buttons, char *text, int textMaxSize, int *secretViewActive); // Text Input Box control, ask for text, supports secret
+/*RAYGUIAPI*/ Color GuiColorPicker(Rectangle bounds, const char *text, Color color);                        // Color Picker control (multiple color controls)
+/*RAYGUIAPI*/ Color GuiColorPanel(Rectangle bounds, const char *text, Color color);                         // Color Panel control
+/*RAYGUIAPI*/ float GuiColorBarAlpha(Rectangle bounds, const char *text, float alpha);                      // Color Bar Alpha control
+/*RAYGUIAPI*/ float GuiColorBarHue(Rectangle bounds, const char *text, float value);                        // Color Bar Hue control
+
+// Styles loading functions
+/*RAYGUIAPI*/ void GuiLoadStyle(const char *fileName);              // Load style file over global style variable (.rgs)
+/*RAYGUIAPI*/ void GuiLoadStyleDefault(void);                       // Load style default over global style
+
+// Tooltips management functions
+/*RAYGUIAPI*/ void GuiEnableTooltip(void);                          // Enable gui tooltips (global state)
+/*RAYGUIAPI*/ void GuiDisableTooltip(void);                         // Disable gui tooltips (global state)
+/*RAYGUIAPI*/ void GuiSetTooltip(const char *tooltip);              // Set tooltip string
+
+// Icons functionality
+/*RAYGUIAPI*/ const char *GuiIconText(int iconId, const char *text); // Get text with icon id prepended (if supported)
+
+
+/*RAYGUIAPI*/ void GuiSetIconScale(int scale);                      // Set default icon drawing size
+/*RAYGUIAPI*/ unsigned int *GuiGetIcons(void);                      // Get raygui icons data pointer
+/*RAYGUIAPI*/ char **GuiLoadIcons(const char *fileName, bool loadIconsName); // Load raygui icons file (.rgi) into internal icons data
+/*RAYGUIAPI*/ void GuiDrawIcon(int iconId, int posX, int posY, int pixelSize, Color color); // Draw icon using pixel size at specified position
+
+RAYGUI_H;
+
+} // endif RL_SUPPORT_MODULE_RAYGUI
+
+// ---------------------------------------------
 
 $_RAYLIB_TEST_PATHES = [
 	'./raylib/',
@@ -2547,7 +3070,7 @@ foreach( $_RAYLIB_SHARED_LIBRARY_NAMES as $_RAYLIB_SHARED_LIBRARY )
 	}
 }
 
-$RAYLIB_FFI = FFI::cdef( $RAYLIB_H , $_RAYLIB_PATH );
+$RAYLIB_FFI = FFI::cdef( $RAYLIB_H.PHP_EOL.$RAYGUI_H , $_RAYLIB_PATH );
 
 $RLAPI_BLACKLISTED_FUNCTIONS = [
 	'SetAudioStreamCallback',
@@ -2744,8 +3267,6 @@ function RL_rlDrawCall_array( ...$DIMENSIONS ) : object { $ARR = FFI::new( FFI::
 define( 'RAYLIB_FFI_rlRenderBatch' , $RAYLIB_FFI->type( 'rlRenderBatch' ) );
 function RL_rlRenderBatch( ...$_ ) : object { $OBJ = FFI::new( RAYLIB_FFI_rlRenderBatch ); $FIELDS = RAYLIB_FFI_rlRenderBatch->getStructFieldNames() ; if ( count( $FIELDS ) == count( $_ ) ) foreach( $FIELDS as $INDEX => $FIELD ) { $OBJ->$FIELD = $_[$INDEX]; } return $OBJ ; }
 function RL_rlRenderBatch_array( ...$DIMENSIONS ) : object { $ARR = FFI::new( FFI::arrayType( RAYLIB_FFI_rlRenderBatch , $DIMENSIONS ) ); return $ARR ; }
-
-_RAYLIB_define_colors_when_ready();
 
 /// Initialize window and OpenGL context
 // void InitWindow(int width , int height , const char* title);
@@ -3165,7 +3686,7 @@ function RL_OpenURL( string $url ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->Ope
 
 /// Set custom trace log
 // void SetTraceLogCallback(TraceLogCallback callback);
-//XXX function RL_SetTraceLogCallback( object $callback ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->SetTraceLogCallback( $callback ); }
+//XXX function RL_SetTraceLogCallback( TraceLogCallback callback ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->SetTraceLogCallback(  ); }
 
 /// Set custom file binary data loader
 // void SetLoadFileDataCallback(LoadFileDataCallback callback);
@@ -5892,6 +6413,229 @@ function RL_GetCameraViewMatrix( object /*ref*/$camera ) : object { global $RAYL
 function RL_GetCameraProjectionMatrix( object /*ref*/$camera , float $aspect ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->GetCameraProjectionMatrix( FFI::addr($camera) , $aspect ); }
 
 
+_RAYLIB_define_colors_when_ready();
+
+if ( RL_SUPPORT_MODULE_RAYGUI ) {
+
+define( 'RAYLIB_FFI_GuiStyleProp' , $RAYLIB_FFI->type( 'GuiStyleProp' ) );
+function RL_GuiStyleProp( ...$_ ) : object { $OBJ = FFI::new( RAYLIB_FFI_GuiStyleProp ); $FIELDS = RAYLIB_FFI_GuiStyleProp->getStructFieldNames() ; if ( count( $FIELDS ) == count( $_ ) ) foreach( $FIELDS as $INDEX => $FIELD ) { $OBJ->$FIELD = $_[$INDEX]; } return $OBJ ; }
+function RL_GuiStyleProp_array( ...$DIMENSIONS ) : object { $ARR = FFI::new( FFI::arrayType( RAYLIB_FFI_GuiStyleProp , $DIMENSIONS ) ); return $ARR ; }
+
+/// Enable gui controls (global state)
+// void GuiEnable(void);
+function RL_GuiEnable(  ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->GuiEnable(  ); }
+
+/// Disable gui controls (global state)
+// void GuiDisable(void);
+function RL_GuiDisable(  ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->GuiDisable(  ); }
+
+/// Lock gui controls (global state)
+// void GuiLock(void);
+function RL_GuiLock(  ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->GuiLock(  ); }
+
+/// Unlock gui controls (global state)
+// void GuiUnlock(void);
+function RL_GuiUnlock(  ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->GuiUnlock(  ); }
+
+/// Check if gui is locked (global state)
+// bool GuiIsLocked(void);
+function RL_GuiIsLocked(  ) : bool { global $RAYLIB_FFI; return $RAYLIB_FFI->GuiIsLocked(  ); }
+
+/// Set gui controls alpha (global state), alpha goes from 0.0f to 1.0f
+// void GuiFade(float alpha);
+function RL_GuiFade( float $alpha ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->GuiFade( $alpha ); }
+
+/// Set gui state (global state)
+// void GuiSetState(int state);
+function RL_GuiSetState( int $state ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->GuiSetState( $state ); }
+
+/// Get gui state (global state)
+// int GuiGetState(void);
+function RL_GuiGetState(  ) : int { global $RAYLIB_FFI; return $RAYLIB_FFI->GuiGetState(  ); }
+
+/// Set gui custom font (global state)
+// void GuiSetFont(Font font);
+function RL_GuiSetFont( object $font ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->GuiSetFont( $font ); }
+
+/// Get gui custom font (global state)
+// Font GuiGetFont(void);
+function RL_GuiGetFont(  ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->GuiGetFont(  ); }
+
+/// Set one style property
+// void GuiSetStyle(int control , int property , int value);
+function RL_GuiSetStyle( int $control , int $property , int $value ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->GuiSetStyle( $control , $property , $value ); }
+
+/// Get one style property
+// int GuiGetStyle(int control , int property);
+function RL_GuiGetStyle( int $control , int $property ) : int { global $RAYLIB_FFI; return $RAYLIB_FFI->GuiGetStyle( $control , $property ); }
+
+/// Window Box control, shows a window that can be closed
+// bool GuiWindowBox(Rectangle bounds , const char* title);
+function RL_GuiWindowBox( object $bounds , string $title ) : bool { global $RAYLIB_FFI; return $RAYLIB_FFI->GuiWindowBox( $bounds , $title ); }
+
+/// Group Box control with text name
+// void GuiGroupBox(Rectangle bounds , const char* text);
+function RL_GuiGroupBox( object $bounds , string $text ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->GuiGroupBox( $bounds , $text ); }
+
+/// Line separator control, could contain text
+// void GuiLine(Rectangle bounds , const char* text);
+function RL_GuiLine( object $bounds , string $text ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->GuiLine( $bounds , $text ); }
+
+/// Panel control, useful to group controls
+// void GuiPanel(Rectangle bounds , const char* text);
+function RL_GuiPanel( object $bounds , string $text ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->GuiPanel( $bounds , $text ); }
+
+/// Tab Bar control, returns TAB to be closed or -1
+// int GuiTabBar(Rectangle bounds , const char** text , int count , int* active);
+function RL_GuiTabBar( object $bounds , object $text , int $count , int &$active ) : int { global $RAYLIB_FFI; return $RAYLIB_FFI->GuiTabBar( $bounds , $text , $count , $active ); }
+
+/// Scroll Panel control
+// Rectangle GuiScrollPanel(Rectangle bounds , const char* text , Rectangle content , Vector2* scroll);
+function RL_GuiScrollPanel( object $bounds , string $text , object $content , object $scroll ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->GuiScrollPanel( $bounds , $text , $content , $scroll ); }
+
+/// Label control, shows text
+// void GuiLabel(Rectangle bounds , const char* text);
+function RL_GuiLabel( object $bounds , string $text ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->GuiLabel( $bounds , $text ); }
+
+/// Button control, returns true when clicked
+// bool GuiButton(Rectangle bounds , const char* text);
+function RL_GuiButton( object $bounds , string $text ) : bool { global $RAYLIB_FFI; return $RAYLIB_FFI->GuiButton( $bounds , $text ); }
+
+/// Label button control, show true when clicked
+// bool GuiLabelButton(Rectangle bounds , const char* text);
+function RL_GuiLabelButton( object $bounds , string $text ) : bool { global $RAYLIB_FFI; return $RAYLIB_FFI->GuiLabelButton( $bounds , $text ); }
+
+/// Toggle Button control, returns true when active
+// bool GuiToggle(Rectangle bounds , const char* text , bool active);
+function RL_GuiToggle( object $bounds , string $text , bool $active ) : bool { global $RAYLIB_FFI; return $RAYLIB_FFI->GuiToggle( $bounds , $text , $active ); }
+
+/// Toggle Group control, returns active toggle index
+// int GuiToggleGroup(Rectangle bounds , const char* text , int active);
+function RL_GuiToggleGroup( object $bounds , string $text , int $active ) : int { global $RAYLIB_FFI; return $RAYLIB_FFI->GuiToggleGroup( $bounds , $text , $active ); }
+
+/// Check Box control, returns true when active
+// bool GuiCheckBox(Rectangle bounds , const char* text , bool checked);
+function RL_GuiCheckBox( object $bounds , string $text , bool $checked ) : bool { global $RAYLIB_FFI; return $RAYLIB_FFI->GuiCheckBox( $bounds , $text , $checked ); }
+
+/// Combo Box control, returns selected item index
+// int GuiComboBox(Rectangle bounds , const char* text , int active);
+function RL_GuiComboBox( object $bounds , string $text , int $active ) : int { global $RAYLIB_FFI; return $RAYLIB_FFI->GuiComboBox( $bounds , $text , $active ); }
+
+/// Dropdown Box control, returns selected item
+// bool GuiDropdownBox(Rectangle bounds , const char* text , int* active , bool editMode);
+function RL_GuiDropdownBox( object $bounds , string $text , int &$active , bool $editMode ) : bool { global $RAYLIB_FFI; return $RAYLIB_FFI->GuiDropdownBox( $bounds , $text , $active , $editMode ); }
+
+/// Spinner control, returns selected value
+// bool GuiSpinner(Rectangle bounds , const char* text , int* value , int minValue , int maxValue , bool editMode);
+function RL_GuiSpinner( object $bounds , string $text , int &$value , int $minValue , int $maxValue , bool $editMode ) : bool { global $RAYLIB_FFI; return $RAYLIB_FFI->GuiSpinner( $bounds , $text , $value , $minValue , $maxValue , $editMode ); }
+
+/// Value Box control, updates input text with numbers
+// bool GuiValueBox(Rectangle bounds , const char* text , int* value , int minValue , int maxValue , bool editMode);
+function RL_GuiValueBox( object $bounds , string $text , int &$value , int $minValue , int $maxValue , bool $editMode ) : bool { global $RAYLIB_FFI; return $RAYLIB_FFI->GuiValueBox( $bounds , $text , $value , $minValue , $maxValue , $editMode ); }
+
+/// Text Box control, updates input text
+// bool GuiTextBox(Rectangle bounds , char* text , int textSize , bool editMode);
+function RL_GuiTextBox( object $bounds , string $text , int $textSize , bool $editMode ) : bool { global $RAYLIB_FFI; return $RAYLIB_FFI->GuiTextBox( $bounds , $text , $textSize , $editMode ); }
+
+/// Slider control, returns selected value
+// float GuiSlider(Rectangle bounds , const char* textLeft , const char* textRight , float value , float minValue , float maxValue);
+function RL_GuiSlider( object $bounds , string $textLeft , string $textRight , float $value , float $minValue , float $maxValue ) : float { global $RAYLIB_FFI; return $RAYLIB_FFI->GuiSlider( $bounds , $textLeft , $textRight , $value , $minValue , $maxValue ); }
+
+/// Slider Bar control, returns selected value
+// float GuiSliderBar(Rectangle bounds , const char* textLeft , const char* textRight , float value , float minValue , float maxValue);
+function RL_GuiSliderBar( object $bounds , string $textLeft , string $textRight , float $value , float $minValue , float $maxValue ) : float { global $RAYLIB_FFI; return $RAYLIB_FFI->GuiSliderBar( $bounds , $textLeft , $textRight , $value , $minValue , $maxValue ); }
+
+/// Progress Bar control, shows current progress value
+// float GuiProgressBar(Rectangle bounds , const char* textLeft , const char* textRight , float value , float minValue , float maxValue);
+function RL_GuiProgressBar( object $bounds , string $textLeft , string $textRight , float $value , float $minValue , float $maxValue ) : float { global $RAYLIB_FFI; return $RAYLIB_FFI->GuiProgressBar( $bounds , $textLeft , $textRight , $value , $minValue , $maxValue ); }
+
+/// Status Bar control, shows info text
+// void GuiStatusBar(Rectangle bounds , const char* text);
+function RL_GuiStatusBar( object $bounds , string $text ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->GuiStatusBar( $bounds , $text ); }
+
+/// Dummy control for placeholders
+// void GuiDummyRec(Rectangle bounds , const char* text);
+function RL_GuiDummyRec( object $bounds , string $text ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->GuiDummyRec( $bounds , $text ); }
+
+/// Grid control, returns mouse cell position
+// Vector2 GuiGrid(Rectangle bounds , const char* text , float spacing , int subdivs);
+function RL_GuiGrid( object $bounds , string $text , float $spacing , int $subdivs ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->GuiGrid( $bounds , $text , $spacing , $subdivs ); }
+
+/// List View control, returns selected list item index
+// int GuiListView(Rectangle bounds , const char* text , int* scrollIndex , int active);
+function RL_GuiListView( object $bounds , string $text , int &$scrollIndex , int $active ) : int { global $RAYLIB_FFI; return $RAYLIB_FFI->GuiListView( $bounds , $text , $scrollIndex , $active ); }
+
+/// List View with extended parameters
+// int GuiListViewEx(Rectangle bounds , const char** text , int count , int* focus , int* scrollIndex , int active);
+function RL_GuiListViewEx( object $bounds , object $text , int $count , int &$focus , int &$scrollIndex , int $active ) : int { global $RAYLIB_FFI; return $RAYLIB_FFI->GuiListViewEx( $bounds , $text , $count , $focus , $scrollIndex , $active ); }
+
+/// Message Box control, displays a message
+// int GuiMessageBox(Rectangle bounds , const char* title , const char* message , const char* buttons);
+function RL_GuiMessageBox( object $bounds , string $title , string $message , string $buttons ) : int { global $RAYLIB_FFI; return $RAYLIB_FFI->GuiMessageBox( $bounds , $title , $message , $buttons ); }
+
+/// Text Input Box control, ask for text, supports secret
+// int GuiTextInputBox(Rectangle bounds , const char* title , const char* message , const char* buttons , char* text , int textMaxSize , int* secretViewActive);
+function RL_GuiTextInputBox( object $bounds , string $title , string $message , string $buttons , string $text , int $textMaxSize , int &$secretViewActive ) : int { global $RAYLIB_FFI; return $RAYLIB_FFI->GuiTextInputBox( $bounds , $title , $message , $buttons , $text , $textMaxSize , $secretViewActive ); }
+
+/// Color Picker control (multiple color controls)
+// Color GuiColorPicker(Rectangle bounds , const char* text , Color color);
+function RL_GuiColorPicker( object $bounds , string $text , object $color ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->GuiColorPicker( $bounds , $text , $color ); }
+
+/// Color Panel control
+// Color GuiColorPanel(Rectangle bounds , const char* text , Color color);
+function RL_GuiColorPanel( object $bounds , string $text , object $color ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->GuiColorPanel( $bounds , $text , $color ); }
+
+/// Color Bar Alpha control
+// float GuiColorBarAlpha(Rectangle bounds , const char* text , float alpha);
+function RL_GuiColorBarAlpha( object $bounds , string $text , float $alpha ) : float { global $RAYLIB_FFI; return $RAYLIB_FFI->GuiColorBarAlpha( $bounds , $text , $alpha ); }
+
+/// Color Bar Hue control
+// float GuiColorBarHue(Rectangle bounds , const char* text , float value);
+function RL_GuiColorBarHue( object $bounds , string $text , float $value ) : float { global $RAYLIB_FFI; return $RAYLIB_FFI->GuiColorBarHue( $bounds , $text , $value ); }
+
+/// Load style file over global style variable (.rgs)
+// void GuiLoadStyle(const char* fileName);
+function RL_GuiLoadStyle( string $fileName ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->GuiLoadStyle( $fileName ); }
+
+/// Load style default over global style
+// void GuiLoadStyleDefault(void);
+function RL_GuiLoadStyleDefault(  ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->GuiLoadStyleDefault(  ); }
+
+/// Enable gui tooltips (global state)
+// void GuiEnableTooltip(void);
+function RL_GuiEnableTooltip(  ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->GuiEnableTooltip(  ); }
+
+/// Disable gui tooltips (global state)
+// void GuiDisableTooltip(void);
+function RL_GuiDisableTooltip(  ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->GuiDisableTooltip(  ); }
+
+/// Set tooltip string
+// void GuiSetTooltip(const char* tooltip);
+function RL_GuiSetTooltip( string $tooltip ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->GuiSetTooltip( $tooltip ); }
+
+/// Get text with icon id prepended (if supported)
+// const char* GuiIconText(int iconId , const char* text);
+function RL_GuiIconText( int $iconId , string $text ) : string { global $RAYLIB_FFI; return $RAYLIB_FFI->GuiIconText( $iconId , $text ); }
+
+/// Set default icon drawing size
+// void GuiSetIconScale(int scale);
+function RL_GuiSetIconScale( int $scale ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->GuiSetIconScale( $scale ); }
+
+/// Get raygui icons data pointer
+// unsigned int* GuiGetIcons(void);
+function RL_GuiGetIcons(  ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->GuiGetIcons(  ); }
+
+/// Load raygui icons file (.rgi) into internal icons data
+// char** GuiLoadIcons(const char* fileName , bool loadIconsName);
+function RL_GuiLoadIcons( string $fileName , bool $loadIconsName ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->GuiLoadIcons( $fileName , $loadIconsName ); }
+
+/// Draw icon using pixel size at specified position
+// void GuiDrawIcon(int iconId , int posX , int posY , int pixelSize , Color color);
+function RL_GuiDrawIcon( int $iconId , int $posX , int $posY , int $pixelSize , object $color ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->GuiDrawIcon( $iconId , $posX , $posY , $pixelSize , $color ); }
+
+
+} // endif RL_SUPPORT_MODULE_RAYGUI
+
 //-------------------------------[/RLAPI_WRAPPER_AUTOGENERATED]--------------------------------
 
 } #endif // RAYLIB_H
@@ -5902,11 +6646,8 @@ function RL_GetCameraProjectionMatrix( object /*ref*/$camera , float $aspect ) :
 // ( I could have used Raylib's header parser (https://github.com/raysan5/raylib/tree/master/parser) to generate it
 // instead of wasting time and energy implementing this ugly function, but I noticed Raylib's parser too late ...)
 //
-function _RAYLIB_REBUILD_WRAPPER_FROM_SCRATCH() : string
+function _RAYLIB_REBUILD_WRAPPER_FROM_SCRATCH( string $RAYLIB_H , array $BLACKLISTED_FUNCTIONS ) : string
 {
-	global $RAYLIB_H ;
-	global $RLAPI_BLACKLISTED_FUNCTIONS ;
-
 	$RLAPI_PHP = '';
 
 	// Typedef list :
@@ -5927,11 +6668,9 @@ function _RAYLIB_REBUILD_WRAPPER_FROM_SCRATCH() : string
 
 //return $RLAPI_PHP ;
 
-	$RLAPI_PHP .= '_RAYLIB_define_colors_when_ready();'.PHP_EOL.PHP_EOL;
-
 	// Function list :
 
-	preg_match_all( '@/\*R.API\*/\h+(.*;.*)@' , $RAYLIB_H , $MATCHES , PREG_SET_ORDER );
+	preg_match_all( '@/\*R.+API\*/\h+(.*;.*)@' , $RAYLIB_H , $MATCHES , PREG_SET_ORDER );
 
 	//print_r( $MATCHES );
 
@@ -6072,7 +6811,7 @@ function _RAYLIB_REBUILD_WRAPPER_FROM_SCRATCH() : string
 
 		$LINE = "function RL_$NAME( $ARGS ) : $TYPE { $INNER }";
 
-		if ( in_array( $NAME , $RLAPI_BLACKLISTED_FUNCTIONS ) )
+		if ( in_array( $NAME , $BLACKLISTED_FUNCTIONS ) )
 		{
 			$LINE = '//XXX '.$LINE ;
 		}
@@ -6088,7 +6827,9 @@ function _RAYLIB_REBUILD_WRAPPER_FROM_SCRATCH() : string
 
 //---------- Command line utility mode ----------------------------
 
-if ( basename( $_SERVER['PHP_SELF'] ) == basename( __FILE__ ) )
+
+
+if ( $_WRAPPER_SCRIPT_RUNNING_IN_UTILITY_MODE_87987987 )
 {
 	echo "Running ".$argv[0]." as utility ...".PHP_EOL;
 
@@ -6103,8 +6844,12 @@ if ( basename( $_SERVER['PHP_SELF'] ) == basename( __FILE__ ) )
 
 		$SOURCE = $HEAD_PART
 			. '[RLAPI_WRAPPER_AUTOGENERATED]---------------------------------'.PHP_EOL.PHP_EOL
-			. _RAYLIB_REBUILD_WRAPPER_FROM_SCRATCH()
-			. PHP_EOL.'//-------------------------------'
+			. _RAYLIB_REBUILD_WRAPPER_FROM_SCRATCH( $RAYLIB_H , $RLAPI_BLACKLISTED_FUNCTIONS ).PHP_EOL
+			. '_RAYLIB_define_colors_when_ready();'.PHP_EOL.PHP_EOL
+			. 'if ( RL_SUPPORT_MODULE_RAYGUI ) {'.PHP_EOL.PHP_EOL
+			. _RAYLIB_REBUILD_WRAPPER_FROM_SCRATCH( $RAYGUI_H , $RLAPI_BLACKLISTED_FUNCTIONS ).PHP_EOL
+			. '} // endif RL_SUPPORT_MODULE_RAYGUI'.PHP_EOL.PHP_EOL
+			. '//-------------------------------'
 			.$TAIL_PART
 			;
 
