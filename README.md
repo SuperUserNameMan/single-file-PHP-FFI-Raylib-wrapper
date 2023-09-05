@@ -7,6 +7,8 @@ Meant to work out of the box with [official precompiled library releases](https:
 
 The wrapper integrates `raylib.h` + `raymath.h` + `rlgl.h` + `rlcamera.h` API.
 
+Optionally, it also supports [RayGui 3.6 API](https://github.com/raysan5/raygui/) if it is compiled inside the library.
+
 Only requires `libraylib.so` or `raylib.dll` into a `.\raylib\`, or `.\lib` or `.\` sub directory.
 
 ## Notes :
@@ -50,6 +52,22 @@ $my_color_map = FFI::new( FFI::arrayType( RAYLIB_FFI_Color ) , [ 320 , 240 ] );
 $my_cube_array = FFI::new( FFI::arrayType( RAYLIB_FFI_Vector3D ) , [ 3 , 5 , 8 ] );
 ```
 
+## Optional RayGui 3.6 support 
+
+If RayGui was compiled inside your library, you can tell it to the wrapper before include :
+
+```PHP
+define( 'RL_SUPPORT_MODULE_RAYGUI' , true );
+
+include('./path/to/raylib.ffi.php');
+```
+
+`raygui.h` functions are also prefixed with `RL_`, but consts are prefixed with `RLGUI_`.
+
+```PHP
+$W = RL_GuiGetStyle( RLGUI_SLIDER , RLGUI_BORDER_WIDTH );
+```
+
 ## Customized `src/config.h` compilation
 
 If Raylib is recompiled using customized `src/config.h` parameters, the wrapper has to be made aware of these new parameters before `include()`.
@@ -64,8 +82,7 @@ define( 'RL_SUPPORT_FILEFORMAT_TGA'  , true );
 include('./your/path/to/raylib.ffi.php');
 ```
 
-
-Regarding custom OpenGL version, the wrapper makes use of special `RL_USES_OPENGL_VERSION` definition :
+Regarding custom OpenGL version, the wrapper makes use of a special `RL_USES_OPENGL_VERSION` definition :
 
 ```PHP
 // 1 => OpenGL 1.1
