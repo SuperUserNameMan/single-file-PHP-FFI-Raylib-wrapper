@@ -5,7 +5,7 @@ Very W.I.P.
 
 Meant to work out of the box with [official precompiled library releases](https://github.com/raysan5/raylib/releases) on Windows (not really tested) and on Linux.
 
-The wrapper integrates `raylib.h` + `raymath.h` + `rlgl.h` + `rlcamera.h` API.
+The wrapper integrates `raylib.h` + `raymath.h` + `rlgl.h` + `rlcamera.h` API. (and `raygui.h` optionaly)
 
 
 
