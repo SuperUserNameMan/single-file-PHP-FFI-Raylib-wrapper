@@ -3090,6 +3090,9 @@ $RLAPI_BLACKLISTED_FUNCTIONS = [
 	'UnloadFileData', // handwritten
 ];
 
+//typedef Camera3D Camera;    // Camera type fallback, defaults to Camera3D
+function RL_Camera( ...$_ ) : object { return RL_Camera3D( ...$_ ); }
+function RL_Camera_array( ...$_ ) : object { return RL_Camera3D_array( ...$_ ); }
 
 /// Load file data as byte array (read)
 // unsigned char *LoadFileData(const char *fileName, unsigned int *bytesRead);
