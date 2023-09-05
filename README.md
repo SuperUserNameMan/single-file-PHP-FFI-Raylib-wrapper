@@ -1,5 +1,5 @@
 # single-file-PHP-FFI-Raylib-wrapper
-A single file [PHP8](https://github.com/php/php-src) FFI [Raylib 4.5](https://github.com/raysan5/raylib) wrapper.
+A single file [PHP8](https://github.com/php/php-src) FFI [Raylib 4.5](https://github.com/raysan5/raylib) wrapper. (Optionally, it also supports [RayGui 3.6 API](https://github.com/raysan5/raygui/) if it is compiled inside the library.)
 
 Very W.I.P.
 
@@ -7,7 +7,7 @@ Meant to work out of the box with [official precompiled library releases](https:
 
 The wrapper integrates `raylib.h` + `raymath.h` + `rlgl.h` + `rlcamera.h` API.
 
-Optionally, it also supports [RayGui 3.6 API](https://github.com/raysan5/raygui/) if it is compiled inside the library.
+
 
 Only requires `libraylib.so` or `raylib.dll` into a `.\raylib\`, or `.\lib` or `.\` sub directory.
 
