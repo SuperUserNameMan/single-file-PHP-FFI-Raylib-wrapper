@@ -65,6 +65,7 @@ $W = RL_GuiGetStyle( RLGUI_SLIDER , RLGUI_BORDER_WIDTH );
 ## Customized `src/config.h` compilation
 
 By default, the wrapper will try to detects if the library was compiled with these parameters :
+- `RL_SUPPORT_MODULE_RMATH`
 - `RL_SUPPORT_MODULE_RSHAPES`
 - `RL_SUPPORT_MODULE_RTEXTURES`
 - `RL_SUPPORT_MODULE_RTEXT`
