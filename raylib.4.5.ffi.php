@@ -98,6 +98,42 @@ define( 'RAYLIB_VERSION' , "4.5" );
 
 function define_default( string $DEFNAME , $DEFVAL ) { defined( $DEFNAME ) || define( $DEFNAME , $DEFVAL ); }
 
+define_default( 'RL_USES_OPENGL_VERSION'       ,   3 );
+
+$_RAYLIB_TEST_PATHES ??= [
+	'./raylib/',
+	'./libs/',
+	'./lib/',
+	'./',
+	'',
+];
+
+$_RAYLIB_SHARED_LIBRARY_NAMES ??= match( PHP_OS_FAMILY )
+{
+	'Linux'   => [
+		'libraylib_opengl'.RL_USES_OPENGL_VERSION.'.so' ,
+		'libraylib.so' ,
+	],
+	'Windows' => [
+		'raylib_opengl'.RL_USES_OPENGL_VERSION.'.dll' ,
+		'raylib.dll' ,
+	],
+};
+
+foreach( $_RAYLIB_SHARED_LIBRARY_NAMES as $_RAYLIB_SHARED_LIBRARY )
+{
+	foreach( $_RAYLIB_TEST_PATHES as $_RAYLIB_TEST_PATH )
+	{
+		$_RAYLIB_PATH = $_RAYLIB_TEST_PATH.$_RAYLIB_SHARED_LIBRARY ;
+		if ( file_exists( $_RAYLIB_PATH ) )
+		{
+			echo "Found $_RAYLIB_PATH".PHP_EOL;
+			break 2;
+		}
+	}
+}
+
+
 //----------------------------------------------------------------------------------
 // RL_PLATFORM_xxx definitions
 //----------------------------------------------------------------------------------
@@ -110,24 +146,30 @@ define_default( 'RL_PLATFORM_RPI'     , FALSE );
 // Other compile-time default definitions :
 //----------------------------------------------------------------------------------
 
-define_default( 'RL_SUPPORT_MODULE_RSHAPES'        , true );
-define_default( 'RL_SUPPORT_MODULE_RTEXTURES'      , true );
-define_default( 'RL_SUPPORT_MODULE_RTEXT'          , true );
-define_default( 'RL_SUPPORT_MODULE_RMODELS'        , true );
-define_default( 'RL_SUPPORT_MODULE_RAUDIO'         , true );
+// try to automatically detects if the library was compiled with each module
+$_RAYLIB_CONTENT = file_get_contents( $_RAYLIB_PATH );
 
-define_default( 'RL_SUPPORT_MODULE_RAYGUI'         , false );
+define_default( 'RL_SUPPORT_MODULE_RSHAPES'        , str_contains( $_RAYLIB_CONTENT , 'DrawPixel'       ) );
+define_default( 'RL_SUPPORT_MODULE_RTEXTURES'      , str_contains( $_RAYLIB_CONTENT , 'LoadImage'       ) );
+define_default( 'RL_SUPPORT_MODULE_RTEXT'          , str_contains( $_RAYLIB_CONTENT , 'LoadFont'        ) );
+define_default( 'RL_SUPPORT_MODULE_RMODELS'        , str_contains( $_RAYLIB_CONTENT , 'LoadModel'       ) );
+define_default( 'RL_SUPPORT_MODULE_RAUDIO'         , str_contains( $_RAYLIB_CONTENT , 'LoadAudioStream' ) );
 
-define_default( 'RL_SUPPORT_CAMERA_SYSTEM'         , true );
-define_default( 'RL_SUPPORT_GESTURES_SYSTEM'       , true );
-define_default( 'RL_SUPPORT_MOUSE_GESTURES'        , true );
-define_default( 'RL_SUPPORT_SSH_KEYBOARD_RPI'      , true );
+define_default( 'RL_SUPPORT_MODULE_RAYGUI'         , str_contains( $_RAYLIB_CONTENT , 'GuiEnable'       ) );
+
+define_default( 'RL_SUPPORT_CAMERA_SYSTEM'         , str_contains( $_RAYLIB_CONTENT , 'GetCameraForward'    ) );
+define_default( 'RL_SUPPORT_GESTURES_SYSTEM'       , str_contains( $_RAYLIB_CONTENT , 'ProcessGestureEvent' ) );
+define_default( 'RL_SUPPORT_MOUSE_GESTURES'        , FALSE );
+define_default( 'RL_SUPPORT_SSH_KEYBOARD_RPI'      , str_contains( $_RAYLIB_CONTENT , 'ProcessKeyboard'     ) );
 define_default( 'RL_SUPPORT_WINMM_HIGHRES_TIMER'   , true );
 define_default( 'RL_SUPPORT_PARTIALBUSY_WAIT_LOOP' , true );
 define_default( 'RL_SUPPORT_SCREEN_CAPTURE'        , true );
-define_default( 'RL_SUPPORT_GIF_RECORDING'         , FALSE );
+define_default( 'RL_SUPPORT_GIF_RECORDING'         , str_contains( $_RAYLIB_CONTENT , 'msf_gif_frame'       ) );
 define_default( 'RL_SUPPORT_COMPRESSION_API'       , true );
 define_default( 'RL_SUPPORT_CUSTOM_FRAME_CONTROL'  , FALSE );
+
+unset( $_RAYLIB_CONTENT );
+
 
 define_default( 'RL_MAX_FILEPATH_CAPACITY' , 8192 );
 define_default( 'RL_MAX_FILEPATH_LENGTH'   , 4096 );
@@ -147,8 +189,6 @@ define_default( 'RL_MAX_DECOMPRESSION_SIZE',  64 );
 //------------------------------------------------------------------------------------
 // Module: rlgl - Configuration values
 //------------------------------------------------------------------------------------
-
-define_default( 'RL_USES_OPENGL_VERSION'       ,   3 );
 
 define_default( 'RLGL_DEFAULT_BATCH_BUFFERS'           ,   1 );
 define_default( 'RLGL_DEFAULT_BATCH_DRAWCALLS'         , 256 );
@@ -3036,39 +3076,6 @@ RAYGUI_H;
 
 // ---------------------------------------------
 
-$_RAYLIB_TEST_PATHES = [
-	'./raylib/',
-	'./libs/',
-	'./lib/',
-	'./',
-	'',
-];
-
-
-$_RAYLIB_SHARED_LIBRARY_NAMES = match( PHP_OS_FAMILY )
-{
-	'Linux'   => [
-		'libraylib_opengl'.RL_USES_OPENGL_VERSION.'.so' ,
-		'libraylib.so' ,
-	],
-	'Windows' => [
-		'raylib_opengl'.RL_USES_OPENGL_VERSION.'.dll' ,
-		'raylib.dll' ,
-	],
-};
-
-foreach( $_RAYLIB_SHARED_LIBRARY_NAMES as $_RAYLIB_SHARED_LIBRARY )
-{
-	foreach( $_RAYLIB_TEST_PATHES as $_RAYLIB_TEST_PATH )
-	{
-		$_RAYLIB_PATH = $_RAYLIB_TEST_PATH.$_RAYLIB_SHARED_LIBRARY ;
-		if ( file_exists( $_RAYLIB_PATH ) )
-		{
-			echo "Found $_RAYLIB_PATH".PHP_EOL;
-			break 2;
-		}
-	}
-}
 
 $RAYLIB_FFI = FFI::cdef( $RAYLIB_H.PHP_EOL.$RAYGUI_H , $_RAYLIB_PATH );
 
