@@ -157,6 +157,10 @@ define_default( 'RL_SUPPORT_MODULE_RAUDIO'         , str_contains( $_RAYLIB_CONT
 
 define_default( 'RL_SUPPORT_MODULE_RAYGUI'         , str_contains( $_RAYLIB_CONTENT , 'GuiEnable'       ) );
 
+define_default( 'RL_SUPPORT_MODULE_RMATH'          , str_contains( $_RAYLIB_CONTENT , 'Normalize'       ) );
+
+define_default( 'RL_SUPPORT_MODULE_RLGL'           , str_contains( $_RAYLIB_CONTENT , 'MatrixPerspective' ) );
+
 define_default( 'RL_SUPPORT_CAMERA_SYSTEM'         , str_contains( $_RAYLIB_CONTENT , 'GetCameraForward'    ) );
 define_default( 'RL_SUPPORT_GESTURES_SYSTEM'       , str_contains( $_RAYLIB_CONTENT , 'ProcessGestureEvent' ) );
 define_default( 'RL_SUPPORT_MOUSE_GESTURES'        , FALSE );
@@ -341,57 +345,44 @@ define_default( 'RL_RAD2DEG' , (180.0/RL_PI) );
 
 define_default( 'RL_EPSILON' , 0.000001 );
 
-
 // Get float vector for Matrix
 function RL_MatrixToFloat( object $MAT ) : object { return RL_MatrixToFloatV( $MAT )->v ; }
 
 // Get float vector for Vector3
 function RL_Vector3ToFloat( object $VEC ) : object { return RL_Vector3ToFloatV( $VEC )->v ; }
 
-// NOTE: We set some defines with some data types declared by raylib
-// Other modules (raymath, rlgl) also require some of those types, so,
-// to be able to use those other modules as standalone (not depending on raylib)
-// this defines are very useful for internal check and avoid type (re)definitions
-
-define( 'RL_COLOR_TYPE'      , true );
-define( 'RL_RECTANGLE_TYPE'  , true );
-define( 'RL_VECTOR2_TYPE'    , true );
-define( 'RL_VECTOR3_TYPE'    , true );
-define( 'RL_VECTOR4_TYPE'    , true );
-define( 'RL_QUATERNION_TYPE' , true );
-define( 'RL_MATRIX_TYPE'     , true );
 
 // Some Basic Colors
 // NOTE: Custom raylib color palette for amazing visuals on WHITE background
 function _RAYLIB_define_colors_when_ready()
 {
-define( 'RL_LIGHTGRAY'  , RL_Color( 200, 200, 200, 255 ) );  // Light Gray
-define( 'RL_GRAY'       , RL_Color( 130, 130, 130, 255 ) );  // Gray
-define( 'RL_DARKGRAY'   , RL_Color(  80,  80,  80, 255 ) );  // Dark Gray
-define( 'RL_YELLOW'     , RL_Color( 253, 249,   0, 255 ) );  // Yellow
-define( 'RL_GOLD'       , RL_Color( 255, 203,   0, 255 ) );  // Gold
-define( 'RL_ORANGE'     , RL_Color( 255, 161,   0, 255 ) );  // Orange
-define( 'RL_PINK'       , RL_Color( 255, 109, 194, 255 ) );  // Pink
-define( 'RL_RED'        , RL_Color( 230,  41,  55, 255 ) );  // Red
-define( 'RL_MAROON'     , RL_Color( 190,  33,  55, 255 ) );  // Maroon
-define( 'RL_GREEN'      , RL_Color(   0, 228,  48, 255 ) );  // Green
-define( 'RL_LIME'       , RL_Color(   0, 158,  47, 255 ) );  // Lime
-define( 'RL_DARKGREEN'  , RL_Color(   0, 117,  44, 255 ) );  // Dark Green
-define( 'RL_SKYBLUE'    , RL_Color( 102, 191, 255, 255 ) );  // Sky Blue
-define( 'RL_BLUE'       , RL_Color(   0, 121, 241, 255 ) );  // Blue
-define( 'RL_DARKBLUE'   , RL_Color(   0,  82, 172, 255 ) );  // Dark Blue
-define( 'RL_PURPLE'     , RL_Color( 200, 122, 255, 255 ) );  // Purple
-define( 'RL_VIOLET'     , RL_Color( 135,  60, 190, 255 ) );  // Violet
-define( 'RL_DARKPURPLE' , RL_Color( 112,  31, 126, 255 ) );  // Dark Purple
-define( 'RL_BEIGE'      , RL_Color( 211, 176, 131, 255 ) );  // Beige
-define( 'RL_BROWN'      , RL_Color( 127, 106,  79, 255 ) );  // Brown
-define( 'RL_DARKBROWN'  , RL_Color(  76,  63,  47, 255 ) );  // Dark Brown
+	define( 'RL_LIGHTGRAY'  , RL_Color( 200, 200, 200, 255 ) );  // Light Gray
+	define( 'RL_GRAY'       , RL_Color( 130, 130, 130, 255 ) );  // Gray
+	define( 'RL_DARKGRAY'   , RL_Color(  80,  80,  80, 255 ) );  // Dark Gray
+	define( 'RL_YELLOW'     , RL_Color( 253, 249,   0, 255 ) );  // Yellow
+	define( 'RL_GOLD'       , RL_Color( 255, 203,   0, 255 ) );  // Gold
+	define( 'RL_ORANGE'     , RL_Color( 255, 161,   0, 255 ) );  // Orange
+	define( 'RL_PINK'       , RL_Color( 255, 109, 194, 255 ) );  // Pink
+	define( 'RL_RED'        , RL_Color( 230,  41,  55, 255 ) );  // Red
+	define( 'RL_MAROON'     , RL_Color( 190,  33,  55, 255 ) );  // Maroon
+	define( 'RL_GREEN'      , RL_Color(   0, 228,  48, 255 ) );  // Green
+	define( 'RL_LIME'       , RL_Color(   0, 158,  47, 255 ) );  // Lime
+	define( 'RL_DARKGREEN'  , RL_Color(   0, 117,  44, 255 ) );  // Dark Green
+	define( 'RL_SKYBLUE'    , RL_Color( 102, 191, 255, 255 ) );  // Sky Blue
+	define( 'RL_BLUE'       , RL_Color(   0, 121, 241, 255 ) );  // Blue
+	define( 'RL_DARKBLUE'   , RL_Color(   0,  82, 172, 255 ) );  // Dark Blue
+	define( 'RL_PURPLE'     , RL_Color( 200, 122, 255, 255 ) );  // Purple
+	define( 'RL_VIOLET'     , RL_Color( 135,  60, 190, 255 ) );  // Violet
+	define( 'RL_DARKPURPLE' , RL_Color( 112,  31, 126, 255 ) );  // Dark Purple
+	define( 'RL_BEIGE'      , RL_Color( 211, 176, 131, 255 ) );  // Beige
+	define( 'RL_BROWN'      , RL_Color( 127, 106,  79, 255 ) );  // Brown
+	define( 'RL_DARKBROWN'  , RL_Color(  76,  63,  47, 255 ) );  // Dark Brown
 
-define( 'RL_WHITE'      , RL_Color( 255, 255, 255, 255 ) );  // White
-define( 'RL_BLACK'      , RL_Color(   0,   0,   0, 255 ) );  // Black
-define( 'RL_BLANK'      , RL_Color(   0,   0,   0,   0 ) );  // Blank (Transparent)
-define( 'RL_MAGENTA'    , RL_Color( 255,   0, 255, 255 ) );  // Magenta
-define( 'RL_RAYWHITE'   , RL_Color( 245, 245, 245, 255 ) );  // My own White (raylib logo)
+	define( 'RL_WHITE'      , RL_Color( 255, 255, 255, 255 ) );  // White
+	define( 'RL_BLACK'      , RL_Color(   0,   0,   0, 255 ) );  // Black
+	define( 'RL_BLANK'      , RL_Color(   0,   0,   0,   0 ) );  // Blank (Transparent)
+	define( 'RL_MAGENTA'    , RL_Color( 255,   0, 255, 255 ) );  // Magenta
+	define( 'RL_RAYWHITE'   , RL_Color( 245, 245, 245, 255 ) );  // My own White (raylib logo)
 }
 
 //----------------------------------------------------------------------------------
@@ -1122,7 +1113,7 @@ define( 'RL_SHADER_LOC_MAP_SPECULAR' , RL_SHADER_LOC_MAP_METALNESS );
     define( 'RL_NPATCH_THREE_PATCH_HORIZONTAL', 2 ); // Npatch layout: 3x1 tiles
 //} NPatchLayout;
 
-$RAYLIB_H.=<<<'RAYLIB_H'
+$RAYLIB_H .= <<<'RAYLIB_H'
 
 // Callbacks to hook some internal functions
 // WARNING: These callbacks are intended for advance users
@@ -1144,11 +1135,7 @@ RAYLIB_H;
 // Window and Graphics Device Functions (Module: core)
 //------------------------------------------------------------------------------------
 
-#if defined(__cplusplus)
-//extern "C" {            // Prevents name mangling of functions
-#endif
-
-$RAYLIB_H .=<<<'RAYLIB_H'
+$RAYLIB_H .= <<<'RAYLIB_H'
 
 // Window-related functions
 /*RLAPI*/ void InitWindow(int width, int height, const char *title);  // Initialize window and OpenGL context
@@ -1369,6 +1356,12 @@ $RAYLIB_H .=<<<'RAYLIB_H'
 /*RLAPI*/ int GetTouchPointId(int index);                         // Get touch point identifier for given index
 /*RLAPI*/ int GetTouchPointCount(void);                           // Get number of touch points
 
+RAYLIB_H;
+
+if ( RL_SUPPORT_GESTURES_SYSTEM ) {
+
+$RAYLIB_H .= <<<'RAYLIB_H'
+
 //------------------------------------------------------------------------------------
 // Gestures and Touch Handling Functions (Module: rgestures)
 //------------------------------------------------------------------------------------
@@ -1381,14 +1374,14 @@ $RAYLIB_H .=<<<'RAYLIB_H'
 /*RLAPI*/ Vector2 GetGesturePinchVector(void);              // Get gesture pinch delta
 /*RLAPI*/ float GetGesturePinchAngle(void);                 // Get gesture pinch angle
 
-//------------------------------------------------------------------------------------
-// Camera System Functions (Module: rcamera)
-//------------------------------------------------------------------------------------
-/*RLAPI*/ void UpdateCamera(Camera *camera, int mode);      // Update camera position for selected mode
-/*RLAPI*/ void UpdateCameraPro(Camera *camera, Vector3 movement, Vector3 rotation, float zoom); // Update camera movement/rotation
+RAYLIB_H;
+} // RL_SUPPORT_GESTURES_SYSTEM
+
+if ( RL_SUPPORT_MODULE_RSHAPES ) {
+$RAYGUI_H .= <<<'RAYLIB_H'
 
 //------------------------------------------------------------------------------------
-// Basic Shapes Drawing Functions (Module: shapes)
+// Basic Shapes Drawing Functions (Module: rshapes)
 //------------------------------------------------------------------------------------
 // Set texture and rectangle to be used on shapes drawing
 // NOTE: It can be useful when using basic shapes and one single font,
@@ -1446,8 +1439,15 @@ $RAYLIB_H .=<<<'RAYLIB_H'
 /*RLAPI*/ bool CheckCollisionPointLine(Vector2 point, Vector2 p1, Vector2 p2, int threshold);                // Check if point belongs to line created between two points [p1] and [p2] with defined margin in pixels [threshold]
 /*RLAPI*/ Rectangle GetCollisionRec(Rectangle rec1, Rectangle rec2);                                         // Get collision rectangle for two rectangles collision
 
+RAYLIB_H;
+}// RL_SUPPORT_MODULE_RSHAPES
+
+
+if ( RL_SUPPORT_MODULE_RTEXTURES ) {
+$RAYGUI_H .= <<<'RAYLIB_H'
+
 //------------------------------------------------------------------------------------
-// Texture Loading and Drawing Functions (Module: textures)
+// Texture Loading and Drawing Functions (Module: rtextures)
 //------------------------------------------------------------------------------------
 
 // Image loading functions
@@ -1571,8 +1571,14 @@ $RAYLIB_H .=<<<'RAYLIB_H'
 /*RLAPI*/ void SetPixelColor(void *dstPtr, Color color, int format);            // Set color formatted into destination pixel pointer
 /*RLAPI*/ int GetPixelDataSize(int width, int height, int format);              // Get pixel data size in bytes for certain format
 
+RAYLIB_H;
+} // RL_SUPPORT_MODULE_RTEXTURES
+
+if ( RL_SUPPORT_MODULE_RTEXT ) {
+$RAYGUI_H .= <<<'RAYLIB_H'
+
 //------------------------------------------------------------------------------------
-// Font Loading and Text Drawing Functions (Module: text)
+// Font Loading and Text Drawing Functions (Module: rtext)
 //------------------------------------------------------------------------------------
 
 // Font loading/unloading functions
@@ -1632,8 +1638,14 @@ $RAYLIB_H .=<<<'RAYLIB_H'
 /*RLAPI*/ const char *TextToPascal(const char *text);                     // Get Pascal case notation version of provided string
 /*RLAPI*/ int TextToInteger(const char *text);                            // Get integer value from text (negative values not supported)
 
+RAYLIB_H;
+} // RL_SUPPORT_MODULE_RTEXT
+
+if ( RL_SUPPORT_MODULE_RMODELS ) {
+$RAYGUI_H .= <<<'RAYLIB_H'
+
 //------------------------------------------------------------------------------------
-// Basic 3d Shapes Drawing Functions (Module: models)
+// Basic 3d Shapes Drawing Functions (Module: rmodels)
 //------------------------------------------------------------------------------------
 
 // Basic geometric 3D shapes drawing functions
@@ -1660,7 +1672,7 @@ $RAYLIB_H .=<<<'RAYLIB_H'
 /*RLAPI*/ void DrawGrid(int slices, float spacing);                                                          // Draw a grid (centered at (0, 0, 0))
 
 //------------------------------------------------------------------------------------
-// Model 3d Loading and Drawing Functions (Module: models)
+// Model 3d Loading and Drawing Functions (Module: rmodels)
 //------------------------------------------------------------------------------------
 
 // Model management functions
@@ -1728,8 +1740,14 @@ $RAYLIB_H .=<<<'RAYLIB_H'
 /*RLAPI*/ RayCollision GetRayCollisionTriangle(Ray ray, Vector3 p1, Vector3 p2, Vector3 p3);            // Get collision info between ray and triangle
 /*RLAPI*/ RayCollision GetRayCollisionQuad(Ray ray, Vector3 p1, Vector3 p2, Vector3 p3, Vector3 p4);    // Get collision info between ray and quad
 
+RAYLIB_H;
+} // RL_SUPPORT_MODULE_RMODELS
+
+if ( RL_SUPPORT_MODULE_RAUDIO ) {
+$RAYGUI_H .= <<<'RAYLIB_H'
+
 //------------------------------------------------------------------------------------
-// Audio Loading and Playing Functions (Module: audio)
+// Audio Loading and Playing Functions (Module: raudio)
 //------------------------------------------------------------------------------------
 typedef void (*AudioCallback)(void *bufferData, unsigned int frames);
 
@@ -1808,7 +1826,12 @@ typedef void (*AudioCallback)(void *bufferData, unsigned int frames);
 /*RLAPI*/ void AttachAudioMixedProcessor(AudioCallback processor); // Attach audio stream processor to the entire audio pipeline
 /*RLAPI*/ void DetachAudioMixedProcessor(AudioCallback processor); // Detach audio stream processor from the entire audio pipeline
 
+RAYLIB_H;
+} // RL_SUPPORT_MODULE_RAUDIO
 
+
+if ( RL_SUPPORT_MODULE_RMATH ) {
+$RAYGUI_H .= <<<'RAYLIB_H'
 
 //----------------------------------------------------------------------------------
 // Module Functions Definition - Utils math
@@ -1948,7 +1971,10 @@ typedef void (*AudioCallback)(void *bufferData, unsigned int frames);
 /*RMAPI*/ int QuaternionEquals(Quaternion p, Quaternion q); // Check whether two given quaternions are almost equal
 
 RAYLIB_H.PHP_EOL;
+} // RL_SUPPORT_MODULE_RMATH
 
+
+if ( RL_SUPPORT_MODULE_RLGL ) {
 
 /**********************************************************************************************
 *
@@ -2522,14 +2548,18 @@ $RAYLIB_H .= <<<'RAYLIB_H'
 /*RLAPI*/ void rlLoadDrawQuad(void);     // Load and draw a quad
 
 RAYLIB_H;
+} // RL_SUPPORT_MODULE_RLGL
 
-/*******************************************************************************************
-*
-*   rcamera - Basic camera system with support for multiple camera modes
-*
-*******************************************************************************************/
 
+if ( RL_SUPPORT_CAMERA_SYSTEM ) {
 $RAYLIB_H .= <<<'RAYLIB_H'
+
+//------------------------------------------------------------------------------------
+// Camera System Functions (Module: rcamera)
+//------------------------------------------------------------------------------------
+
+/*RLAPI*/ void UpdateCamera(Camera *camera, int mode);      // Update camera position for selected mode
+/*RLAPI*/ void UpdateCameraPro(Camera *camera, Vector3 movement, Vector3 rotation, float zoom); // Update camera movement/rotation
 
 /*RLAPI*/ Vector3 GetCameraForward(Camera *camera);
 /*RLAPI*/ Vector3 GetCameraUp(Camera *camera);
@@ -2550,6 +2580,7 @@ $RAYLIB_H .= <<<'RAYLIB_H'
 /*RLAPI*/ Matrix GetCameraProjectionMatrix(Camera* camera, float aspect);
 
 RAYLIB_H;
+} // RL_SUPPORT_CAMERA_SYSTEM
 
 if ( RL_SUPPORT_MODULE_RAYGUI || $_WRAPPER_SCRIPT_RUNNING_IN_UTILITY_MODE_87987987 )
 {
