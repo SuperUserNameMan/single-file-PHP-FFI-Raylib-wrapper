@@ -54,13 +54,7 @@ $my_cube_array = FFI::new( FFI::arrayType( RAYLIB_FFI_Vector3D ) , [ 3 , 5 , 8 ]
 
 ## Optional RayGui 3.6 support 
 
-If RayGui was compiled inside your library, you can tell it to the wrapper before include :
-
-```PHP
-define( 'RL_SUPPORT_MODULE_RAYGUI' , true );
-
-include('./path/to/raylib.ffi.php');
-```
+If Raylib was compiled with `raygui.h`, the wrapper will try to detect it, and will set the value of `RL_SUPPORT_MODULE_RAYGUI` accordingly.
 
 `raygui.h` functions are also prefixed with `RL_`, but consts are prefixed with `RLGUI_`.
 
@@ -70,7 +64,21 @@ $W = RL_GuiGetStyle( RLGUI_SLIDER , RLGUI_BORDER_WIDTH );
 
 ## Customized `src/config.h` compilation
 
-If Raylib is recompiled using customized `src/config.h` parameters, the wrapper has to be made aware of these new parameters before `include()`.
+By default, the wrapper will try to detects if the library was compiled with these parameters :
+- `RL_SUPPORT_MODULE_RSHAPES`
+- `RL_SUPPORT_MODULE_RTEXTURES`
+- `RL_SUPPORT_MODULE_RTEXT`
+- `RL_SUPPORT_MODULE_RMODELS`
+- `RL_SUPPORT_MODULE_RAUDIO`
+- `RL_SUPPORT_MODULE_RAYGUI`
+- `RL_SUPPORT_CAMERA_SYSTEM`
+- `RL_SUPPORT_GESTURES_SYSTEM`
+- `RL_SUPPORT_SSH_KEYBOARD_RPI`
+- `RL_SUPPORT_GIF_RECORDING`
+
+Other parameters will be set to default values.
+
+So, if your Raylib was recompiled using customized `src/config.h` parameters, the wrapper has to be made aware of these new parameters before `include()`.
 
 Look at your `src/config.h` and redefine all your customised constants in PHP using `RL_` or `RLGL_` prefixes.
 
@@ -99,22 +107,6 @@ Other OpenGL customized definitions must use the `RLGL_` prefix :
 ```PHP
 // Default internal render batch elements limits
 define( 'RLGL_DEFAULT_BATCH_BUFFER_ELEMENTS' , 8192 );
-
-// Default number of batch buffers (multi-buffering)
-define( 'RLGL_DEFAULT_BATCH_BUFFERS' , 1 );
-
-// Default number of batch draw calls (by state changes: mode, texture)
-define( 'RLGL_DEFAULT_BATCH_DRAWCALLS' , 256 );
-
-// Maximum number of textures units that can be activated
-// on batch drawing (SetShaderValueTexture())
-define( 'RLGL_DEFAULT_BATCH_MAX_TEXTURE_UNITS' , 4 );
-
-// Maximum size of Matrix stack
-define( 'RLGL_MAX_MATRIX_STACK_SIZE' , 32 );
-
-// Maximum number of shader locations supported
-define( 'RLGL_MAX_SHADER_LOCATIONS' , 32 );
 
 // Default near cull distance
 define( 'RLGL_CULL_DISTANCE_NEAR' , 0.01 );
