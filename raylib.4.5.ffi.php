@@ -3383,7 +3383,7 @@ function RL_SetWindowIcon( object $image ) : void { global $RAYLIB_FFI; $RAYLIB_
 
 /// Set icon for window (multiple images, RGBA 32bit, only PLATFORM_DESKTOP)
 // void SetWindowIcons(Image* images , int count);
-function RL_SetWindowIcons( array $images , int $count ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->SetWindowIcons( $images , $count ); }
+function RL_SetWindowIcons( object /*ref*/$images , int $count ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->SetWindowIcons( FFI::addr($images) , $count ); }
 
 /// Set title for window (only PLATFORM_DESKTOP)
 // void SetWindowTitle(const char* title);
@@ -4331,95 +4331,95 @@ function RL_ImageTextEx( object $font , string $text , float $fontSize , float $
 
 /// Convert image data to desired format
 // void ImageFormat(Image* image , int newFormat);
-function RL_ImageFormat( array $image , int $newFormat ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->ImageFormat( $image , $newFormat ); }
+function RL_ImageFormat( object /*ref*/$image , int $newFormat ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->ImageFormat( FFI::addr($image) , $newFormat ); }
 
 /// Convert image to POT (power-of-two)
 // void ImageToPOT(Image* image , Color fill);
-function RL_ImageToPOT( array $image , object $fill ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->ImageToPOT( $image , $fill ); }
+function RL_ImageToPOT( object /*ref*/$image , object $fill ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->ImageToPOT( FFI::addr($image) , $fill ); }
 
 /// Crop an image to a defined rectangle
 // void ImageCrop(Image* image , Rectangle crop);
-function RL_ImageCrop( array $image , object $crop ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->ImageCrop( $image , $crop ); }
+function RL_ImageCrop( object /*ref*/$image , object $crop ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->ImageCrop( FFI::addr($image) , $crop ); }
 
 /// Crop image depending on alpha value
 // void ImageAlphaCrop(Image* image , float threshold);
-function RL_ImageAlphaCrop( array $image , float $threshold ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->ImageAlphaCrop( $image , $threshold ); }
+function RL_ImageAlphaCrop( object /*ref*/$image , float $threshold ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->ImageAlphaCrop( FFI::addr($image) , $threshold ); }
 
 /// Clear alpha channel to desired color
 // void ImageAlphaClear(Image* image , Color color , float threshold);
-function RL_ImageAlphaClear( array $image , object $color , float $threshold ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->ImageAlphaClear( $image , $color , $threshold ); }
+function RL_ImageAlphaClear( object /*ref*/$image , object $color , float $threshold ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->ImageAlphaClear( FFI::addr($image) , $color , $threshold ); }
 
 /// Apply alpha mask to image
 // void ImageAlphaMask(Image* image , Image alphaMask);
-function RL_ImageAlphaMask( array $image , object $alphaMask ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->ImageAlphaMask( $image , $alphaMask ); }
+function RL_ImageAlphaMask( object /*ref*/$image , object $alphaMask ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->ImageAlphaMask( FFI::addr($image) , $alphaMask ); }
 
 /// Premultiply alpha channel
 // void ImageAlphaPremultiply(Image* image);
-function RL_ImageAlphaPremultiply( array $image ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->ImageAlphaPremultiply( $image ); }
+function RL_ImageAlphaPremultiply( object /*ref*/$image ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->ImageAlphaPremultiply( FFI::addr($image) ); }
 
 /// Apply Gaussian blur using a box blur approximation
 // void ImageBlurGaussian(Image* image , int blurSize);
-function RL_ImageBlurGaussian( array $image , int $blurSize ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->ImageBlurGaussian( $image , $blurSize ); }
+function RL_ImageBlurGaussian( object /*ref*/$image , int $blurSize ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->ImageBlurGaussian( FFI::addr($image) , $blurSize ); }
 
 /// Resize image (Bicubic scaling algorithm)
 // void ImageResize(Image* image , int newWidth , int newHeight);
-function RL_ImageResize( array $image , int $newWidth , int $newHeight ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->ImageResize( $image , $newWidth , $newHeight ); }
+function RL_ImageResize( object /*ref*/$image , int $newWidth , int $newHeight ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->ImageResize( FFI::addr($image) , $newWidth , $newHeight ); }
 
 /// Resize image (Nearest-Neighbor scaling algorithm)
 // void ImageResizeNN(Image* image , int newWidth , int newHeight);
-function RL_ImageResizeNN( array $image , int $newWidth , int $newHeight ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->ImageResizeNN( $image , $newWidth , $newHeight ); }
+function RL_ImageResizeNN( object /*ref*/$image , int $newWidth , int $newHeight ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->ImageResizeNN( FFI::addr($image) , $newWidth , $newHeight ); }
 
 /// Resize canvas and fill with color
 // void ImageResizeCanvas(Image* image , int newWidth , int newHeight , int offsetX , int offsetY , Color fill);
-function RL_ImageResizeCanvas( array $image , int $newWidth , int $newHeight , int $offsetX , int $offsetY , object $fill ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->ImageResizeCanvas( $image , $newWidth , $newHeight , $offsetX , $offsetY , $fill ); }
+function RL_ImageResizeCanvas( object /*ref*/$image , int $newWidth , int $newHeight , int $offsetX , int $offsetY , object $fill ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->ImageResizeCanvas( FFI::addr($image) , $newWidth , $newHeight , $offsetX , $offsetY , $fill ); }
 
 /// Compute all mipmap levels for a provided image
 // void ImageMipmaps(Image* image);
-function RL_ImageMipmaps( array $image ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->ImageMipmaps( $image ); }
+function RL_ImageMipmaps( object /*ref*/$image ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->ImageMipmaps( FFI::addr($image) ); }
 
 /// Dither image data to 16bpp or lower (Floyd-Steinberg dithering)
 // void ImageDither(Image* image , int rBpp , int gBpp , int bBpp , int aBpp);
-function RL_ImageDither( array $image , int $rBpp , int $gBpp , int $bBpp , int $aBpp ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->ImageDither( $image , $rBpp , $gBpp , $bBpp , $aBpp ); }
+function RL_ImageDither( object /*ref*/$image , int $rBpp , int $gBpp , int $bBpp , int $aBpp ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->ImageDither( FFI::addr($image) , $rBpp , $gBpp , $bBpp , $aBpp ); }
 
 /// Flip image vertically
 // void ImageFlipVertical(Image* image);
-function RL_ImageFlipVertical( array $image ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->ImageFlipVertical( $image ); }
+function RL_ImageFlipVertical( object /*ref*/$image ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->ImageFlipVertical( FFI::addr($image) ); }
 
 /// Flip image horizontally
 // void ImageFlipHorizontal(Image* image);
-function RL_ImageFlipHorizontal( array $image ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->ImageFlipHorizontal( $image ); }
+function RL_ImageFlipHorizontal( object /*ref*/$image ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->ImageFlipHorizontal( FFI::addr($image) ); }
 
 /// Rotate image clockwise 90deg
 // void ImageRotateCW(Image* image);
-function RL_ImageRotateCW( array $image ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->ImageRotateCW( $image ); }
+function RL_ImageRotateCW( object /*ref*/$image ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->ImageRotateCW( FFI::addr($image) ); }
 
 /// Rotate image counter-clockwise 90deg
 // void ImageRotateCCW(Image* image);
-function RL_ImageRotateCCW( array $image ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->ImageRotateCCW( $image ); }
+function RL_ImageRotateCCW( object /*ref*/$image ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->ImageRotateCCW( FFI::addr($image) ); }
 
 /// Modify image color: tint
 // void ImageColorTint(Image* image , Color color);
-function RL_ImageColorTint( array $image , object $color ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->ImageColorTint( $image , $color ); }
+function RL_ImageColorTint( object /*ref*/$image , object $color ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->ImageColorTint( FFI::addr($image) , $color ); }
 
 /// Modify image color: invert
 // void ImageColorInvert(Image* image);
-function RL_ImageColorInvert( array $image ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->ImageColorInvert( $image ); }
+function RL_ImageColorInvert( object /*ref*/$image ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->ImageColorInvert( FFI::addr($image) ); }
 
 /// Modify image color: grayscale
 // void ImageColorGrayscale(Image* image);
-function RL_ImageColorGrayscale( array $image ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->ImageColorGrayscale( $image ); }
+function RL_ImageColorGrayscale( object /*ref*/$image ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->ImageColorGrayscale( FFI::addr($image) ); }
 
 /// Modify image color: contrast (-100 to 100)
 // void ImageColorContrast(Image* image , float contrast);
-function RL_ImageColorContrast( array $image , float $contrast ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->ImageColorContrast( $image , $contrast ); }
+function RL_ImageColorContrast( object /*ref*/$image , float $contrast ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->ImageColorContrast( FFI::addr($image) , $contrast ); }
 
 /// Modify image color: brightness (-255 to 255)
 // void ImageColorBrightness(Image* image , int brightness);
-function RL_ImageColorBrightness( array $image , int $brightness ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->ImageColorBrightness( $image , $brightness ); }
+function RL_ImageColorBrightness( object /*ref*/$image , int $brightness ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->ImageColorBrightness( FFI::addr($image) , $brightness ); }
 
 /// Modify image color: replace color
 // void ImageColorReplace(Image* image , Color color , Color replace);
-function RL_ImageColorReplace( array $image , object $color , object $replace ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->ImageColorReplace( $image , $color , $replace ); }
+function RL_ImageColorReplace( object /*ref*/$image , object $color , object $replace ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->ImageColorReplace( FFI::addr($image) , $color , $replace ); }
 
 /// Load color data from image as a Color array (RGBA - 32bit)
 // Color* LoadImageColors(Image image);
@@ -4447,67 +4447,67 @@ function RL_GetImageColor( object $image , int $x , int $y ) : object { global $
 
 /// Clear image background with given color
 // void ImageClearBackground(Image* dst , Color color);
-function RL_ImageClearBackground( array $dst , object $color ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->ImageClearBackground( $dst , $color ); }
+function RL_ImageClearBackground( object /*ref*/$dst , object $color ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->ImageClearBackground( FFI::addr($dst) , $color ); }
 
 /// Draw pixel within an image
 // void ImageDrawPixel(Image* dst , int posX , int posY , Color color);
-function RL_ImageDrawPixel( array $dst , int $posX , int $posY , object $color ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->ImageDrawPixel( $dst , $posX , $posY , $color ); }
+function RL_ImageDrawPixel( object /*ref*/$dst , int $posX , int $posY , object $color ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->ImageDrawPixel( FFI::addr($dst) , $posX , $posY , $color ); }
 
 /// Draw pixel within an image (Vector version)
 // void ImageDrawPixelV(Image* dst , Vector2 position , Color color);
-function RL_ImageDrawPixelV( array $dst , object $position , object $color ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->ImageDrawPixelV( $dst , $position , $color ); }
+function RL_ImageDrawPixelV( object /*ref*/$dst , object $position , object $color ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->ImageDrawPixelV( FFI::addr($dst) , $position , $color ); }
 
 /// Draw line within an image
 // void ImageDrawLine(Image* dst , int startPosX , int startPosY , int endPosX , int endPosY , Color color);
-function RL_ImageDrawLine( array $dst , int $startPosX , int $startPosY , int $endPosX , int $endPosY , object $color ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->ImageDrawLine( $dst , $startPosX , $startPosY , $endPosX , $endPosY , $color ); }
+function RL_ImageDrawLine( object /*ref*/$dst , int $startPosX , int $startPosY , int $endPosX , int $endPosY , object $color ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->ImageDrawLine( FFI::addr($dst) , $startPosX , $startPosY , $endPosX , $endPosY , $color ); }
 
 /// Draw line within an image (Vector version)
 // void ImageDrawLineV(Image* dst , Vector2 start , Vector2 end , Color color);
-function RL_ImageDrawLineV( array $dst , object $start , object $end , object $color ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->ImageDrawLineV( $dst , $start , $end , $color ); }
+function RL_ImageDrawLineV( object /*ref*/$dst , object $start , object $end , object $color ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->ImageDrawLineV( FFI::addr($dst) , $start , $end , $color ); }
 
 /// Draw a filled circle within an image
 // void ImageDrawCircle(Image* dst , int centerX , int centerY , int radius , Color color);
-function RL_ImageDrawCircle( array $dst , int $centerX , int $centerY , int $radius , object $color ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->ImageDrawCircle( $dst , $centerX , $centerY , $radius , $color ); }
+function RL_ImageDrawCircle( object /*ref*/$dst , int $centerX , int $centerY , int $radius , object $color ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->ImageDrawCircle( FFI::addr($dst) , $centerX , $centerY , $radius , $color ); }
 
 /// Draw a filled circle within an image (Vector version)
 // void ImageDrawCircleV(Image* dst , Vector2 center , int radius , Color color);
-function RL_ImageDrawCircleV( array $dst , object $center , int $radius , object $color ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->ImageDrawCircleV( $dst , $center , $radius , $color ); }
+function RL_ImageDrawCircleV( object /*ref*/$dst , object $center , int $radius , object $color ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->ImageDrawCircleV( FFI::addr($dst) , $center , $radius , $color ); }
 
 /// Draw circle outline within an image
 // void ImageDrawCircleLines(Image* dst , int centerX , int centerY , int radius , Color color);
-function RL_ImageDrawCircleLines( array $dst , int $centerX , int $centerY , int $radius , object $color ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->ImageDrawCircleLines( $dst , $centerX , $centerY , $radius , $color ); }
+function RL_ImageDrawCircleLines( object /*ref*/$dst , int $centerX , int $centerY , int $radius , object $color ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->ImageDrawCircleLines( FFI::addr($dst) , $centerX , $centerY , $radius , $color ); }
 
 /// Draw circle outline within an image (Vector version)
 // void ImageDrawCircleLinesV(Image* dst , Vector2 center , int radius , Color color);
-function RL_ImageDrawCircleLinesV( array $dst , object $center , int $radius , object $color ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->ImageDrawCircleLinesV( $dst , $center , $radius , $color ); }
+function RL_ImageDrawCircleLinesV( object /*ref*/$dst , object $center , int $radius , object $color ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->ImageDrawCircleLinesV( FFI::addr($dst) , $center , $radius , $color ); }
 
 /// Draw rectangle within an image
 // void ImageDrawRectangle(Image* dst , int posX , int posY , int width , int height , Color color);
-function RL_ImageDrawRectangle( array $dst , int $posX , int $posY , int $width , int $height , object $color ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->ImageDrawRectangle( $dst , $posX , $posY , $width , $height , $color ); }
+function RL_ImageDrawRectangle( object /*ref*/$dst , int $posX , int $posY , int $width , int $height , object $color ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->ImageDrawRectangle( FFI::addr($dst) , $posX , $posY , $width , $height , $color ); }
 
 /// Draw rectangle within an image (Vector version)
 // void ImageDrawRectangleV(Image* dst , Vector2 position , Vector2 size , Color color);
-function RL_ImageDrawRectangleV( array $dst , object $position , object $size , object $color ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->ImageDrawRectangleV( $dst , $position , $size , $color ); }
+function RL_ImageDrawRectangleV( object /*ref*/$dst , object $position , object $size , object $color ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->ImageDrawRectangleV( FFI::addr($dst) , $position , $size , $color ); }
 
 /// Draw rectangle within an image
 // void ImageDrawRectangleRec(Image* dst , Rectangle rec , Color color);
-function RL_ImageDrawRectangleRec( array $dst , object $rec , object $color ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->ImageDrawRectangleRec( $dst , $rec , $color ); }
+function RL_ImageDrawRectangleRec( object /*ref*/$dst , object $rec , object $color ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->ImageDrawRectangleRec( FFI::addr($dst) , $rec , $color ); }
 
 /// Draw rectangle lines within an image
 // void ImageDrawRectangleLines(Image* dst , Rectangle rec , int thick , Color color);
-function RL_ImageDrawRectangleLines( array $dst , object $rec , int $thick , object $color ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->ImageDrawRectangleLines( $dst , $rec , $thick , $color ); }
+function RL_ImageDrawRectangleLines( object /*ref*/$dst , object $rec , int $thick , object $color ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->ImageDrawRectangleLines( FFI::addr($dst) , $rec , $thick , $color ); }
 
 /// Draw a source image within a destination image (tint applied to source)
 // void ImageDraw(Image* dst , Image src , Rectangle srcRec , Rectangle dstRec , Color tint);
-function RL_ImageDraw( array $dst , object $src , object $srcRec , object $dstRec , object $tint ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->ImageDraw( $dst , $src , $srcRec , $dstRec , $tint ); }
+function RL_ImageDraw( object /*ref*/$dst , object $src , object $srcRec , object $dstRec , object $tint ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->ImageDraw( FFI::addr($dst) , $src , $srcRec , $dstRec , $tint ); }
 
 /// Draw text (using default font) within an image (destination)
 // void ImageDrawText(Image* dst , const char* text , int posX , int posY , int fontSize , Color color);
-function RL_ImageDrawText( array $dst , string $text , int $posX , int $posY , int $fontSize , object $color ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->ImageDrawText( $dst , $text , $posX , $posY , $fontSize , $color ); }
+function RL_ImageDrawText( object /*ref*/$dst , string $text , int $posX , int $posY , int $fontSize , object $color ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->ImageDrawText( FFI::addr($dst) , $text , $posX , $posY , $fontSize , $color ); }
 
 /// Draw text (custom sprite font) within an image (destination)
 // void ImageDrawTextEx(Image* dst , Font font , const char* text , Vector2 position , float fontSize , float spacing , Color tint);
-function RL_ImageDrawTextEx( array $dst , object $font , string $text , object $position , float $fontSize , float $spacing , object $tint ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->ImageDrawTextEx( $dst , $font , $text , $position , $fontSize , $spacing , $tint ); }
+function RL_ImageDrawTextEx( object /*ref*/$dst , object $font , string $text , object $position , float $fontSize , float $spacing , object $tint ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->ImageDrawTextEx( FFI::addr($dst) , $font , $text , $position , $fontSize , $spacing , $tint ); }
 
 /// Load texture from file into GPU memory (VRAM)
 // Texture2D LoadTexture(const char* fileName);
@@ -6779,7 +6779,7 @@ function _RAYLIB_REBUILD_WRAPPER_FROM_SCRATCH( string $RAYLIB_H , array $BLACKLI
 		$ARGS = str_replace( ' FilePathList '    , ' object $' , $ARGS );
 		$ARGS = str_replace( ' GlyphInfo '       , ' object $' , $ARGS );
 		$ARGS = str_replace( ' GlyphInfo* '      , ' object $' , $ARGS );
-		$ARGS = str_replace( ' Image* '          , ' array $'  , $ARGS );
+		$ARGS = str_replace( ' Image* '          , ' object /*ref*/$' , $ARGS );
 		$ARGS = str_replace( ' Image '           , ' object $' , $ARGS );
 		$ARGS = str_replace( ' Material '        , ' object $' , $ARGS );
 		$ARGS = str_replace( ' Material* '       , ' object $' , $ARGS );
