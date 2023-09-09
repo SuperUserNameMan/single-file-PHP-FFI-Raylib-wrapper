@@ -289,12 +289,12 @@ define_default( 'RL_MAX_TEXTSPLIT_COUNT'         ,  128 ); // Maximum number of 
 // Module: rmodels - Configuration Flags
 //------------------------------------------------------------------------------------
 // Selected desired model fileformats to be supported for loading
-define_default( 'RL_SUPPORT_FILEFORMAT_OBJ'      , true );
-define_default( 'RL_SUPPORT_FILEFORMAT_MTL'      , true );
-define_default( 'RL_SUPPORT_FILEFORMAT_IQM'      , true );
-define_default( 'RL_SUPPORT_FILEFORMAT_GLTF'     , true );
-define_default( 'RL_SUPPORT_FILEFORMAT_VOX'      , true );
-define_default( 'RL_SUPPORT_FILEFORMAT_M3D'      , true );
+define_default( 'RL_SUPPORT_FILEFORMAT_OBJ'      , str_contains( $_RAYLIB_CONTENT , "\0.obj\0" ) );
+define_default( 'RL_SUPPORT_FILEFORMAT_MTL'      , str_contains( $_RAYLIB_CONTENT , "\0.mtl\0" ) );
+define_default( 'RL_SUPPORT_FILEFORMAT_IQM'      , str_contains( $_RAYLIB_CONTENT , "\0.iqm\0" ) );
+define_default( 'RL_SUPPORT_FILEFORMAT_GLTF'     , str_contains( $_RAYLIB_CONTENT , "\0.gltf;.glb\0" ) );
+define_default( 'RL_SUPPORT_FILEFORMAT_VOX'      , str_contains( $_RAYLIB_CONTENT , "\0.vox\0" ) );
+define_default( 'RL_SUPPORT_FILEFORMAT_M3D'      , str_contains( $_RAYLIB_CONTENT , "\0.m3d\0" ) );
 // Support procedural mesh generation functions, uses external par_shapes.h library
 // NOTE: Some generated meshes DO NOT include generated texture coordinates
 define_default( 'RL_SUPPORT_MESH_GENERATION'     , true );
@@ -308,13 +308,13 @@ define_default( 'RL_MAX_MESH_VERTEX_BUFFERS'     ,    7 ); // Maximum vertex buf
 // Module: raudio - Configuration Flags
 //------------------------------------------------------------------------------------
 // Desired audio fileformats to be supported for loading
-define_default( 'RL_SUPPORT_FILEFORMAT_WAV'       ,  true );
-define_default( 'RL_SUPPORT_FILEFORMAT_OGG'       ,  true );
-define_default( 'RL_SUPPORT_FILEFORMAT_MP3'       ,  true );
-define_default( 'RL_SUPPORT_FILEFORMAT_QOA'       ,  true );
-define_default( 'RL_SUPPORT_FILEFORMAT_FLAC'      , FALSE );
-define_default( 'RL_SUPPORT_FILEFORMAT_XM'        ,  true );
-define_default( 'RL_SUPPORT_FILEFORMAT_MOD'       ,  true );
+define_default( 'RL_SUPPORT_FILEFORMAT_WAV'       , str_contains( $_RAYLIB_CONTENT , "\0.wav\0" ) );
+define_default( 'RL_SUPPORT_FILEFORMAT_OGG'       , str_contains( $_RAYLIB_CONTENT , "\0.ogg\0" ) );
+define_default( 'RL_SUPPORT_FILEFORMAT_MP3'       , str_contains( $_RAYLIB_CONTENT , "\0.mp3\0" ) );
+define_default( 'RL_SUPPORT_FILEFORMAT_QOA'       , str_contains( $_RAYLIB_CONTENT , "\0.qoa\0" ) );
+define_default( 'RL_SUPPORT_FILEFORMAT_FLAC'      , str_contains( $_RAYLIB_CONTENT , "\0.flac\0" ) );
+define_default( 'RL_SUPPORT_FILEFORMAT_XM'        , str_contains( $_RAYLIB_CONTENT , "\0.xm\0" ) );
+define_default( 'RL_SUPPORT_FILEFORMAT_MOD'       , str_contains( $_RAYLIB_CONTENT , "\0.mod\0" ) );
 
 // raudio: Configuration values
 //------------------------------------------------------------------------------------
