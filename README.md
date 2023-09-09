@@ -80,6 +80,7 @@ By default, the wrapper will try to detects if the library was compiled with the
 - `RL_SUPPORT_IMAGE_xxx` ( `EXPORT`, `GENERATION`, `MANIPULATION` )
 - `RL_SUPPORT_DEFAULT_FONT`
 - `RL_SUPPORT_TEXT_MANIPULATION`
+- `RL_SUPPORT_MESH_GENERATION`
 
 Other parameters will be set to default values.
 
