@@ -168,12 +168,10 @@ define_default( 'RL_SUPPORT_WINMM_HIGHRES_TIMER'   , true );
 define_default( 'RL_SUPPORT_PARTIALBUSY_WAIT_LOOP' , true );
 
 define_default( 'RL_SUPPORT_SCREEN_CAPTURE'        , true );
-define_default( 'RL_SUPPORT_GIF_RECORDING'         , str_contains( $_RAYLIB_CONTENT , 'msf_gif_frame'       ) );
+define_default( 'RL_SUPPORT_GIF_RECORDING'         , str_contains( $_RAYLIB_CONTENT , '/screenrec%03i.gif'  ) );
 
 define_default( 'RL_SUPPORT_COMPRESSION_API'       , true );
 define_default( 'RL_SUPPORT_CUSTOM_FRAME_CONTROL'  , FALSE );
-
-unset( $_RAYLIB_CONTENT );
 
 
 define_default( 'RL_MAX_FILEPATH_CAPACITY' , 8192 );
@@ -238,27 +236,33 @@ define_default( 'RL_SUPPORT_QUADS_DRAW_MODE'       ,  true );
 //------------------------------------------------------------------------------------
 // Select the desired fileformats to be supported for image data loading
 define_default( 'RL_SUPPORT_FILEFORMAT_PNG'  ,  true );
-define_default( 'RL_SUPPORT_FILEFORMAT_BMP'  , FALSE );
-define_default( 'RL_SUPPORT_FILEFORMAT_TGA'  , FALSE );
-define_default( 'RL_SUPPORT_FILEFORMAT_JPG'  , FALSE );
-define_default( 'RL_SUPPORT_FILEFORMAT_GIF'  ,  true );
-define_default( 'RL_SUPPORT_FILEFORMAT_QOI'  ,  true );
-define_default( 'RL_SUPPORT_FILEFORMAT_PSD'  , FALSE );
-define_default( 'RL_SUPPORT_FILEFORMAT_DDS'  ,  true );
-define_default( 'RL_SUPPORT_FILEFORMAT_HDR'  ,  true );
-define_default( 'RL_SUPPORT_FILEFORMAT_PIC'  , FALSE );
-define_default( 'RL_SUPPORT_FILEFORMAT_PNM'  , FALSE );
-define_default( 'RL_SUPPORT_FILEFORMAT_KTX'  , FALSE );
-define_default( 'RL_SUPPORT_FILEFORMAT_ASTC' , FALSE );
-define_default( 'RL_SUPPORT_FILEFORMAT_PKM'  , FALSE );
-define_default( 'RL_SUPPORT_FILEFORMAT_PVR'  , FALSE );
+define_default( 'RL_SUPPORT_FILEFORMAT_BMP'  , str_contains( $_RAYLIB_CONTENT , "\0.bmp\0"     ) );
+define_default( 'RL_SUPPORT_FILEFORMAT_TGA'  , str_contains( $_RAYLIB_CONTENT , "\0.tga\0"     ) );
+define_default( 'RL_SUPPORT_FILEFORMAT_JPG'  , str_contains( $_RAYLIB_CONTENT , "\0.jpg\0"     ) );
+define_default( 'RL_SUPPORT_FILEFORMAT_GIF'  , str_contains( $_RAYLIB_CONTENT , "\0not GIF\0"  ) ); // XXX
+define_default( 'RL_SUPPORT_FILEFORMAT_QOI'  , str_contains( $_RAYLIB_CONTENT , "\0.qoi\0"     ) );
+define_default( 'RL_SUPPORT_FILEFORMAT_PSD'  , str_contains( $_RAYLIB_CONTENT , "\0.bmp\0"     ) );
+define_default( 'RL_SUPPORT_FILEFORMAT_DDS'  , str_contains( $_RAYLIB_CONTENT , "\0.dds\0"     ) );
+define_default( 'RL_SUPPORT_FILEFORMAT_HDR'  , str_contains( $_RAYLIB_CONTENT , "\0.hdr\0"     ) );
+define_default( 'RL_SUPPORT_FILEFORMAT_PIC'  , str_contains( $_RAYLIB_CONTENT , "\0.pic\0"     ) );
+define_default( 'RL_SUPPORT_FILEFORMAT_PNM'  , str_contains( $_RAYLIB_CONTENT , "\0.ppm\0"     ) ); // XXX .ppm or pgm
+define_default( 'RL_SUPPORT_FILEFORMAT_KTX'  , str_contains( $_RAYLIB_CONTENT , "\0.ktx\0"     ) );
+define_default( 'RL_SUPPORT_FILEFORMAT_ASTC' , str_contains( $_RAYLIB_CONTENT , "\0.astc\0"    ) );
+define_default( 'RL_SUPPORT_FILEFORMAT_PKM'  , str_contains( $_RAYLIB_CONTENT , "\0.pkm\0"     ) );
+define_default( 'RL_SUPPORT_FILEFORMAT_PVR'  , str_contains( $_RAYLIB_CONTENT , "\0.pvr\0"     ) );
 
 // rtextures: Configuration values
 //------------------------------------------------------------------------------------
-define_default( 'RL_SUPPORT_IMAGE_EXPORT'       , true ); // Support image export functionality (.png, .bmp, .tga, .jpg, .qoi)
-define_default( 'RL_SUPPORT_IMAGE_GENERATION'   , true ); // Support procedural image generation functionality (gradient, spot, perlin-noise, cellular)
-define_default( 'RL_SUPPORT_IMAGE_MANIPULATION' , true ); // Support multiple image editing functions to scale, adjust colors, flip, draw on images, crop...
-                                                          // If not defined, still some functions are supported: ImageFormat(), ImageCrop(), ImageToPOT()
+
+// Support image export functionality (.png, .bmp, .tga, .jpg, .qoi)
+define_default( 'RL_SUPPORT_IMAGE_EXPORT'       , true );
+
+// Support procedural image generation functionality (gradient, spot, perlin-noise, cellular)
+define_default( 'RL_SUPPORT_IMAGE_GENERATION'   , true );
+
+// Support multiple image editing functions to scale, adjust colors, flip, draw on images, crop...
+// If not defined, still some functions are supported: ImageFormat(), ImageCrop(), ImageToPOT()
+define_default( 'RL_SUPPORT_IMAGE_MANIPULATION' , true );
 
 //------------------------------------------------------------------------------------
 // Module: rtext - Configuration Flags
@@ -334,6 +338,8 @@ define_default( 'RL_SUPPORT_TRACELOG_DEBUG'         , FALSE );
 //------------------------------------------------------------------------------------
 #define MAX_TRACELOG_MSG_LENGTH       256       // Max length of one trace-log message
 
+
+unset( $_RAYLIB_CONTENT );
 
 //----------------------------------------------------------------------------------
 // Some basic Defines
