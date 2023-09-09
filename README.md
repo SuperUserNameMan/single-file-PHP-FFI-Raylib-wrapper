@@ -88,10 +88,10 @@ So, if your Raylib was recompiled using customized `src/config.h` parameters, th
 
 Look at your `src/config.h` and redefine all your customised constants in PHP using `RL_` or `RLGL_` prefixes.
 
-For example, if you recompiled Raylib with `.tga` image support, you'll have to do :
+For example, if you recompiled Raylib with a custom `MAX_TEXT_BUFFER_LENGTH` value, you'll have to do :
 
 ```PHP
-define( 'RL_SUPPORT_FILEFORMAT_TGA'  , true );
+define( 'RL_MAX_TEXT_BUFFER_LENGTH'  , 123456 /* <== your custom value*/ ); 
 
 include('./your/path/to/raylib.ffi.php');
 ```
