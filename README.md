@@ -76,7 +76,8 @@ By default, the wrapper will try to detects if the library was compiled with the
 - `RL_SUPPORT_GESTURES_SYSTEM`
 - `RL_SUPPORT_SSH_KEYBOARD_RPI`
 - `RL_SUPPORT_GIF_RECORDING`
-- `RL_SUPPORT_FILEFORMAT_xxx` ( PNG, BMP, TGA, JPG ...)
+- `RL_SUPPORT_FILEFORMAT_xxx` ( `PNG`, `BMP`, `TGA`, `JPG` ...)
+- `RL_SUPPORT_IMAGE_xxx` ( `EXPORT`, `GENERATION`, `MANIPULATION` )
 
 Other parameters will be set to default values.
 
