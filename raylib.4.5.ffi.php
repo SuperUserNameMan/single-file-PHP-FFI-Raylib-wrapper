@@ -269,10 +269,10 @@ define_default( 'RL_SUPPORT_IMAGE_MANIPULATION' , str_contains( $_RAYLIB_CONTENT
 //------------------------------------------------------------------------------------
 // Default font is loaded on window initialization to be available for the user to render simple text
 // NOTE: If enabled, uses external module functions to load default raylib font
-define_default( 'RL_SUPPORT_DEFAULT_FONT'        , true );
+define_default( 'RL_SUPPORT_DEFAULT_FONT'        , str_contains( $_RAYLIB_CONTENT , 'LoadFontDefault' ) );
 // Selected desired font fileformats to be supported for loading
-define_default( 'RL_SUPPORT_FILEFORMAT_FNT'      , true );
-define_default( 'RL_SUPPORT_FILEFORMAT_TTF'      , true );
+define_default( 'RL_SUPPORT_FILEFORMAT_FNT'      , str_contains( $_RAYLIB_CONTENT , "\0.fnt\0" ) );
+define_default( 'RL_SUPPORT_FILEFORMAT_TTF'      , str_contains( $_RAYLIB_CONTENT , "\0.ttf\0" ) );
 
 // Support text management functions
 // If not defined, still some functions are supported: TextLength(), TextFormat()
