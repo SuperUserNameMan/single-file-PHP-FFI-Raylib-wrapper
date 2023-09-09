@@ -297,7 +297,7 @@ define_default( 'RL_SUPPORT_FILEFORMAT_VOX'      , str_contains( $_RAYLIB_CONTEN
 define_default( 'RL_SUPPORT_FILEFORMAT_M3D'      , str_contains( $_RAYLIB_CONTENT , "\0.m3d\0" ) );
 // Support procedural mesh generation functions, uses external par_shapes.h library
 // NOTE: Some generated meshes DO NOT include generated texture coordinates
-define_default( 'RL_SUPPORT_MESH_GENERATION'     , true );
+define_default( 'RL_SUPPORT_MESH_GENERATION'     , str_contains( $_RAYLIB_CONTENT , "GenMeshPoly" ) );
 
 // rmodels: Configuration values
 //------------------------------------------------------------------------------------
@@ -1742,18 +1742,25 @@ $RAYLIB_H .= <<<'RAYLIB_H'
 /*RLAPI*/ BoundingBox GetMeshBoundingBox(Mesh mesh);                                            // Compute mesh bounding box limits
 /*RLAPI*/ void GenMeshTangents(Mesh *mesh);                                                     // Compute mesh tangents
 
-// Mesh generation functions
-/*RLAPI*/ Mesh GenMeshPoly(int sides, float radius);                                            // Generate polygonal mesh
-/*RLAPI*/ Mesh GenMeshPlane(float width, float length, int resX, int resZ);                     // Generate plane mesh (with subdivisions)
-/*RLAPI*/ Mesh GenMeshCube(float width, float height, float length);                            // Generate cuboid mesh
-/*RLAPI*/ Mesh GenMeshSphere(float radius, int rings, int slices);                              // Generate sphere mesh (standard sphere)
-/*RLAPI*/ Mesh GenMeshHemiSphere(float radius, int rings, int slices);                          // Generate half-sphere mesh (no bottom cap)
-/*RLAPI*/ Mesh GenMeshCylinder(float radius, float height, int slices);                         // Generate cylinder mesh
-/*RLAPI*/ Mesh GenMeshCone(float radius, float height, int slices);                             // Generate cone/pyramid mesh
-/*RLAPI*/ Mesh GenMeshTorus(float radius, float size, int radSeg, int sides);                   // Generate torus mesh
-/*RLAPI*/ Mesh GenMeshKnot(float radius, float size, int radSeg, int sides);                    // Generate trefoil knot mesh
-/*RLAPI*/ Mesh GenMeshHeightmap(Image heightmap, Vector3 size);                                 // Generate heightmap mesh from image data
-/*RLAPI*/ Mesh GenMeshCubicmap(Image cubicmap, Vector3 cubeSize);                               // Generate cubes-based map mesh from image data
+RAYLIB_H;
+
+	if ( RL_SUPPORT_MESH_GENERATION || $_WRAPPER_SCRIPT_RUNNING_IN_UTILITY_MODE_87987987 ) {
+	$RAYLIB_H .=<<<'RAYLIB_H'
+		// Mesh generation functions
+		/*RLAPI*/ Mesh GenMeshPoly(int sides, float radius);                                            // Generate polygonal mesh
+		/*RLAPI*/ Mesh GenMeshPlane(float width, float length, int resX, int resZ);                     // Generate plane mesh (with subdivisions)
+		/*RLAPI*/ Mesh GenMeshCube(float width, float height, float length);                            // Generate cuboid mesh
+		/*RLAPI*/ Mesh GenMeshSphere(float radius, int rings, int slices);                              // Generate sphere mesh (standard sphere)
+		/*RLAPI*/ Mesh GenMeshHemiSphere(float radius, int rings, int slices);                          // Generate half-sphere mesh (no bottom cap)
+		/*RLAPI*/ Mesh GenMeshCylinder(float radius, float height, int slices);                         // Generate cylinder mesh
+		/*RLAPI*/ Mesh GenMeshCone(float radius, float height, int slices);                             // Generate cone/pyramid mesh
+		/*RLAPI*/ Mesh GenMeshTorus(float radius, float size, int radSeg, int sides);                   // Generate torus mesh
+		/*RLAPI*/ Mesh GenMeshKnot(float radius, float size, int radSeg, int sides);                    // Generate trefoil knot mesh
+		/*RLAPI*/ Mesh GenMeshHeightmap(Image heightmap, Vector3 size);                                 // Generate heightmap mesh from image data
+		/*RLAPI*/ Mesh GenMeshCubicmap(Image cubicmap, Vector3 cubeSize);                               // Generate cubes-based map mesh from image data
+	RAYLIB_H; }
+
+$RAYLIB_H .=<<<'RAYLIB_H'
 
 // Material loading/unloading functions
 /*RLAPI*/ Material *LoadMaterials(const char *fileName, int *materialCount);                    // Load materials from model file
