@@ -235,7 +235,7 @@ define_default( 'RL_SUPPORT_QUADS_DRAW_MODE'       ,  true );
 // Module: rtextures - Configuration Flags
 //------------------------------------------------------------------------------------
 // Select the desired fileformats to be supported for image data loading
-define_default( 'RL_SUPPORT_FILEFORMAT_PNG'  ,  true );
+define_default( 'RL_SUPPORT_FILEFORMAT_PNG'  , str_contains( $_RAYLIB_CONTENT , "\0bad png sig\0" ) );
 define_default( 'RL_SUPPORT_FILEFORMAT_BMP'  , str_contains( $_RAYLIB_CONTENT , "\0.bmp\0"     ) );
 define_default( 'RL_SUPPORT_FILEFORMAT_TGA'  , str_contains( $_RAYLIB_CONTENT , "\0.tga\0"     ) );
 define_default( 'RL_SUPPORT_FILEFORMAT_JPG'  , str_contains( $_RAYLIB_CONTENT , "\0.jpg\0"     ) );
