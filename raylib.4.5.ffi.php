@@ -4376,17 +4376,29 @@ function RL_ImageText( string $text , int $fontSize , object $color ) : object {
 // Image ImageTextEx(Font font , const char* text , float fontSize , float spacing , Color tint);
 function RL_ImageTextEx( object $font , string $text , float $fontSize , float $spacing , object $tint ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->ImageTextEx( $font , $text , $fontSize , $spacing , $tint ); }
 
+/// Crop an image to a defined rectangle
+// void ImageCrop(Image* image , Rectangle crop);
+function RL_ImageCrop( object /*ref*/$image , object $crop ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->ImageCrop( FFI::addr($image) , $crop ); }
+
 /// Convert image data to desired format
 // void ImageFormat(Image* image , int newFormat);
 function RL_ImageFormat( object /*ref*/$image , int $newFormat ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->ImageFormat( FFI::addr($image) , $newFormat ); }
 
+/// Resize image (Nearest-Neighbor scaling algorithm)
+// void ImageResizeNN(Image* image , int newWidth , int newHeight);
+function RL_ImageResizeNN( object /*ref*/$image , int $newWidth , int $newHeight ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->ImageResizeNN( FFI::addr($image) , $newWidth , $newHeight ); }
+
+/// Resize image (Bicubic scaling algorithm)
+// void ImageResize(Image* image , int newWidth , int newHeight);
+function RL_ImageResize( object /*ref*/$image , int $newWidth , int $newHeight ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->ImageResize( FFI::addr($image) , $newWidth , $newHeight ); }
+
+/// Resize canvas and fill with color
+// void ImageResizeCanvas(Image* image , int newWidth , int newHeight , int offsetX , int offsetY , Color fill);
+function RL_ImageResizeCanvas( object /*ref*/$image , int $newWidth , int $newHeight , int $offsetX , int $offsetY , object $fill ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->ImageResizeCanvas( FFI::addr($image) , $newWidth , $newHeight , $offsetX , $offsetY , $fill ); }
+
 /// Convert image to POT (power-of-two)
 // void ImageToPOT(Image* image , Color fill);
 function RL_ImageToPOT( object /*ref*/$image , object $fill ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->ImageToPOT( FFI::addr($image) , $fill ); }
-
-/// Crop an image to a defined rectangle
-// void ImageCrop(Image* image , Rectangle crop);
-function RL_ImageCrop( object /*ref*/$image , object $crop ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->ImageCrop( FFI::addr($image) , $crop ); }
 
 /// Crop image depending on alpha value
 // void ImageAlphaCrop(Image* image , float threshold);
@@ -4407,18 +4419,6 @@ function RL_ImageAlphaPremultiply( object /*ref*/$image ) : void { global $RAYLI
 /// Apply Gaussian blur using a box blur approximation
 // void ImageBlurGaussian(Image* image , int blurSize);
 function RL_ImageBlurGaussian( object /*ref*/$image , int $blurSize ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->ImageBlurGaussian( FFI::addr($image) , $blurSize ); }
-
-/// Resize image (Bicubic scaling algorithm)
-// void ImageResize(Image* image , int newWidth , int newHeight);
-function RL_ImageResize( object /*ref*/$image , int $newWidth , int $newHeight ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->ImageResize( FFI::addr($image) , $newWidth , $newHeight ); }
-
-/// Resize image (Nearest-Neighbor scaling algorithm)
-// void ImageResizeNN(Image* image , int newWidth , int newHeight);
-function RL_ImageResizeNN( object /*ref*/$image , int $newWidth , int $newHeight ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->ImageResizeNN( FFI::addr($image) , $newWidth , $newHeight ); }
-
-/// Resize canvas and fill with color
-// void ImageResizeCanvas(Image* image , int newWidth , int newHeight , int offsetX , int offsetY , Color fill);
-function RL_ImageResizeCanvas( object /*ref*/$image , int $newWidth , int $newHeight , int $offsetX , int $offsetY , object $fill ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->ImageResizeCanvas( FFI::addr($image) , $newWidth , $newHeight , $offsetX , $offsetY , $fill ); }
 
 /// Compute all mipmap levels for a provided image
 // void ImageMipmaps(Image* image);
@@ -4478,11 +4478,11 @@ function RL_LoadImagePalette( object $image , int $maxPaletteSize , int &$colorC
 
 /// Unload color data loaded with LoadImageColors()
 // void UnloadImageColors(Color* colors);
-function RL_UnloadImageColors( array $colors ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->UnloadImageColors( $colors ); }
+function RL_UnloadImageColors( object /*c_array*/$colors ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->UnloadImageColors( /*c_array*/$colors ); }
 
 /// Unload colors palette loaded with LoadImagePalette()
 // void UnloadImagePalette(Color* colors);
-function RL_UnloadImagePalette( array $colors ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->UnloadImagePalette( $colors ); }
+function RL_UnloadImagePalette( object /*c_array*/$colors ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->UnloadImagePalette( /*c_array*/$colors ); }
 
 /// Get image alpha border rectangle
 // Rectangle GetImageAlphaBorder(Image image , float threshold);
@@ -4780,6 +4780,18 @@ function RL_GetGlyphInfo( object $font , int $codepoint ) : object { global $RAY
 // Rectangle GetGlyphAtlasRec(Font font , int codepoint);
 function RL_GetGlyphAtlasRec( object $font , int $codepoint ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->GetGlyphAtlasRec( $font , $codepoint ); }
 
+/// Get next codepoint in a UTF-8 encoded string, 0x3f('?') is returned on failure
+// int GetCodepoint(const char* text , int* codepointSize);
+function RL_GetCodepoint( string $text , int &$codepointSize ) : int { global $RAYLIB_FFI; return $RAYLIB_FFI->GetCodepoint( $text , $codepointSize ); }
+
+/// Get next codepoint in a UTF-8 encoded string, 0x3f('?') is returned on failure
+// int GetCodepointNext(const char* text , int* codepointSize);
+function RL_GetCodepointNext( string $text , int &$codepointSize ) : int { global $RAYLIB_FFI; return $RAYLIB_FFI->GetCodepointNext( $text , $codepointSize ); }
+
+/// Get previous codepoint in a UTF-8 encoded string, 0x3f('?') is returned on failure
+// int GetCodepointPrevious(const char* text , int* codepointSize);
+function RL_GetCodepointPrevious( string $text , int &$codepointSize ) : int { global $RAYLIB_FFI; return $RAYLIB_FFI->GetCodepointPrevious( $text , $codepointSize ); }
+
 /// Load UTF-8 text encoded from codepoints array
 // char* LoadUTF8(const int* codepoints , int length);
 function RL_LoadUTF8( int &$codepoints , int $length ) : string { global $RAYLIB_FFI; return $RAYLIB_FFI->LoadUTF8( $codepoints , $length ); }
@@ -4800,18 +4812,6 @@ function RL_UnloadCodepoints( int &$codepoints ) : void { global $RAYLIB_FFI; $R
 // int GetCodepointCount(const char* text);
 function RL_GetCodepointCount( string $text ) : int { global $RAYLIB_FFI; return $RAYLIB_FFI->GetCodepointCount( $text ); }
 
-/// Get next codepoint in a UTF-8 encoded string, 0x3f('?') is returned on failure
-// int GetCodepoint(const char* text , int* codepointSize);
-function RL_GetCodepoint( string $text , int &$codepointSize ) : int { global $RAYLIB_FFI; return $RAYLIB_FFI->GetCodepoint( $text , $codepointSize ); }
-
-/// Get next codepoint in a UTF-8 encoded string, 0x3f('?') is returned on failure
-// int GetCodepointNext(const char* text , int* codepointSize);
-function RL_GetCodepointNext( string $text , int &$codepointSize ) : int { global $RAYLIB_FFI; return $RAYLIB_FFI->GetCodepointNext( $text , $codepointSize ); }
-
-/// Get previous codepoint in a UTF-8 encoded string, 0x3f('?') is returned on failure
-// int GetCodepointPrevious(const char* text , int* codepointSize);
-function RL_GetCodepointPrevious( string $text , int &$codepointSize ) : int { global $RAYLIB_FFI; return $RAYLIB_FFI->GetCodepointPrevious( $text , $codepointSize ); }
-
 /// Encode one codepoint into UTF-8 byte array (array length returned as parameter)
 // const char* CodepointToUTF8(int codepoint , int* utf8Size);
 function RL_CodepointToUTF8( int $codepoint , int &$utf8Size ) : string { global $RAYLIB_FFI; return $RAYLIB_FFI->CodepointToUTF8( $codepoint , $utf8Size ); }
@@ -4823,14 +4823,6 @@ function RL_TextCopy( string $dst , string $src ) : int { global $RAYLIB_FFI; re
 /// Check if two text string are equal
 // bool TextIsEqual(const char* text1 , const char* text2);
 function RL_TextIsEqual( string $text1 , string $text2 ) : bool { global $RAYLIB_FFI; return $RAYLIB_FFI->TextIsEqual( $text1 , $text2 ); }
-
-/// Get text length, checks for '\0' ending
-// unsigned int TextLength(const char* text);
-function RL_TextLength( string $text ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->TextLength( $text ); }
-
-/// Text formatting with variables (sprintf() style)
-// const char* TextFormat(const char* text , ...);
-function RL_TextFormat( string $text , ...$_ ) : string { global $RAYLIB_FFI; return $RAYLIB_FFI->TextFormat( $text , ...$_ ); }
 
 /// Get a piece of a text string
 // const char* TextSubtext(const char* text , int position , int length);
@@ -4871,6 +4863,14 @@ function RL_TextToLower( string $text ) : string { global $RAYLIB_FFI; return $R
 /// Get Pascal case notation version of provided string
 // const char* TextToPascal(const char* text);
 function RL_TextToPascal( string $text ) : string { global $RAYLIB_FFI; return $RAYLIB_FFI->TextToPascal( $text ); }
+
+/// Get text length, checks for '\0' ending
+// unsigned int TextLength(const char* text);
+function RL_TextLength( string $text ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->TextLength( $text ); }
+
+/// Text formatting with variables (sprintf() style)
+// const char* TextFormat(const char* text , ...);
+function RL_TextFormat( string $text , ...$_ ) : string { global $RAYLIB_FFI; return $RAYLIB_FFI->TextFormat( $text , ...$_ ); }
 
 /// Get integer value from text (negative values not supported)
 // int TextToInteger(const char* text);
@@ -6820,7 +6820,7 @@ function _RAYLIB_REBUILD_WRAPPER_FROM_SCRATCH( string $RAYLIB_H , array $BLACKLI
 		$ARGS = str_replace( ' Camera* '         , ' object /*ref*/$' , $ARGS );
 		$ARGS = str_replace( ' Camera2D '        , ' object $' , $ARGS );
 		$ARGS = str_replace( ' Camera3D '        , ' object $' , $ARGS );
-		$ARGS = str_replace( ' Color* '          , ' array $'  , $ARGS );
+		$ARGS = str_replace( ' Color* '          , ' object /*c_array*/$' , $ARGS );
 		$ARGS = str_replace( ' Color '           , ' object $' , $ARGS );
 		$ARGS = str_replace( ' Font '            , ' object $' , $ARGS );
 		$ARGS = str_replace( ' FilePathList '    , ' object $' , $ARGS );
