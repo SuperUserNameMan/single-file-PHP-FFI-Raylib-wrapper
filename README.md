@@ -40,7 +40,9 @@ Raylib's structs can be created this way :
 
 $my_vector = RL_Vector3D(); // uninit
 //or
-$my_vector = RL_Vector3D( 1.0 , 2.0 , 3.0 ); // init
+$my_vector = RL_Vector3D( 1.0 , 2.0 , 3.0 ); // init by order
+// or
+$my_vector = RL_Vector3D([ 'x' => 1.0 , 'z' => 3.0 , 'y' => 2.0 ]); // init by names
 // or
 $my_vector = FFI::new( RAYLIB_FFI_Vector3D ); // uninit
 ```
