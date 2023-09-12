@@ -43,12 +43,13 @@ for( $y = 0 ; $y < $HEIGHT ; $y++ )
 }
 
 // Load pixels data into an image structure and create texture
-$CHECKED_IMG = RL_Image();
-$CHECKED_IMG->data    = $PIXELS ;
-$CHECKED_IMG->width   = $WIDTH  ;
-$CHECKED_IMG->height  = $HEIGHT ;
-$CHECKED_IMG->format  = RL_PIXELFORMAT_UNCOMPRESSED_R8G8B8A8 ;
-$CHECKED_IMG->mipmaps = 1 ;
+$CHECKED_IMG = RL_Image([
+	'data'    => $PIXELS ,
+	'width'   => $WIDTH  ,
+	'height'  => $HEIGHT ,
+	'format'  => RL_PIXELFORMAT_UNCOMPRESSED_R8G8B8A8 ,
+	'mipmaps' => 1 ,
+]);
 
 $CHECKED = RL_LoadTextureFromImage( $CHECKED_IMG );
 RL_UnloadImage( $CHECKED_IMG );
