@@ -290,37 +290,46 @@ PHP's `FFI` can make two type of memory allocation : managed, and unmanaged.
 
 Example of **managed** allocation :
 ```PHP
-$ICON = RL_Color_array( 32 , 32 ); // <= create a managed CData 2D array of type `struct Color`
+$ICON = RL_Color_array( 32 , 32 ); // <= create a managed CData 2D array
+                                   //    of type `struct Color`
 
 $ICON = null ; // <= the array is sent to PHP's garbage collector.
 ```
 
 Example of **unmanaged** allocation :
 ```PHP
-$ICON = RL_Color_alloc( 32 , 32 ); // <== create an unmanaged CData 2D array of type `struct Color`
+$ICON = RL_Color_alloc( 32 , 32 ); // <== create an unmanaged CData 2D array
+                                   //     of type `struct Color`
 
-// $ICON = null ; // <== WARNING ! DONT ! or else, you'll lose the reference and it would create a memory leak !
+// $ICON = null ; // <== WARNING ! DONT ! or else, you'll lose the reference
+                  //     and it would create a memory leak !
 
-FFI::free( $ICON ); // <== unmanaged allocation must be set free manually, or else it would create a memory leak !
+FFI::free( $ICON ); // <== unmanaged allocation must be set free manually,
+                    //     or else it would create a memory leak !
 ```
 
-Other example of **unmanaged** allocation (see [examples/40_raw_data.php](https://github.com/SuperUserNameMan/single-file-PHP-FFI-Raylib-wrapper/blob/main/examples/40_raw_data.php) :
+Other example of **unmanaged** allocation (see [examples/40_raw_data.php](https://github.com/SuperUserNameMan/single-file-PHP-FFI-Raylib-wrapper/blob/main/examples/40_raw_data.php) ) :
 ```PHP
 // we use `RL_Color_alloc()` instead of `RL_Color_array()` because
 // the `$PIXELS` array will be deleted through `RL_UnloadImage()`
-$PIXELS = RL_Color_alloc( $WIDTH * $HEIGHT ); // <== we create an unmanaged allocation that will be set free by RL_UnloadImage()
+$PIXELS = RL_Color_alloc( $WIDTH * $HEIGHT ); // <== we create an unmanaged allocation
+                                              // that will be set free by RL_UnloadImage()
 ...
 
-$IMAGE = RL_Image(); // <== this Image struct is managed by PHP's garbage collector,
+$IMAGE = RL_Image(); // <== this Image struct is managed
+                     //     by PHP's garbage collector,
 
-$IMAGE->data = $PIXELS ; // <== but we bind to it the unmanaged array created above
+$IMAGE->data = $PIXELS ; // <== but we bind to it the unmanaged
+                         //     array created above
 ...
 
 $TEXTURE = RL_LoadTextureFromImage( $IMAGE ); // <== make use of the Image
 
-RL_UnloadImage( $IMAGE ); // <== and this is where the unmanaged $PIXELS allocation is set free by Raylib
+RL_UnloadImage( $IMAGE ); // <== and this is where the unmanaged $PIXELS
+                          //     allocation is set free by Raylib
 ...
 
-$IMAGE = null ; // <== now the emptied Image struct is sent to PHP's garbage collector
+$IMAGE = null ; // <== now the emptied Image struct
+                //     is sent to PHP's garbage collector
 ```
 
