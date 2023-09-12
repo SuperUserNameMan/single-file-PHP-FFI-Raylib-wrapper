@@ -3173,6 +3173,8 @@ $RLAPI_BLACKLISTED_FUNCTIONS = [
 
 	'LoadFileData'  , // handwritten
 	'UnloadFileData', // handwritten
+
+	'LoadFontEx' , // handwritten
 ];
 
 //typedef Camera3D Camera;    // Camera type fallback, defaults to Camera3D
@@ -3194,7 +3196,25 @@ function RL_LoadFileData( string $FILE_PATH , int &$DATA_SIZE ) : ?object
 // void UnloadFileData(unsigned char* data);
 function RL_UnloadFileData( object $data ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->UnloadFileData( $data ); }
 
+/// Load font from file with extended parameters, use NULL for fontChars and 0 for glyphCount to load the default character set
+// Font LoadFontEx(const char* fileName , int fontSize , int* fontChars , int glyphCount);
+function RL_LoadFontEx( string $fileName , int $fontSize , array $fontChars = null , int $glyphCount = null ) : object
+{
+	global $RAYLIB_FFI;
 
+	if ( empty( $fontChars ) )
+	{
+		$fontChars_C = NULL ;
+		$glyphCount ??= 0 ;
+	}
+	else
+	{
+		$glyphCount ??= count( $fontChars );
+		$fontChars_C = FFI::new("int[ $glyphCount ]");
+	}
+
+	return $RAYLIB_FFI->LoadFontEx( $fileName , $fontSize , $fontChars_C , $glyphCount );
+}
 
 // ------------------------------------------------------------------------------------
 /*
@@ -4702,7 +4722,7 @@ function RL_LoadFont( string $fileName ) : object { global $RAYLIB_FFI; return $
 
 /// Load font from file with extended parameters, use NULL for fontChars and 0 for glyphCount to load the default character set
 // Font LoadFontEx(const char* fileName , int fontSize , int* fontChars , int glyphCount);
-function RL_LoadFontEx( string $fileName , int $fontSize , int &$fontChars , int $glyphCount ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->LoadFontEx( $fileName , $fontSize , $fontChars , $glyphCount ); }
+//XXX function RL_LoadFontEx( string $fileName , int $fontSize , int &$fontChars , int $glyphCount ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->LoadFontEx( $fileName , $fontSize , $fontChars , $glyphCount ); }
 
 /// Load font from Image (XNA style)
 // Font LoadFontFromImage(Image image , Color key , int firstChar);
