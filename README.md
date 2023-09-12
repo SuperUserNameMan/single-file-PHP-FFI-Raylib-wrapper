@@ -185,6 +185,14 @@ $B = clone $A ;    // <= $B refers to a clone of $A's object
 ```
 
 ```PHP
+$A = RL_Vector2(); // <= let's call this object Bob, and say $A refers to Bob
+$A = clone $A ;    // <= now, $A refers to a clone of Bob, while Bob is
+                   //    sent to the garbage collector because no one refers
+                   //    to Bob anymore. Bye bye Bob, and welcome Bob's clone.
+                   //    Same as Star Trek's transporters ?
+```
+
+```PHP
 $A = RL_Vector2();
 $B = RL_Vector2();
 $B = clone $A ;    // <= $B refers to a clone of $A's object
@@ -242,6 +250,21 @@ function foo( object &$ARG /* <== reference to the variable passed as argument *
 
 $A = RL_Vector(2);
 foo( $A ); // <== same as $A = null ;
+```
+
+```PHP
+function foo( object &$ARG /* <== reference to the variable passed as argument */) : void
+{
+  $ARG = clone $ARG ; // <== the content of the variable passed
+                      // as argument is replaced by a reference
+                      // to a clone of the previous refered
+                      // object. And the previous refered object
+                      // is sent to garbage collector if no othe
+                      // variable refers to it.
+}
+
+$A = RL_Vector(2);
+foo( $A ); // <== same as $A = clone $A ;
 ```
 
 ```PHP
