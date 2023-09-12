@@ -213,9 +213,10 @@ $B = null ;        // <= $B abandonned the last reference to the object
 ```
 
 ```PHP
-function foo( object $A /*objects are passed by reference*/ ) : object
+function foo( object $ARG /*objects are passed by reference*/ ) : object
 {
-  return $A ; // <= returns the reference 
+  // $ARG refers to the object refered by the variable passed as arguement
+  return $ARG ; // <= returns the reference to the object
 }
 
 $A = RL_Vector2();
@@ -223,20 +224,30 @@ $B = foo( $A ); // <= same as $B = $A ;
 ```
 
 ```PHP
-function foo( object $A ) : object
+function foo( object $ARG ) : object
 {
-  return clone $A ; // <= returns clone of refered object
+  return clone $ARG ; // <= returns clone of refered object
 }
 
 $A = RL_Vector2();
 $B = foo( $A );     // <= same as $B = clone $A ;
 ```
 
+```PHP
+function foo( object &$ARG /* <== reference to the variable passed as argument */) : void
+{
+  $ARG = null ; // <== the content of the variable passed
+              // as argument is sent to garbage collector
+}
+
+$A = RL_Vector(2);
+foo( $A ); // <== same as $A = null ;
+```
 
 ```PHP
-function foo( object $A ) : void
+function foo( object $ARG ) : void
 {
-  $A->x = 789 ;
+  $ARG->x = 789 ;
 }
 
 $A = RL_Vector2( 123 , 456 );
