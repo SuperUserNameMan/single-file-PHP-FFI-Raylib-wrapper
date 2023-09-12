@@ -284,7 +284,7 @@ $COLOR->r = 0 :           // <= RL_WHITE remains untouched by this change
 
 ##  `malloc()` and `free()` ?
 
-`FFI` can make two type of memory allocation : managed, and unmanaged.
+PHP's `FFI` can make two type of memory allocation : managed, and unmanaged.
 - **managed allocations** are automatically freed by PHP's garbage collector ;
 - **unmanaged allocations** must be set free manually using `FFI::free()` or by a C function that internally uses `free()`.
 
