@@ -37,7 +37,7 @@ $my_vector = RL_Vector3D( 1.0 , 2.0 , 3.0 ); // init
 $my_vector = FFI::new( RAYLIB_FFI_Vector3D ); // uninit
 ```
 
-Arrays of Raylib's structs can be created this way :
+Arrays of Raylib's structs whose deletion is managed by PHP's garbage collector can be created this way :
 
 ```PHP
 
@@ -50,6 +50,20 @@ $my_cube_array = RL_Vector3D_array( 3 , 5 , 8 );
 $my_palette = FFI::new( FFI::arrayType( RAYLIB_FFI_Color ) , [ 1 ] );
 $my_color_map = FFI::new( FFI::arrayType( RAYLIB_FFI_Color ) , [ 320 , 240 ] );
 $my_cube_array = FFI::new( FFI::arrayType( RAYLIB_FFI_Vector3D ) , [ 3 , 5 , 8 ] );
+```
+
+If their deletion has to be managed manually using `FFI::free()` or managed by a Raylib function, they must be created this way :
+
+```PHP
+$my_palette = RL_Color_alloc( 256 );
+$my_color_map = RL_Color_alloc( 320 , 240  );
+$my_cube_array = RL_Vector3D_alloc( 3 , 5 , 8 );
+
+// or
+
+$my_palette = FFI::new( FFI::arrayType( RAYLIB_FFI_Color ) , [ 1 ] , false , true );
+$my_color_map = FFI::new( FFI::arrayType( RAYLIB_FFI_Color ) , [ 320 , 240 ] , false , true );
+$my_cube_array = FFI::new( FFI::arrayType( RAYLIB_FFI_Vector3D ) , [ 3 , 5 , 8 ] , false , true );
 ```
 
 ## Optional RayGui 3.6 support 
