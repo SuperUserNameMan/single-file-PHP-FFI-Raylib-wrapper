@@ -3,7 +3,7 @@ A single file [PHP8](https://github.com/php/php-src) FFI [Raylib 4.5](https://gi
 
 Very W.I.P.
 
-Meant to work out of the box with [official precompiled library releases](https://github.com/raysan5/raylib/releases) on Windows (not really tested) and on Linux.
+Meant to work out of the box with [official precompiled library releases](https://github.com/raysan5/raylib/releases) on Windows (not really tested) and on Linux, but also compatible with customized `config.h` compiled libs.
 
 The wrapper integrates `raylib.h` + `raymath.h` + `rlgl.h` + `rlcamera.h` API. (and `raygui.h` optionaly)
 
