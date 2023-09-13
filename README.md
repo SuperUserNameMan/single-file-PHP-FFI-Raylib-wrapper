@@ -14,7 +14,7 @@ Only requires `libraylib.so` or `raylib.dll` into a `.\raylib\`, or `.\lib` or `
 ## Why PHP ?
 
 PHP is not just a language for under payed web developpers. 
-It is also a very confortable cross platform "batteries included" scripting language faster than the ugly spacebar addict python.
+It is also a very comfortable cross platform "batteries included" scripting language faster than the ugly spacebar addict python.
 It even has a JIT.
 
 It can be used for quick prototyping, or for reasearch purpose (as Raylib offers an interface to compute-shaders).
