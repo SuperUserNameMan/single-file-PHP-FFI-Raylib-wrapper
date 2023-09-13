@@ -17,7 +17,7 @@ PHP is not just a language for under payed web developpers.
 It is also a very comfortable cross platform "batteries included" scripting language faster than the ugly spacebar addict python.
 It even has a JIT.
 
-It can be used for quick prototyping, or for reasearch purpose (as Raylib offers an interface to compute-shaders).
+It can be used for quick prototyping, or for reasearch purpose (as Raylib offers an interface to compute-shaders, and there is also [RubixLM](https://rubixml.com/) for machine learning ).
 
 ## Notes :
 
