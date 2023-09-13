@@ -6805,11 +6805,11 @@ function _RAYLIB_REBUILD_WRAPPER_FROM_SCRATCH( string $RAYLIB_H , array $BLACKLI
 	{
 		$RLAPI_PHP .= "define( 'RAYLIB_FFI_$TYPE_NAME' , \$RAYLIB_FFI->type( '$TYPE_NAME' ) );".PHP_EOL ;
 
-		$RLAPI_PHP .= "function RL_$TYPE_NAME( ...\$_ ) : object { \$OBJ = FFI::new( RAYLIB_FFI_$TYPE_NAME ); \$FIELDS = RAYLIB_FFI_${TYPE_NAME}->getStructFieldNames() ; if ( count( \$FIELDS ) == count( \$_ ) && isset( \$_[0] ) && ! is_array( \$_[0] ) ) foreach( \$FIELDS as \$INDEX => \$FIELD ) { \$OBJ->\$FIELD = \$_[\$INDEX]; } else foreach( \$FIELDS as \$FIELD ) { if ( isset( \$_[0][\$FIELD] ) ) \$OBJ->\$FIELD = \$_[0][\$FIELD]; } return \$OBJ ; }".PHP_EOL;
+		$RLAPI_PHP .= "function RL_$TYPE_NAME( ...\$_ ) : object { \$OBJ = FFI::new( RAYLIB_FFI_$TYPE_NAME ); \$FIELDS = RAYLIB_FFI_{$TYPE_NAME}->getStructFieldNames() ; if ( count( \$FIELDS ) == count( \$_ ) && isset( \$_[0] ) && ! is_array( \$_[0] ) ) foreach( \$FIELDS as \$INDEX => \$FIELD ) { \$OBJ->\$FIELD = \$_[\$INDEX]; } else foreach( \$FIELDS as \$FIELD ) { if ( isset( \$_[0][\$FIELD] ) ) \$OBJ->\$FIELD = \$_[0][\$FIELD]; } return \$OBJ ; }".PHP_EOL;
 
-		$RLAPI_PHP .= "function RL_${TYPE_NAME}_array( ...\$DIMENSIONS ) : object { \$ARR = FFI::new( FFI::arrayType( RAYLIB_FFI_$TYPE_NAME , \$DIMENSIONS ) ); return \$ARR ; }".PHP_EOL;
+		$RLAPI_PHP .= "function RL_{$TYPE_NAME}_array( ...\$DIMENSIONS ) : object { \$ARR = FFI::new( FFI::arrayType( RAYLIB_FFI_$TYPE_NAME , \$DIMENSIONS ) ); return \$ARR ; }".PHP_EOL;
 
-		$RLAPI_PHP .= "function RL_${TYPE_NAME}_alloc( ...\$DIMENSIONS ) : object { \$ARR = FFI::new( FFI::arrayType( RAYLIB_FFI_$TYPE_NAME , \$DIMENSIONS ) , false , true ); return \$ARR ; }".PHP_EOL;
+		$RLAPI_PHP .= "function RL_{$TYPE_NAME}_alloc( ...\$DIMENSIONS ) : object { \$ARR = FFI::new( FFI::arrayType( RAYLIB_FFI_$TYPE_NAME , \$DIMENSIONS ) , false , true ); return \$ARR ; }".PHP_EOL;
 
 		$RLAPI_PHP .= PHP_EOL ;
 	}
