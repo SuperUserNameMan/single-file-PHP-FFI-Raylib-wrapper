@@ -133,15 +133,15 @@ while( ! RL_WindowShouldClose() )
 			RL_DrawText
 			(
 				$LABEL ,
-				$TOGGLE_RECTANGLES[ $i ]->x + $TOGGLE_RECTANGLES[ $i ]->width/2 - RL_MeasureText( $LABEL , 10 ) /2 ,
+				$TOGGLE_RECTANGLES[ $i ]->x + (int)( $TOGGLE_RECTANGLES[ $i ]->width/2 - RL_MeasureText( $LABEL , 10 ) /2 ) ,
 				$TOGGLE_RECTANGLES[ $i ]->y + 11 ,
 				10 ,
 				( ( $i == $CURRENT_PROCESS ) || ( $i == $MOUSE_HOVER_REC ) ) ? RL_DARKBLUE : RL_DARKGRAY
 			);
 		}
 
-		RL_DrawTexture( $TEXTURE , $SCREEN_W - $TEXTURE->width - 60 , $SCREEN_H/2 - $TEXTURE->height/2 , RL_WHITE );
-		RL_DrawRectangleLines( $SCREEN_W - $TEXTURE->width - 60 , $SCREEN_H/2 - $TEXTURE->height/2 , $TEXTURE->width , $TEXTURE->height , RL_BLACK );
+		RL_DrawTexture( $TEXTURE , $SCREEN_W - $TEXTURE->width - 60 , (int)( $SCREEN_H/2 - $TEXTURE->height/2 ) , RL_WHITE );
+		RL_DrawRectangleLines( $SCREEN_W - $TEXTURE->width - 60 , (int)( $SCREEN_H/2 - $TEXTURE->height/2 ) , $TEXTURE->width , $TEXTURE->height , RL_BLACK );
 
 	RL_EndDrawing();
 }

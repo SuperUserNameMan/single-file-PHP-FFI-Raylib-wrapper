@@ -122,8 +122,8 @@ while( ! RL_WindowShouldClose() )
 
 			case STATE::LOADING :
 			{
-				RL_DrawRectangle( 150 , 200 , $DATA_PROGRESS , 60 , RL_SKYBLUE );
-				if ( ( $FRAMES_COUNTER / 15 ) % 2 )
+				RL_DrawRectangle( 150 , 200 , (int)$DATA_PROGRESS , 60 , RL_SKYBLUE );
+				if ( (int)( $FRAMES_COUNTER / 15 ) % 2 )
 				{
 					RL_DrawText( "LOADING DATA..." , 240 , 210 , 40 , RL_DARKBLUE );
 				}

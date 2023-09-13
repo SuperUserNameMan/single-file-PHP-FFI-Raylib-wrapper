@@ -11,7 +11,7 @@ RL_SetConfigFlags( RL_FLAG_MSAA_4X_HINT );  // Set MSAA 4X hint before windows c
 
 RL_InitWindow( $SCREEN_W , $SCREEN_H , "raylib [core] example - gamepad input" );
 
-$TEXTURE_360_PAS = RL_LoadTexture( "./raylib/examples/resources/xbox.png" );
+$TEXTURE_360_PAD = RL_LoadTexture( "./raylib/examples/resources/xbox.png" );
 
 RL_SetTargetFPS( 60 );               // Set our game to run at 60 frames-per-second
 
@@ -32,7 +32,7 @@ while ( ! RL_WindowShouldClose() )    // Detect window close button or ESC key
 
 		if ( true )
 		{
-			RL_DrawTexture( $TEXTURE_360_PAS , 0 , 0 , RL_DARKGRAY );
+			RL_DrawTexture( $TEXTURE_360_PAD , 0 , 0 , RL_DARKGRAY );
 
 			// Draw buttons: xbox home
 			if ( RL_IsGamepadButtonDown( $GAMEPAD_ID , RL_GAMEPAD_BUTTON_MIDDLE ) ) RL_DrawCircle( 394 , 89 , 19 , RL_RED );
@@ -106,14 +106,13 @@ while ( ! RL_WindowShouldClose() )    // Detect window close button or ESC key
 	{
 		RL_DrawText( RL_TextFormat( "GP%d: NOT DETECTED" , $GAMEPAD_ID ) , 10 , 10 , 10 , RL_GRAY );
 
-		RL_DrawTexture( $TEXTURE_360_PAS , 0 , 0 , RL_LIGHTGRAY );
+		RL_DrawTexture( $TEXTURE_360_PAD , 0 , 0 , RL_LIGHTGRAY );
 	}
 
 	RL_EndDrawing();
 }
 
-RL_UnloadTexture( $TEXTURE_360_PAS );
-RL_UnloadTexture( $TEXTURE_PS3_PAD );
+RL_UnloadTexture( $TEXTURE_360_PAD );
 
 RL_CloseWindow();
 

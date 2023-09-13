@@ -60,10 +60,10 @@ while( ! RL_WindowShouldClose())
 		for( $Y_OFFSET = -1 ; $Y_OFFSET <= 1 ; $Y_OFFSET++ )
 		for( $X_OFFSET = -1 ; $X_OFFSET <= 1 ; $X_OFFSET++ )
 		{
-			RL_DrawText( $TEXT , $TEXT_X - $TEXT_W / 2 + $X_OFFSET*2 , $TEXT_Y + $Y_OFFSET*2 , $FONT_SIZE , RL_BLACK );
+			RL_DrawText( $TEXT , $TEXT_X - (int)($TEXT_W / 2) + $X_OFFSET*2 , $TEXT_Y + $Y_OFFSET*2 , $FONT_SIZE , RL_BLACK );
 		}
 
-		RL_DrawText( $TEXTURES[ $CURRENT_TEXTURE ]->name , $TEXT_X - $TEXT_W / 2 , $TEXT_Y , $FONT_SIZE , RL_WHITE );
+		RL_DrawText( $TEXTURES[ $CURRENT_TEXTURE ]->name , $TEXT_X - (int)($TEXT_W / 2) , $TEXT_Y , $FONT_SIZE , RL_WHITE );
 
 	RL_EndDrawing();
 }
