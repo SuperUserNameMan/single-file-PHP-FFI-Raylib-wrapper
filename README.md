@@ -147,7 +147,19 @@ define( 'RLGL_CULL_DISTANCE_FAR' , 1000.0 );
 
 ## Choosing the OpenGL version at runtime :
 
-The wrapper is able to pick a different shared library (`.dll` or `.so`) according to the value of `RL_USES_OPENGL_VERSION`.
+The wrapper is able to pick a different shared library (`.dll` or `.so`) according to the value of `RL_USES_OPENGL_VERSION` which can be defined in code, or passed as command line argument.
+
+In code :
+```PHP
+define( 'RL_USES_OPENGL_VERSION` , 4 );
+include( './raylib.ffi.php' );
+```
+
+Command line argument :
+```bash
+php my_raylib_app.php RL_USES_OPENGL_VERSION=4
+```
+
 
 | RL_USES_OPENGL_VERSION | OpenGL version | Lib name Linux | Lib name Windows |
 |-----|---|---|---|
