@@ -3214,6 +3214,7 @@ function RL_LoadFontEx( string $fileName , int $fontSize , array $fontChars = nu
 	{
 		$glyphCount ??= count( $fontChars );
 		$fontChars_C = FFI::new("int[ $glyphCount ]");
+		foreach( $fontChars as $index => $char ) $fontChars_C[ $index ] = (int)$char ;
 	}
 
 	return $RAYLIB_FFI->LoadFontEx( $fileName , $fontSize , $fontChars_C , $glyphCount );
