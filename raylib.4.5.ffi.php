@@ -3855,7 +3855,7 @@ function RL_OpenURL( string $url ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->Ope
 
 /// Load file data as byte array (read)
 // unsigned char* LoadFileData(const char* fileName , unsigned int* bytesRead);
-//XXX function RL_LoadFileData( string $fileName , int &$bytesRead ) : string { global $RAYLIB_FFI; return $RAYLIB_FFI->LoadFileData( $fileName , $bytesRead ); }
+//XXX function RL_LoadFileData( string $fileName , int /*ref:int*/&$bytesRead ) : string { global $RAYLIB_FFI; static $__c_ref__bytesRead = null ; $__c_ref__bytesRead ??= FFI::new("int"); $__result__ = $RAYLIB_FFI->LoadFileData( $fileName , FFI::addr($__c_ref__bytesRead) ); $bytesRead = $__c_ref__bytesRead->cdata ; return $__result__; }
 
 /// Unload file data allocated by LoadFileData()
 // void UnloadFileData(unsigned char* data);
@@ -3963,19 +3963,19 @@ function RL_GetFileModTime( string $fileName ) : int { global $RAYLIB_FFI; retur
 
 /// Compress data (DEFLATE algorithm), memory must be MemFree()
 // unsigned char* CompressData(const unsigned char* data , int dataSize , int* compDataSize);
-function RL_CompressData( string $data , int $dataSize , int &$compDataSize ) : string { global $RAYLIB_FFI; return $RAYLIB_FFI->CompressData( $data , $dataSize , $compDataSize ); }
+function RL_CompressData( string $data , int $dataSize , int /*ref:int*/&$compDataSize ) : string { global $RAYLIB_FFI; static $__c_ref__compDataSize = null ; $__c_ref__compDataSize ??= FFI::new("int"); $__result__ = $RAYLIB_FFI->CompressData( $data , $dataSize , FFI::addr($__c_ref__compDataSize) ); $compDataSize = $__c_ref__compDataSize->cdata ; return $__result__; }
 
 /// Decompress data (DEFLATE algorithm), memory must be MemFree()
 // unsigned char* DecompressData(const unsigned char* compData , int compDataSize , int* dataSize);
-function RL_DecompressData( string $compData , int $compDataSize , int &$dataSize ) : string { global $RAYLIB_FFI; return $RAYLIB_FFI->DecompressData( $compData , $compDataSize , $dataSize ); }
+function RL_DecompressData( string $compData , int $compDataSize , int /*ref:int*/&$dataSize ) : string { global $RAYLIB_FFI; static $__c_ref__dataSize = null ; $__c_ref__dataSize ??= FFI::new("int"); $__result__ = $RAYLIB_FFI->DecompressData( $compData , $compDataSize , FFI::addr($__c_ref__dataSize) ); $dataSize = $__c_ref__dataSize->cdata ; return $__result__; }
 
 /// Encode data to Base64 string, memory must be MemFree()
 // char* EncodeDataBase64(const unsigned char* data , int dataSize , int* outputSize);
-function RL_EncodeDataBase64( string $data , int $dataSize , int &$outputSize ) : string { global $RAYLIB_FFI; return $RAYLIB_FFI->EncodeDataBase64( $data , $dataSize , $outputSize ); }
+function RL_EncodeDataBase64( string $data , int $dataSize , int /*ref:int*/&$outputSize ) : string { global $RAYLIB_FFI; static $__c_ref__outputSize = null ; $__c_ref__outputSize ??= FFI::new("int"); $__result__ = $RAYLIB_FFI->EncodeDataBase64( $data , $dataSize , FFI::addr($__c_ref__outputSize) ); $outputSize = $__c_ref__outputSize->cdata ; return $__result__; }
 
 /// Decode Base64 string data, memory must be MemFree()
 // unsigned char* DecodeDataBase64(const unsigned char* data , int* outputSize);
-function RL_DecodeDataBase64( string $data , int &$outputSize ) : string { global $RAYLIB_FFI; return $RAYLIB_FFI->DecodeDataBase64( $data , $outputSize ); }
+function RL_DecodeDataBase64( string $data , int /*ref:int*/&$outputSize ) : string { global $RAYLIB_FFI; static $__c_ref__outputSize = null ; $__c_ref__outputSize ??= FFI::new("int"); $__result__ = $RAYLIB_FFI->DecodeDataBase64( $data , FFI::addr($__c_ref__outputSize) ); $outputSize = $__c_ref__outputSize->cdata ; return $__result__; }
 
 /// Check if a key has been pressed once
 // bool IsKeyPressed(int key);
@@ -4355,7 +4355,7 @@ function RL_LoadImageRaw( string $fileName , int $width , int $height , int $for
 
 /// Load image sequence from file (frames appended to image.data)
 // Image LoadImageAnim(const char* fileName , int* frames);
-function RL_LoadImageAnim( string $fileName , int &$frames ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->LoadImageAnim( $fileName , $frames ); }
+function RL_LoadImageAnim( string $fileName , int /*ref:int*/&$frames ) : object { global $RAYLIB_FFI; static $__c_ref__frames = null ; $__c_ref__frames ??= FFI::new("int"); $__result__ = $RAYLIB_FFI->LoadImageAnim( $fileName , FFI::addr($__c_ref__frames) ); $frames = $__c_ref__frames->cdata ; return $__result__; }
 
 /// Load image from memory buffer, fileType refers to extension: i.e. '.png'
 // Image LoadImageFromMemory(const char* fileType , const unsigned char* fileData , int dataSize);
@@ -4535,7 +4535,7 @@ function RL_LoadImageColors( object $image ) : object { global $RAYLIB_FFI; retu
 
 /// Load colors palette from image as a Color array (RGBA - 32bit)
 // Color* LoadImagePalette(Image image , int maxPaletteSize , int* colorCount);
-function RL_LoadImagePalette( object $image , int $maxPaletteSize , int &$colorCount ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->LoadImagePalette( $image , $maxPaletteSize , $colorCount ); }
+function RL_LoadImagePalette( object $image , int $maxPaletteSize , int /*ref:int*/&$colorCount ) : object { global $RAYLIB_FFI; static $__c_ref__colorCount = null ; $__c_ref__colorCount ??= FFI::new("int"); $__result__ = $RAYLIB_FFI->LoadImagePalette( $image , $maxPaletteSize , FFI::addr($__c_ref__colorCount) ); $colorCount = $__c_ref__colorCount->cdata ; return $__result__; }
 
 /// Unload color data loaded with LoadImageColors()
 // void UnloadImageColors(Color* colors);
@@ -4763,7 +4763,7 @@ function RL_LoadFont( string $fileName ) : object { global $RAYLIB_FFI; return $
 
 /// Load font from file with extended parameters, use NULL for fontChars and 0 for glyphCount to load the default character set
 // Font LoadFontEx(const char* fileName , int fontSize , int* fontChars , int glyphCount);
-//XXX function RL_LoadFontEx( string $fileName , int $fontSize , int &$fontChars , int $glyphCount ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->LoadFontEx( $fileName , $fontSize , $fontChars , $glyphCount ); }
+//XXX function RL_LoadFontEx( string $fileName , int $fontSize , int /*ref:int*/&$fontChars , int $glyphCount ) : object { global $RAYLIB_FFI; static $__c_ref__fontChars = null ; $__c_ref__fontChars ??= FFI::new("int"); $__result__ = $RAYLIB_FFI->LoadFontEx( $fileName , $fontSize , FFI::addr($__c_ref__fontChars) , $glyphCount ); $fontChars = $__c_ref__fontChars->cdata ; return $__result__; }
 
 /// Load font from Image (XNA style)
 // Font LoadFontFromImage(Image image , Color key , int firstChar);
@@ -4771,7 +4771,7 @@ function RL_LoadFontFromImage( object $image , object $key , int $firstChar ) : 
 
 /// Load font from memory buffer, fileType refers to extension: i.e. '.ttf'
 // Font LoadFontFromMemory(const char* fileType , const unsigned char* fileData , int dataSize , int fontSize , int* fontChars , int glyphCount);
-function RL_LoadFontFromMemory( string $fileType , string $fileData , int $dataSize , int $fontSize , int &$fontChars , int $glyphCount ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->LoadFontFromMemory( $fileType , $fileData , $dataSize , $fontSize , $fontChars , $glyphCount ); }
+function RL_LoadFontFromMemory( string $fileType , string $fileData , int $dataSize , int $fontSize , int /*ref:int*/&$fontChars , int $glyphCount ) : object { global $RAYLIB_FFI; static $__c_ref__fontChars = null ; $__c_ref__fontChars ??= FFI::new("int"); $__result__ = $RAYLIB_FFI->LoadFontFromMemory( $fileType , $fileData , $dataSize , $fontSize , FFI::addr($__c_ref__fontChars) , $glyphCount ); $fontChars = $__c_ref__fontChars->cdata ; return $__result__; }
 
 /// Check if a font is ready
 // bool IsFontReady(Font font);
@@ -4779,7 +4779,7 @@ function RL_IsFontReady( object $font ) : bool { global $RAYLIB_FFI; return $RAY
 
 /// Load font data for further use
 // GlyphInfo* LoadFontData(const unsigned char* fileData , int dataSize , int fontSize , int* fontChars , int glyphCount , int type);
-function RL_LoadFontData( string $fileData , int $dataSize , int $fontSize , int &$fontChars , int $glyphCount , int $type ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->LoadFontData( $fileData , $dataSize , $fontSize , $fontChars , $glyphCount , $type ); }
+function RL_LoadFontData( string $fileData , int $dataSize , int $fontSize , int /*ref:int*/&$fontChars , int $glyphCount , int $type ) : object { global $RAYLIB_FFI; static $__c_ref__fontChars = null ; $__c_ref__fontChars ??= FFI::new("int"); $__result__ = $RAYLIB_FFI->LoadFontData( $fileData , $dataSize , $fontSize , FFI::addr($__c_ref__fontChars) , $glyphCount , $type ); $fontChars = $__c_ref__fontChars->cdata ; return $__result__; }
 
 /// Generate image font atlas using chars info
 // Image GenImageFontAtlas(const GlyphInfo* chars , Rectangle** recs , int glyphCount , int fontSize , int padding , int packMethod);
@@ -4819,7 +4819,7 @@ function RL_DrawTextCodepoint( object $font , int $codepoint , object $position 
 
 /// Draw multiple character (codepoint)
 // void DrawTextCodepoints(Font font , const int* codepoints , int count , Vector2 position , float fontSize , float spacing , Color tint);
-function RL_DrawTextCodepoints( object $font , int &$codepoints , int $count , object $position , float $fontSize , float $spacing , object $tint ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->DrawTextCodepoints( $font , $codepoints , $count , $position , $fontSize , $spacing , $tint ); }
+function RL_DrawTextCodepoints( object $font , int /*ref:int*/&$codepoints , int $count , object $position , float $fontSize , float $spacing , object $tint ) : void { global $RAYLIB_FFI; static $__c_ref__codepoints = null ; $__c_ref__codepoints ??= FFI::new("int"); $RAYLIB_FFI->DrawTextCodepoints( $font , FFI::addr($__c_ref__codepoints) , $count , $position , $fontSize , $spacing , $tint ); $codepoints = $__c_ref__codepoints->cdata ; }
 
 /// Measure string width for default font
 // int MeasureText(const char* text , int fontSize);
@@ -4843,19 +4843,19 @@ function RL_GetGlyphAtlasRec( object $font , int $codepoint ) : object { global 
 
 /// Get next codepoint in a UTF-8 encoded string, 0x3f('?') is returned on failure
 // int GetCodepoint(const char* text , int* codepointSize);
-function RL_GetCodepoint( string $text , int &$codepointSize ) : int { global $RAYLIB_FFI; return $RAYLIB_FFI->GetCodepoint( $text , $codepointSize ); }
+function RL_GetCodepoint( string $text , int /*ref:int*/&$codepointSize ) : int { global $RAYLIB_FFI; static $__c_ref__codepointSize = null ; $__c_ref__codepointSize ??= FFI::new("int"); $__result__ = $RAYLIB_FFI->GetCodepoint( $text , FFI::addr($__c_ref__codepointSize) ); $codepointSize = $__c_ref__codepointSize->cdata ; return $__result__; }
 
 /// Get next codepoint in a UTF-8 encoded string, 0x3f('?') is returned on failure
 // int GetCodepointNext(const char* text , int* codepointSize);
-function RL_GetCodepointNext( string $text , int &$codepointSize ) : int { global $RAYLIB_FFI; return $RAYLIB_FFI->GetCodepointNext( $text , $codepointSize ); }
+function RL_GetCodepointNext( string $text , int /*ref:int*/&$codepointSize ) : int { global $RAYLIB_FFI; static $__c_ref__codepointSize = null ; $__c_ref__codepointSize ??= FFI::new("int"); $__result__ = $RAYLIB_FFI->GetCodepointNext( $text , FFI::addr($__c_ref__codepointSize) ); $codepointSize = $__c_ref__codepointSize->cdata ; return $__result__; }
 
 /// Get previous codepoint in a UTF-8 encoded string, 0x3f('?') is returned on failure
 // int GetCodepointPrevious(const char* text , int* codepointSize);
-function RL_GetCodepointPrevious( string $text , int &$codepointSize ) : int { global $RAYLIB_FFI; return $RAYLIB_FFI->GetCodepointPrevious( $text , $codepointSize ); }
+function RL_GetCodepointPrevious( string $text , int /*ref:int*/&$codepointSize ) : int { global $RAYLIB_FFI; static $__c_ref__codepointSize = null ; $__c_ref__codepointSize ??= FFI::new("int"); $__result__ = $RAYLIB_FFI->GetCodepointPrevious( $text , FFI::addr($__c_ref__codepointSize) ); $codepointSize = $__c_ref__codepointSize->cdata ; return $__result__; }
 
 /// Load UTF-8 text encoded from codepoints array
 // char* LoadUTF8(const int* codepoints , int length);
-function RL_LoadUTF8( int &$codepoints , int $length ) : string { global $RAYLIB_FFI; return $RAYLIB_FFI->LoadUTF8( $codepoints , $length ); }
+function RL_LoadUTF8( int /*ref:int*/&$codepoints , int $length ) : string { global $RAYLIB_FFI; static $__c_ref__codepoints = null ; $__c_ref__codepoints ??= FFI::new("int"); $__result__ = $RAYLIB_FFI->LoadUTF8( FFI::addr($__c_ref__codepoints) , $length ); $codepoints = $__c_ref__codepoints->cdata ; return $__result__; }
 
 /// Unload UTF-8 text encoded from codepoints array
 // void UnloadUTF8(char* text);
@@ -4863,11 +4863,11 @@ function RL_UnloadUTF8( string $text ) : void { global $RAYLIB_FFI; $RAYLIB_FFI-
 
 /// Load all codepoints from a UTF-8 text string, codepoints count returned by parameter
 // int* LoadCodepoints(const char* text , int* count);
-function RL_LoadCodepoints( string $text , int &$count ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->LoadCodepoints( $text , $count ); }
+function RL_LoadCodepoints( string $text , int /*ref:int*/&$count ) : object { global $RAYLIB_FFI; static $__c_ref__count = null ; $__c_ref__count ??= FFI::new("int"); $__result__ = $RAYLIB_FFI->LoadCodepoints( $text , FFI::addr($__c_ref__count) ); $count = $__c_ref__count->cdata ; return $__result__; }
 
 /// Unload codepoints data from memory
 // void UnloadCodepoints(int* codepoints);
-function RL_UnloadCodepoints( int &$codepoints ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->UnloadCodepoints( $codepoints ); }
+function RL_UnloadCodepoints( int /*ref:int*/&$codepoints ) : void { global $RAYLIB_FFI; static $__c_ref__codepoints = null ; $__c_ref__codepoints ??= FFI::new("int"); $RAYLIB_FFI->UnloadCodepoints( FFI::addr($__c_ref__codepoints) ); $codepoints = $__c_ref__codepoints->cdata ; }
 
 /// Get total number of codepoints in a UTF-8 encoded string
 // int GetCodepointCount(const char* text);
@@ -4875,7 +4875,7 @@ function RL_GetCodepointCount( string $text ) : int { global $RAYLIB_FFI; return
 
 /// Encode one codepoint into UTF-8 byte array (array length returned as parameter)
 // const char* CodepointToUTF8(int codepoint , int* utf8Size);
-function RL_CodepointToUTF8( int $codepoint , int &$utf8Size ) : string { global $RAYLIB_FFI; return $RAYLIB_FFI->CodepointToUTF8( $codepoint , $utf8Size ); }
+function RL_CodepointToUTF8( int $codepoint , int /*ref:int*/&$utf8Size ) : string { global $RAYLIB_FFI; static $__c_ref__utf8Size = null ; $__c_ref__utf8Size ??= FFI::new("int"); $__result__ = $RAYLIB_FFI->CodepointToUTF8( $codepoint , FFI::addr($__c_ref__utf8Size) ); $utf8Size = $__c_ref__utf8Size->cdata ; return $__result__; }
 
 /// Copy one string to another, returns bytes copied
 // int TextCopy(char* dst , const char* src);
@@ -4903,11 +4903,11 @@ function RL_TextJoin( object $textList , int $count , string $delimiter ) : stri
 
 /// Split text into multiple strings
 // const char** TextSplit(const char* text , char delimiter , int* count);
-function RL_TextSplit( string $text , string $delimiter , int &$count ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->TextSplit( $text , $delimiter , $count ); }
+function RL_TextSplit( string $text , string $delimiter , int /*ref:int*/&$count ) : object { global $RAYLIB_FFI; static $__c_ref__count = null ; $__c_ref__count ??= FFI::new("int"); $__result__ = $RAYLIB_FFI->TextSplit( $text , $delimiter , FFI::addr($__c_ref__count) ); $count = $__c_ref__count->cdata ; return $__result__; }
 
 /// Append text at specific position and move cursor!
 // void TextAppend(char* text , const char* append , int* position);
-function RL_TextAppend( string $text , string $append , int &$position ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->TextAppend( $text , $append , $position ); }
+function RL_TextAppend( string $text , string $append , int /*ref:int*/&$position ) : void { global $RAYLIB_FFI; static $__c_ref__position = null ; $__c_ref__position ??= FFI::new("int"); $RAYLIB_FFI->TextAppend( $text , $append , FFI::addr($__c_ref__position) ); $position = $__c_ref__position->cdata ; }
 
 /// Find first text occurrence within a string
 // int TextFindIndex(const char* text , const char* find);
@@ -5151,7 +5151,7 @@ function RL_GenMeshCubicmap( object $cubicmap , object $cubeSize ) : object { gl
 
 /// Load materials from model file
 // Material* LoadMaterials(const char* fileName , int* materialCount);
-function RL_LoadMaterials( string $fileName , int &$materialCount ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->LoadMaterials( $fileName , $materialCount ); }
+function RL_LoadMaterials( string $fileName , int /*ref:int*/&$materialCount ) : object { global $RAYLIB_FFI; static $__c_ref__materialCount = null ; $__c_ref__materialCount ??= FFI::new("int"); $__result__ = $RAYLIB_FFI->LoadMaterials( $fileName , FFI::addr($__c_ref__materialCount) ); $materialCount = $__c_ref__materialCount->cdata ; return $__result__; }
 
 /// Load default material (Supports: DIFFUSE, SPECULAR, NORMAL maps)
 // Material LoadMaterialDefault(void);
@@ -5175,7 +5175,7 @@ function RL_SetModelMeshMaterial( object $model , int $meshId , int $materialId 
 
 /// Load model animations from file
 // ModelAnimation* LoadModelAnimations(const char* fileName , unsigned int* animCount);
-function RL_LoadModelAnimations( string $fileName , int &$animCount ) : object { global $RAYLIB_FFI; return $RAYLIB_FFI->LoadModelAnimations( $fileName , $animCount ); }
+function RL_LoadModelAnimations( string $fileName , int /*ref:int*/&$animCount ) : object { global $RAYLIB_FFI; static $__c_ref__animCount = null ; $__c_ref__animCount ??= FFI::new("int"); $__result__ = $RAYLIB_FFI->LoadModelAnimations( $fileName , FFI::addr($__c_ref__animCount) ); $animCount = $__c_ref__animCount->cdata ; return $__result__; }
 
 /// Update model animation pose
 // void UpdateModelAnimation(Model model , ModelAnimation anim , int frame);
@@ -6343,7 +6343,7 @@ function RL_rlUpdateTexture( int $id , int $offsetX , int $offsetY , int $width 
 
 /// Get OpenGL internal formats
 // void rlGetGlTextureFormats(int format , unsigned int* glInternalFormat , unsigned int* glFormat , unsigned int* glType);
-function RL_rlGetGlTextureFormats( int $format , int &$glInternalFormat , int &$glFormat , int &$glType ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->rlGetGlTextureFormats( $format , $glInternalFormat , $glFormat , $glType ); }
+function RL_rlGetGlTextureFormats( int $format , int /*ref:int*/&$glInternalFormat , int /*ref:int*/&$glFormat , int /*ref:int*/&$glType ) : void { global $RAYLIB_FFI; static $__c_ref__glInternalFormat = null ; $__c_ref__glInternalFormat ??= FFI::new("int"); static $__c_ref__glFormat = null ; $__c_ref__glFormat ??= FFI::new("int"); static $__c_ref__glType = null ; $__c_ref__glType ??= FFI::new("int"); $RAYLIB_FFI->rlGetGlTextureFormats( $format , FFI::addr($__c_ref__glInternalFormat) , FFI::addr($__c_ref__glFormat) , FFI::addr($__c_ref__glType) ); $glInternalFormat = $__c_ref__glInternalFormat->cdata ; $glFormat = $__c_ref__glFormat->cdata ; $glType = $__c_ref__glType->cdata ; }
 
 /// Get name string for pixel format
 // const char* rlGetPixelFormatName(unsigned int format);
@@ -6355,7 +6355,7 @@ function RL_rlUnloadTexture( int $id ) : void { global $RAYLIB_FFI; $RAYLIB_FFI-
 
 /// Generate mipmap data for selected texture
 // void rlGenTextureMipmaps(unsigned int id , int width , int height , int format , int* mipmaps);
-function RL_rlGenTextureMipmaps( int $id , int $width , int $height , int $format , int &$mipmaps ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->rlGenTextureMipmaps( $id , $width , $height , $format , $mipmaps ); }
+function RL_rlGenTextureMipmaps( int $id , int $width , int $height , int $format , int /*ref:int*/&$mipmaps ) : void { global $RAYLIB_FFI; static $__c_ref__mipmaps = null ; $__c_ref__mipmaps ??= FFI::new("int"); $RAYLIB_FFI->rlGenTextureMipmaps( $id , $width , $height , $format , FFI::addr($__c_ref__mipmaps) ); $mipmaps = $__c_ref__mipmaps->cdata ; }
 
 /// Read texture pixel data
 // void* rlReadTexturePixels(unsigned int id , int width , int height , int format);
@@ -6419,7 +6419,7 @@ function RL_rlSetUniformSampler( int $locIndex , int $textureId ) : void { globa
 
 /// Set shader currently active (id and locations)
 // void rlSetShader(unsigned int id , int* locs);
-function RL_rlSetShader( int $id , int &$locs ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->rlSetShader( $id , $locs ); }
+function RL_rlSetShader( int $id , int /*ref:int*/&$locs ) : void { global $RAYLIB_FFI; static $__c_ref__locs = null ; $__c_ref__locs ??= FFI::new("int"); $RAYLIB_FFI->rlSetShader( $id , FFI::addr($__c_ref__locs) ); $locs = $__c_ref__locs->cdata ; }
 
 /// Load compute shader program
 // unsigned int rlLoadComputeShaderProgram(unsigned int shaderId);
@@ -6637,7 +6637,7 @@ function RL_GuiPanel( object $bounds , string $text ) : void { global $RAYLIB_FF
 
 /// Tab Bar control, returns TAB to be closed or -1
 // int GuiTabBar(Rectangle bounds , const char** text , int count , int* active);
-function RL_GuiTabBar( object $bounds , object $text , int $count , int &$active ) : int { global $RAYLIB_FFI; return $RAYLIB_FFI->GuiTabBar( $bounds , $text , $count , $active ); }
+function RL_GuiTabBar( object $bounds , object $text , int $count , int /*ref:int*/&$active ) : int { global $RAYLIB_FFI; static $__c_ref__active = null ; $__c_ref__active ??= FFI::new("int"); $__result__ = $RAYLIB_FFI->GuiTabBar( $bounds , $text , $count , FFI::addr($__c_ref__active) ); $active = $__c_ref__active->cdata ; return $__result__; }
 
 /// Scroll Panel control
 // Rectangle GuiScrollPanel(Rectangle bounds , const char* text , Rectangle content , Vector2* scroll);
@@ -6673,15 +6673,15 @@ function RL_GuiComboBox( object $bounds , string $text , int $active ) : int { g
 
 /// Dropdown Box control, returns selected item
 // bool GuiDropdownBox(Rectangle bounds , const char* text , int* active , bool editMode);
-function RL_GuiDropdownBox( object $bounds , string $text , int &$active , bool $editMode ) : bool { global $RAYLIB_FFI; return $RAYLIB_FFI->GuiDropdownBox( $bounds , $text , $active , $editMode ); }
+function RL_GuiDropdownBox( object $bounds , string $text , int /*ref:int*/&$active , bool $editMode ) : bool { global $RAYLIB_FFI; static $__c_ref__active = null ; $__c_ref__active ??= FFI::new("int"); $__result__ = $RAYLIB_FFI->GuiDropdownBox( $bounds , $text , FFI::addr($__c_ref__active) , $editMode ); $active = $__c_ref__active->cdata ; return $__result__; }
 
 /// Spinner control, returns selected value
 // bool GuiSpinner(Rectangle bounds , const char* text , int* value , int minValue , int maxValue , bool editMode);
-function RL_GuiSpinner( object $bounds , string $text , int &$value , int $minValue , int $maxValue , bool $editMode ) : bool { global $RAYLIB_FFI; return $RAYLIB_FFI->GuiSpinner( $bounds , $text , $value , $minValue , $maxValue , $editMode ); }
+function RL_GuiSpinner( object $bounds , string $text , int /*ref:int*/&$value , int $minValue , int $maxValue , bool $editMode ) : bool { global $RAYLIB_FFI; static $__c_ref__value = null ; $__c_ref__value ??= FFI::new("int"); $__result__ = $RAYLIB_FFI->GuiSpinner( $bounds , $text , FFI::addr($__c_ref__value) , $minValue , $maxValue , $editMode ); $value = $__c_ref__value->cdata ; return $__result__; }
 
 /// Value Box control, updates input text with numbers
 // bool GuiValueBox(Rectangle bounds , const char* text , int* value , int minValue , int maxValue , bool editMode);
-function RL_GuiValueBox( object $bounds , string $text , int &$value , int $minValue , int $maxValue , bool $editMode ) : bool { global $RAYLIB_FFI; return $RAYLIB_FFI->GuiValueBox( $bounds , $text , $value , $minValue , $maxValue , $editMode ); }
+function RL_GuiValueBox( object $bounds , string $text , int /*ref:int*/&$value , int $minValue , int $maxValue , bool $editMode ) : bool { global $RAYLIB_FFI; static $__c_ref__value = null ; $__c_ref__value ??= FFI::new("int"); $__result__ = $RAYLIB_FFI->GuiValueBox( $bounds , $text , FFI::addr($__c_ref__value) , $minValue , $maxValue , $editMode ); $value = $__c_ref__value->cdata ; return $__result__; }
 
 /// Text Box control, updates input text
 // bool GuiTextBox(Rectangle bounds , char* text , int textSize , bool editMode);
@@ -6713,11 +6713,11 @@ function RL_GuiGrid( object $bounds , string $text , float $spacing , int $subdi
 
 /// List View control, returns selected list item index
 // int GuiListView(Rectangle bounds , const char* text , int* scrollIndex , int active);
-function RL_GuiListView( object $bounds , string $text , int &$scrollIndex , int $active ) : int { global $RAYLIB_FFI; return $RAYLIB_FFI->GuiListView( $bounds , $text , $scrollIndex , $active ); }
+function RL_GuiListView( object $bounds , string $text , int /*ref:int*/&$scrollIndex , int $active ) : int { global $RAYLIB_FFI; static $__c_ref__scrollIndex = null ; $__c_ref__scrollIndex ??= FFI::new("int"); $__result__ = $RAYLIB_FFI->GuiListView( $bounds , $text , FFI::addr($__c_ref__scrollIndex) , $active ); $scrollIndex = $__c_ref__scrollIndex->cdata ; return $__result__; }
 
 /// List View with extended parameters
 // int GuiListViewEx(Rectangle bounds , const char** text , int count , int* focus , int* scrollIndex , int active);
-function RL_GuiListViewEx( object $bounds , object $text , int $count , int &$focus , int &$scrollIndex , int $active ) : int { global $RAYLIB_FFI; return $RAYLIB_FFI->GuiListViewEx( $bounds , $text , $count , $focus , $scrollIndex , $active ); }
+function RL_GuiListViewEx( object $bounds , object $text , int $count , int /*ref:int*/&$focus , int /*ref:int*/&$scrollIndex , int $active ) : int { global $RAYLIB_FFI; static $__c_ref__focus = null ; $__c_ref__focus ??= FFI::new("int"); static $__c_ref__scrollIndex = null ; $__c_ref__scrollIndex ??= FFI::new("int"); $__result__ = $RAYLIB_FFI->GuiListViewEx( $bounds , $text , $count , FFI::addr($__c_ref__focus) , FFI::addr($__c_ref__scrollIndex) , $active ); $focus = $__c_ref__focus->cdata ; $scrollIndex = $__c_ref__scrollIndex->cdata ; return $__result__; }
 
 /// Message Box control, displays a message
 // int GuiMessageBox(Rectangle bounds , const char* title , const char* message , const char* buttons);
@@ -6725,7 +6725,7 @@ function RL_GuiMessageBox( object $bounds , string $title , string $message , st
 
 /// Text Input Box control, ask for text, supports secret
 // int GuiTextInputBox(Rectangle bounds , const char* title , const char* message , const char* buttons , char* text , int textMaxSize , int* secretViewActive);
-function RL_GuiTextInputBox( object $bounds , string $title , string $message , string $buttons , string $text , int $textMaxSize , int &$secretViewActive ) : int { global $RAYLIB_FFI; return $RAYLIB_FFI->GuiTextInputBox( $bounds , $title , $message , $buttons , $text , $textMaxSize , $secretViewActive ); }
+function RL_GuiTextInputBox( object $bounds , string $title , string $message , string $buttons , string $text , int $textMaxSize , int /*ref:int*/&$secretViewActive ) : int { global $RAYLIB_FFI; static $__c_ref__secretViewActive = null ; $__c_ref__secretViewActive ??= FFI::new("int"); $__result__ = $RAYLIB_FFI->GuiTextInputBox( $bounds , $title , $message , $buttons , $text , $textMaxSize , FFI::addr($__c_ref__secretViewActive) ); $secretViewActive = $__c_ref__secretViewActive->cdata ; return $__result__; }
 
 /// Color Picker control (multiple color controls)
 // Color GuiColorPicker(Rectangle bounds , const char* text , Color color);
@@ -6860,7 +6860,7 @@ function _RAYLIB_REBUILD_WRAPPER_FROM_SCRATCH( string $RAYLIB_H , array $BLACKLI
 		$ARGS = str_replace( ' void* '           , ' object $' , $ARGS );
 
 		$ARGS = str_replace( ' int '             , ' int $'    , $ARGS );
-		$ARGS = str_replace( ' int* '            , ' int &$'   , $ARGS );
+		$ARGS = str_replace( ' int* '            , ' int /*ref:int*/&$'   , $ARGS );
 		$ARGS = str_replace( ' unsigned int '    , ' int '     , $ARGS );
 
 		$ARGS = str_replace( ' unsigned char* '  , ' string $' , $ARGS );
@@ -6948,6 +6948,8 @@ function _RAYLIB_REBUILD_WRAPPER_FROM_SCRATCH( string $RAYLIB_H , array $BLACKLI
 			}
 		}
 
+		$RETURN_REF_ARGS = [];
+
 		if ( empty( $ARGS ) )
 		{
 			$VARS = '';
@@ -6955,16 +6957,49 @@ function _RAYLIB_REBUILD_WRAPPER_FROM_SCRATCH( string $RAYLIB_H , array $BLACKLI
 		else
 		{
 			$VARS = explode( ' ' , $ARGS ) ;
-			$VARS = array_filter( $VARS , function( $TOK ) { return $TOK == ',' || $TOK[0] == '$' || $TOK[0] == '&' || $TOK[0] == '.' || $TOK[0] == '/'; } );
+
+				$VARS = array_filter( $VARS , function( $TOK ) { return $TOK == ',' || $TOK[0] == '$' || $TOK[0] == '&' || $TOK[0] == '.' || $TOK[0] == '/'; } );
+
+				foreach( $VARS as &$VAR )
+				{
+					if ( str_starts_with( $VAR , '/*ref:' ) ) // var ref
+					{
+						list( $REF_TYPE , $REF_NAME ) = explode( '*/&$' , substr( $VAR , 6 ) );
+						$RETURN_REF_ARGS[ $REF_NAME ] = $REF_TYPE ;
+						$VAR = 'FFI::addr($__c_ref__'.$REF_NAME.')';
+					}
+				}
+
 			$VARS = implode( ' ' , $VARS );
 
-			$VARS = preg_replace( '|/\*ref\*/(\$\H+)|' , 'FFI::addr($1)' , $VARS );
-			$VARS = str_replace( '&' , '' , $VARS );
+			$VARS = preg_replace( '|/\*ref\*/(\$\H+)|' , 'FFI::addr($1)' , $VARS ); // object ref
+			//$VARS = str_replace( '&' , '' , $VARS );
 		}
 
 		$INNER  = 'global $RAYLIB_FFI;';
-		$INNER .= $TYPE != 'void' ? ' return' : '' ;
-		$INNER .= ' $RAYLIB_FFI->'.$NAME.'( '.$VARS.' );' ;
+
+		if ( count( $RETURN_REF_ARGS ) == 0 )
+		{
+			$INNER .= $TYPE != 'void' ? ' return' : '' ;
+			$INNER .= ' $RAYLIB_FFI->'.$NAME.'( '.$VARS.' );' ;
+		}
+		else
+		{
+			foreach( $RETURN_REF_ARGS as $REF_NAME => $REF_TYPE )
+			{
+				$INNER .= ' static $__c_ref__'.$REF_NAME.' = null ; $__c_ref__'.$REF_NAME.' ??= FFI::new("'.$REF_TYPE.'");';
+			}
+
+			$INNER .= $TYPE != 'void' ? ' $__result__ =' : '' ;
+			$INNER .= ' $RAYLIB_FFI->'.$NAME.'( '.$VARS.' );' ;
+
+			foreach( $RETURN_REF_ARGS as $REF_NAME => $REF_TYPE )
+			{
+				$INNER .= ' $'.$REF_NAME.' = $__c_ref__'.$REF_NAME.'->cdata ;';
+			}
+
+			$INNER .= $TYPE != 'void' ? ' return $__result__;' : '' ;
+		}
 
 		$LINE = "function RL_$NAME( $ARGS ) : $TYPE { $INNER }";
 
