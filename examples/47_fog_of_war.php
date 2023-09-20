@@ -104,11 +104,13 @@ class Map
 				for( $x = 0 ; $x < $this->W ; $x++ )
 				{
 					$a = $x + $y * $this->W ;
+					$v = 0.05 * sin( RL_GetTime() ) * sin( $a * 0.2 + RL_GetTime() ) ; // fog animation
+
 					switch( $this->FOG[ $a ] )
 					{
-						case 0 : RL_DrawRectangle( $x , $y , 1 , 1 , RL_Fade( RL_WHITE , 0.9 ) ); break ;
-						case 1 : RL_DrawRectangle( $x , $y , 1 , 1 , RL_Fade( RL_WHITE , 0.5 ) ); break ;
-						case 2 : RL_DrawRectangle( $x , $y , 1 , 1 , RL_Fade( RL_WHITE , 0.8 ) ); break ;
+						case 0 : RL_DrawRectangle( $x , $y , 1 , 1 , RL_Fade( RL_WHITE , 0.9 + $v ) ); break ;
+						case 1 : RL_DrawRectangle( $x , $y , 1 , 1 , RL_Fade( RL_WHITE , 0.5 + $v ) ); break ;
+						case 2 : RL_DrawRectangle( $x , $y , 1 , 1 , RL_Fade( RL_WHITE , 0.8 + $v ) ); break ;
 					}
 				}
 			}
