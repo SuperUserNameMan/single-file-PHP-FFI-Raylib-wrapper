@@ -226,7 +226,7 @@ unset( $B );   // <= only $B is undefined, $A is left untouched
 print_r( $A ); // <= 0 , 0
 print_r( $B ); // Warning: Undefined
 
-$B = null ; // <= now be is null, and $A is untouched
+$B = null ; // <= now $B is null, and $A is untouched
 ```
 
 ```PHP
