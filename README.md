@@ -180,9 +180,39 @@ If it fails, it tries again using `libraylib.so` or `raylib.dll`.
 ## Passing structs by reference or by value ?
 
 ```PHP
-$A = RL_Vector2(); // <= $A refers to a FFI/CData object
-$B = $A ;          // <= $A and $B refers to the same object
+$A = RL_Vector2( 123 , 456 ); // <= $A refers to a FFI/CData object
+$B = $A ;                     // <= $A and $B refers to the same object
+$A->x = 999 ;
+
+print_r( $A );                // <= 999 , 456
+print_r( $B );                // <= 999 , 456
+
+$A = RL_Vector( 0 , 0 );      // <= $A now refers to a different object
+                                 
+print_r( $A );                // <= 0 , 0
+print_r( $B );                // <= 999 , 456
 ```
+
+```PHP
+$A = RL_Vector2( 123 , 456 ); // <= $A refers to a FFI/CData object
+$B = &$A ;                    // <= $B refers to $A
+$A->x = 999 ;
+
+print_r( $A );                // <= 999 , 456
+print_r( $B );                // <= 999 , 456
+
+$B = RL_Vector( 0 , 0 );      // <= $A and $B refers to this new object
+                              //    the previously refered object is
+                              //    sent to garbage collector.
+                                 
+print_r( $A );                // <= 0 , 0
+print_r( $B );                // <= 0 , 0
+
+$B = null ;                   // <= $A and $B are set to null
+                              //    and the previously refered object
+                              //    is sent to garbage collector
+```
+
 
 ```PHP
 $A = RL_Vector2();
@@ -232,6 +262,14 @@ $A = null ;        // <= $A abandonned the reference to the object
 print_r( $B );     // <= $B still refers to the object
 $B = null ;        // <= $B abandonned the last reference to the object
                    //       and the object is sent to garbage colllector.
+```
+
+```PHP
+$A = RL_Vector2( 123 , 456 );
+$B = &$A ;
+$B = RL_Vector2Add( $B , RL_Vector2( 876 , 543 ) );
+print_r( $B ) ;   // <= 999 , 999
+print_r( $A ) ;   // <= 999 , 999
 ```
 
 ```PHP
