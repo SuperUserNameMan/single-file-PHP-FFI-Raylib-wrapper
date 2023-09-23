@@ -231,6 +231,53 @@ $B = null ; // <= now $B is null, and $A is untouched
 
 ```PHP
 $A = RL_Vector2();
+$B = null ;
+
+function foo() : void
+{
+  global $A ;
+  global $B ;
+
+  if( is_object( $B ) )
+  {
+    print_r( $B );
+    return;
+  }
+
+  $B = &$A ; // for some unkown reason, it did not work well
+             // using PHP 8.1.2 and 8.2.9
+             // in example 49_textured_curve.php 
+             // the reference was lost on foo exit
+}
+
+while(1) { foo(); }
+
+/// USE THIS WORKAROUND INSTEAD :
+
+$A = RL_Vector2();
+$B = null ;
+
+function foo() : void
+{
+  global $A ;
+  global $B ;
+
+  if( ! empty( $B ) )
+  {
+    print_r( $$B ); // <= !! $$B : workaround ref as string
+    return;
+  }
+
+  $B = 'A' ; // <== workaround : reference as string
+}
+
+while(1) { foo(); }
+```
+
+
+
+```PHP
+$A = RL_Vector2();
 $B = RL_Vector2();
 $B = $A ;          // <= $A and $B refers to the same object
                    //    and the object previously refered
