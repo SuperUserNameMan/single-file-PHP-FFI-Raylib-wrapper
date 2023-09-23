@@ -213,6 +213,19 @@ $B = null ;                   // <= $A and $B are set to null
                               //    is sent to garbage collector
 ```
 
+```PHP
+$A = RL_Vector2();
+$B = &$A ;
+
+// how to set $B to Null without affecting $A ?
+
+// $B = null ; // <= /!\ the object refered by $A
+               //        would be sent to garbage collector
+unset( $B );   // <= only $B is undefined, $A is left untouched
+
+print_r( $A ); // <= 0 , 0
+print_r( $B ); // Warning: Undefined
+```
 
 ```PHP
 $A = RL_Vector2();
