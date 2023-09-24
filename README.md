@@ -161,6 +161,11 @@ Command line argument :
 ```bash
 php my_raylib_app.php RL_USES_OPENGL_VERSION=4
 ```
+or
+```bash
+php my_raylib_app.php OPENGL=4
+```
+
 
 
 | RL_USES_OPENGL_VERSION | OpenGL version | Lib name Linux | Lib name Windows |
