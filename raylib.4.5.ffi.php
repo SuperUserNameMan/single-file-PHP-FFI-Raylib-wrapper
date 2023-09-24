@@ -4659,7 +4659,7 @@ function RL_UpdateTextureRec( object $texture , object $rec , object $pixels ) :
 
 /// Generate GPU mipmaps for a texture
 // void GenTextureMipmaps(Texture2D* texture);
-function RL_GenTextureMipmaps( object $texture ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->GenTextureMipmaps( $texture ); }
+function RL_GenTextureMipmaps( object /*ref*/$texture ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->GenTextureMipmaps( FFI::addr($texture) ); }
 
 /// Set texture scaling filter mode
 // void SetTextureFilter(Texture2D texture , int filter);
@@ -6912,7 +6912,7 @@ function _RAYLIB_REBUILD_WRAPPER_FROM_SCRATCH( string $RAYLIB_H , array $BLACKLI
 		$ARGS = str_replace( ' Shader '          , ' object $' , $ARGS );
 		$ARGS = str_replace( ' Sound '           , ' object $' , $ARGS );
 		$ARGS = str_replace( ' Texture2D '       , ' object $' , $ARGS );
-		$ARGS = str_replace( ' Texture2D* '      , ' object $' , $ARGS );
+		$ARGS = str_replace( ' Texture2D* '      , ' object /*ref*/$' , $ARGS );
 		$ARGS = str_replace( ' Vector2 '         , ' object $' , $ARGS );
 		$ARGS = str_replace( ' Vector2* '        , ' object $' , $ARGS );
 		$ARGS = str_replace( ' Vector3 '         , ' object $' , $ARGS );
