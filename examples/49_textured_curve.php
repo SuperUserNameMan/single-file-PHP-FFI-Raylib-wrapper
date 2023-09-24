@@ -15,7 +15,16 @@ RL_InitWindow( $SCREEN_W , $SCREEN_H , "raylib [textures] examples - textured cu
 
 
 $TEXTURE_ROAD = RL_LoadTexture( './raylib/examples/resources/road.png' );
-RL_SetTextureFilter( $TEXTURE_ROAD , RL_TEXTURE_FILTER_TRILINEAR );
+
+if ( 1 )
+{
+	RL_GenTextureMipmaps( $TEXTURE_ROAD );
+	RL_SetTextureFilter( $TEXTURE_ROAD , RL_TEXTURE_FILTER_TRILINEAR );
+}
+else
+{
+	RL_SetTextureFilter( $TEXTURE_ROAD , RL_TEXTURE_FILTER_BILINEAR );
+}
 
 $CURVE_START_POSITION  = RL_Vector2(  80 , 100 );
 $CURVE_START_TANGENT   = RL_Vector2( 100 , 300 );
