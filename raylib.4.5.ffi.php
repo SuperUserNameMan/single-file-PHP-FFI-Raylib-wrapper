@@ -875,11 +875,6 @@ RAYLIB_H;
     define( 'RL_KEY_VOLUME_DOWN'     , 25 );     // Key: Android volume down button
 //} KeyboardKey;
 
-// Add backwards compatibility support for deprecated names
-#define MOUSE_LEFT_BUTTON   MOUSE_BUTTON_LEFT
-#define MOUSE_RIGHT_BUTTON  MOUSE_BUTTON_RIGHT
-#define MOUSE_MIDDLE_BUTTON MOUSE_BUTTON_MIDDLE
-
 // Mouse buttons
 //typedef enum {
     define( 'RL_MOUSE_BUTTON_LEFT'    , 0 );     // Mouse button left
@@ -890,6 +885,11 @@ RAYLIB_H;
     define( 'RL_MOUSE_BUTTON_FORWARD' , 5 );     // Mouse button forward (advanced mouse device)
     define( 'RL_MOUSE_BUTTON_BACK'    , 6 );     // Mouse button back (advanced mouse device)
 //} MouseButton;
+
+// Add backwards compatibility support for deprecated names
+define( 'RL_MOUSE_LEFT_BUTTON'   , RL_MOUSE_BUTTON_LEFT   );
+define( 'RL_MOUSE_RIGHT_BUTTON'  , RL_MOUSE_BUTTON_RIGHT  );
+define( 'RL_MOUSE_MIDDLE_BUTTON' , RL_MOUSE_BUTTON_MIDDLE );
 
 // Mouse cursor
 //typedef enum {
