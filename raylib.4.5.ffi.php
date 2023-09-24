@@ -101,6 +101,9 @@ function define_default( string $DEFNAME , $DEFVAL ) { defined( $DEFNAME ) || de
 for( $i = 1 ; $i <= 4 ; $i++ ) if ( in_array( "RL_USES_OPENGL_VERSION=$i" , $argv ) ) define_default( 'RL_USES_OPENGL_VERSION' , $i ) ;
 if ( in_array( 'RL_USES_OPENGL_VERSION=0xE2' , $argv ) || in_array( 'RL_USES_OPENGL_VERSION=226' , $argv ) ) define_default( 'RL_USES_OPENGL_VERSION' , 0xE2 );
 
+for( $i = 1 ; $i <= 4 ; $i++ ) if ( in_array( "OPENGL=$i" , $argv ) ) define_default( 'RL_USES_OPENGL_VERSION' , $i ) ;
+if ( in_array( 'OPENGL=0xE2' , $argv ) || in_array( 'OPENGL=226' , $argv ) ) define_default( 'RL_USES_OPENGL_VERSION' , 0xE2 );
+
 define_default( 'RL_USES_OPENGL_VERSION'       ,   3 );
 
 $_RAYLIB_TEST_PATHES ??= [
