@@ -90,7 +90,7 @@ Note : if Raylib was compiled with `raygui.h` 4.0, `RAYGUI_VERSION_4_DETECTED` w
 
 ## Customized `src/config.h` compilation
 
-By default, the wrapper will try to detects if the library was compiled with these parameters :
+By default, the wrapper will try to detects the modules contained into the library, and will set these boolean contants accordingly :
 - `RL_SUPPORT_MODULE_RMATH`
 - `RL_SUPPORT_MODULE_RSHAPES`
 - `RL_SUPPORT_MODULE_RTEXTURES`
