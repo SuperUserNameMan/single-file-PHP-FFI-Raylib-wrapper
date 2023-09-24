@@ -152,8 +152,12 @@ define_default( 'RL_PLATFORM_RPI'     , FALSE );
 // try to automatically detects if the library was compiled with each module
 $_RAYLIB_CONTENT = file_get_contents( $_RAYLIB_PATH );
 
+define( 'RAYGUI_VERSION_3_5_DETECTED' , str_contains( $_RAYLIB_CONTENT , 'GuiTabBar'       ) ); // since 3.5
+define( 'RAYGUI_VERSION_4_DETECTED'   , str_contains( $_RAYLIB_CONTENT , 'GuiToggleSlider' ) ); // since 4.0
+
+define_default( 'RL_SUPPORT_MODULE_RAYGUI' , RAYGUI_VERSION_3_5_DETECTED && ! RAYGUI_VERSION_4_DETECTED );
+
 define_default( 'RL_SUPPORT_MODULE_RAUDIO'         , str_contains( $_RAYLIB_CONTENT , 'LoadAudioStream'     ) );
-define_default( 'RL_SUPPORT_MODULE_RAYGUI'         , str_contains( $_RAYLIB_CONTENT , 'GuiEnable'           ) );
 define_default( 'RL_SUPPORT_MODULE_RLGL'           , str_contains( $_RAYLIB_CONTENT , 'MatrixPerspective'   ) );
 define_default( 'RL_SUPPORT_MODULE_RMATH'          , str_contains( $_RAYLIB_CONTENT , 'Normalize'           ) );
 define_default( 'RL_SUPPORT_MODULE_RMODELS'        , str_contains( $_RAYLIB_CONTENT , 'LoadModel'           ) );
