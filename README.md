@@ -78,7 +78,7 @@ $my_cube_array = FFI::new( FFI::arrayType( RAYLIB_FFI_Vector3D ) , [ 3 , 5 , 8 ]
 
 ## Optional RayGui 3.6 support 
 
-If Raylib was compiled with `raygui.h` 3.6, the wrapper will try to detect it, and will set the value of `RL_SUPPORT_MODULE_RAYGUI` accordingly.
+If Raylib was compiled with `raygui.h` 3.6, the wrapper will try to detect it, and will set the boolean value of `RL_SUPPORT_MODULE_RAYGUI` accordingly.
 
 `raygui.h` functions are also prefixed with `RL_`, but consts are prefixed with `RLGUI_`.
 
@@ -86,7 +86,7 @@ If Raylib was compiled with `raygui.h` 3.6, the wrapper will try to detect it, a
 $W = RL_GuiGetStyle( RLGUI_SLIDER , RLGUI_BORDER_WIDTH );
 ```
 
-If you compiled Raylib with `raygui.h` 4.0, it will be detected `RAYGUI_VERSION_4_DETECTED`, but the API will be disabled since version 4.0 is not yet supported.
+Note : if Raylib was compiled with `raygui.h` 4.0, `RAYGUI_VERSION_4_DETECTED` will be `true`, but `RL_SUPPORT_MODULE_RAYGUI` will be `false` as version 4.0 is not yet supported.
 
 ## Customized `src/config.h` compilation
 
