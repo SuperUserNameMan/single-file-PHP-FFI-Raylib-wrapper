@@ -5082,7 +5082,7 @@ function RL_DrawBillboardPro( object $camera , object $texture , object $source 
 
 /// Upload mesh vertex data in GPU and provide VAO/VBO ids
 // void UploadMesh(Mesh* mesh , bool dynamic);
-function RL_UploadMesh( object $mesh , bool $dynamic ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->UploadMesh( $mesh , $dynamic ); }
+function RL_UploadMesh( object /*ref*/$mesh , bool $dynamic ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->UploadMesh( FFI::addr($mesh) , $dynamic ); }
 
 /// Update mesh vertex data in GPU for a specific buffer index
 // void UpdateMeshBuffer(Mesh mesh , int index , const void* data , int dataSize , int offset);
@@ -5110,7 +5110,7 @@ function RL_GetMeshBoundingBox( object $mesh ) : object { global $RAYLIB_FFI; re
 
 /// Compute mesh tangents
 // void GenMeshTangents(Mesh* mesh);
-function RL_GenMeshTangents( object $mesh ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->GenMeshTangents( $mesh ); }
+function RL_GenMeshTangents( object /*ref*/$mesh ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->GenMeshTangents( FFI::addr($mesh) ); }
 
 /// Generate polygonal mesh
 // Mesh GenMeshPoly(int sides , float radius);
@@ -6904,7 +6904,7 @@ function _RAYLIB_REBUILD_WRAPPER_FROM_SCRATCH( string $RAYLIB_H , array $BLACKLI
 		$ARGS = str_replace( ' Matrix '          , ' object $' , $ARGS );
 		$ARGS = str_replace( ' Matrix* '         , ' object $' , $ARGS );
 		$ARGS = str_replace( ' Mesh '            , ' object $' , $ARGS );
-		$ARGS = str_replace( ' Mesh* '           , ' object $' , $ARGS );
+		$ARGS = str_replace( ' Mesh* '           , ' object /*ref*/$' , $ARGS );
 		$ARGS = str_replace( ' Model '           , ' object $' , $ARGS );
 		$ARGS = str_replace( ' Model* '          , ' object $' , $ARGS );
 		$ARGS = str_replace( ' ModelAnimation '  , ' object $' , $ARGS );
