@@ -5174,7 +5174,7 @@ function RL_UnloadMaterial( object $material ) : void { global $RAYLIB_FFI; $RAY
 
 /// Set texture for a material map type (MATERIAL_MAP_DIFFUSE, MATERIAL_MAP_SPECULAR...)
 // void SetMaterialTexture(Material* material , int mapType , Texture2D texture);
-function RL_SetMaterialTexture( object $material , int $mapType , object $texture ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->SetMaterialTexture( $material , $mapType , $texture ); }
+function RL_SetMaterialTexture( object /*ref*/$material , int $mapType , object $texture ) : void { global $RAYLIB_FFI; $RAYLIB_FFI->SetMaterialTexture( FFI::addr($material) , $mapType , $texture ); }
 
 /// Set material for a mesh
 // void SetModelMeshMaterial(Model* model , int meshId , int materialId);
@@ -6900,7 +6900,7 @@ function _RAYLIB_REBUILD_WRAPPER_FROM_SCRATCH( string $RAYLIB_H , array $BLACKLI
 		$ARGS = str_replace( ' Image* '          , ' object /*ref*/$' , $ARGS );
 		$ARGS = str_replace( ' Image '           , ' object $' , $ARGS );
 		$ARGS = str_replace( ' Material '        , ' object $' , $ARGS );
-		$ARGS = str_replace( ' Material* '       , ' object $' , $ARGS );
+		$ARGS = str_replace( ' Material* '       , ' object /*ref*/$' , $ARGS );
 		$ARGS = str_replace( ' Matrix '          , ' object $' , $ARGS );
 		$ARGS = str_replace( ' Matrix* '         , ' object $' , $ARGS );
 		$ARGS = str_replace( ' Mesh '            , ' object $' , $ARGS );
