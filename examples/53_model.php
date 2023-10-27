@@ -18,8 +18,18 @@ $CAMERA = RL_Camera([
 ]);
 
 $MODEL   = RL_LoadModel( './raylib/examples/resources/elder_zombie_ninja_turtle.obj' );
-$TEXTURE = RL_LoadTexture( './raylib/examples/resources/elder_turtle.png' );
-RL_SetMaterialTexture( $MODEL->materials[ 0 ] , RL_MATERIAL_MAP_DIFFUSE , $TEXTURE );
+
+// Note : in Raylib 4.5 and above, there is a bug in ./external/tinyobj_loader_c.h
+// which prevents the .mtl file from loading alongside the .obj file.
+// If the current Raylib is unpatched (or does not support MTL), a default material
+// will be attached to the model.
+// We detect it and we load the texture manually :
+if ( $MODEL->materials[ 0 ]->maps[ 0 ]->texture->id == 1 )
+{
+	$TEXTURE = RL_LoadTexture( './raylib/examples/resources/elder_turtle.png' );
+	RL_SetMaterialTexture( $MODEL->materials[ 0 ] , RL_MATERIAL_MAP_DIFFUSE , $TEXTURE );
+}
+
 
 $POSITION = RL_Vector3();
 
@@ -56,7 +66,7 @@ while( ! RL_WindowShouldClose() )
 }
 
 RL_UnloadModel( $MODEL );
-RL_UnloadTexture( $TEXTURE );
+if ( isset( $TEXTURE ) ) RL_UnloadTexture( $TEXTURE );
 
 RL_CloseWindow();
 
